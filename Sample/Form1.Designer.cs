@@ -28,66 +28,62 @@
         /// </summary>
         private void InitializeComponent()
         {
-            rdbSerial = new RadioButton();
-            pnlMenu = new Panel();
-            pnlMain = new Panel();
-            pnlMenu.SuspendLayout();
+            grid2 = new DataGridView();
+            gridResult = new DataGridView();
+            grid1 = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)grid2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridResult).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grid1).BeginInit();
             SuspendLayout();
             // 
-            // rdbSerial
+            // grid2
             // 
-            rdbSerial.Appearance = Appearance.Button;
-            rdbSerial.Checked = true;
-            rdbSerial.FlatAppearance.CheckedBackColor = Color.FromArgb(192, 255, 255);
-            rdbSerial.FlatStyle = FlatStyle.Flat;
-            rdbSerial.Font = new Font("メイリオ", 12F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            rdbSerial.Location = new Point(2, 1);
-            rdbSerial.Name = "rdbSerial";
-            rdbSerial.Size = new Size(102, 46);
-            rdbSerial.TabIndex = 0;
-            rdbSerial.TabStop = true;
-            rdbSerial.Text = "シリアル";
-            rdbSerial.TextAlign = ContentAlignment.MiddleCenter;
-            rdbSerial.UseVisualStyleBackColor = true;
-            rdbSerial.CheckedChanged += rdbSerail_CheckedChanged;
+            grid2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid2.Location = new Point(347, 12);
+            grid2.Name = "grid2";
+            grid2.Size = new Size(329, 453);
+            grid2.TabIndex = 0;
+            grid2.CellContentClick += dataGridView_CellContentClick;
             // 
-            // pnlMenu
+            // gridResult
             // 
-            pnlMenu.BackColor = Color.Gainsboro;
-            pnlMenu.Controls.Add(rdbSerial);
-            pnlMenu.Dock = DockStyle.Top;
-            pnlMenu.Location = new Point(0, 0);
-            pnlMenu.Name = "pnlMenu";
-            pnlMenu.Size = new Size(762, 47);
-            pnlMenu.TabIndex = 1;
+            gridResult.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridResult.Location = new Point(682, 12);
+            gridResult.Name = "gridResult";
+            gridResult.Size = new Size(329, 453);
+            gridResult.TabIndex = 0;
+            gridResult.CellContentClick += dataGridView1_CellContentClick;
             // 
-            // pnlMain
+            // grid1
             // 
-            pnlMain.Dock = DockStyle.Bottom;
-            pnlMain.Location = new Point(0, 47);
-            pnlMain.Name = "pnlMain";
-            pnlMain.Size = new Size(762, 446);
-            pnlMain.TabIndex = 2;
+            grid1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid1.Location = new Point(12, 12);
+            grid1.Name = "grid1";
+            grid1.Size = new Size(329, 453);
+            grid1.TabIndex = 1;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(762, 493);
-            Controls.Add(pnlMain);
-            Controls.Add(pnlMenu);
+            ClientSize = new Size(1017, 493);
+            Controls.Add(grid1);
+            Controls.Add(gridResult);
+            Controls.Add(grid2);
             Name = "Form1";
             Text = "Form1";
             Shown += Form1_Shown;
-            pnlMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)grid2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridResult).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grid1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private RadioButton rdbSerial;
-        private Panel pnlMenu;
-        private Panel pnlMain;
+        private DataGridView grid2;
+        private DataGridView gridResult;
+        private DataGridView grid1;
     }
 }
