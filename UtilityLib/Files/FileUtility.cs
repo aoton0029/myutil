@@ -23,11 +23,8 @@ namespace UtilityLib.Files
             {
                 return null;
             }
-
-            using (var fs = new System.IO.FileStream(filePath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            {
-                return System.Drawing.Image.FromStream(fs);
-            }
+            
+            return Image.FromFile(filePath);
         }
     }
 }
