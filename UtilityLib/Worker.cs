@@ -11,7 +11,6 @@ namespace UtilityLib
         private readonly object _lockObject = new object();
         private readonly string _actionName;
         private readonly Action _action;
-        private readonly ILogger _logger;
         private Status _status;
 
         /// <summary>Returns the action name of the current worker.
@@ -30,7 +29,6 @@ namespace UtilityLib
             _actionName = actionName;
             _action = action;
             _status = Status.Initial;
-            _logger = ObjectContainer.Resolve<ILoggerFactory>().Create(GetType().FullName);
         }
 
         /// <summary>Start the worker if it is not running.
@@ -77,13 +75,10 @@ namespace UtilityLib
                 }
                 catch (ThreadAbortException)
                 {
-                    _logger.InfoFormat("Worker thread caught ThreadAbortException, try to resetting, actionName:{0}", _actionName);
                     Thread.ResetAbort();
-                    _logger.InfoFormat("Worker thread ThreadAbortException resetted, actionName:{0}", _actionName);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(string.Format("Worker thread has exception, actionName:{0}", _actionName), ex);
                 }
             }
         }
