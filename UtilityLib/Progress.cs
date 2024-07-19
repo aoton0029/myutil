@@ -7,53 +7,36 @@ using System.Threading.Tasks;
 
 namespace UtilityLib
 {
-    public class Progress<T> : IProgress<T>
+    public class ProgressUtility
     {
-        private readonly SynchronizationContext _synchronizationContext;
-        private readonly Action<T>? _handler;
-        private readonly SendOrPostCallback _invokeHandlers;
-
-        public Progress()
+        public static IDisposable StartProgress(Action<ProgressEventArgs> progressHandler)
         {
-            _synchronizationContext = SynchronizationContext.Current ?? ProgressStatics.DefaultContext;
-            Debug.Assert(_synchronizationContext != null);
-            _invokeHandlers = new SendOrPostCallback(InvokeHandlers);
-        }
-
-        public Progress(Action<T> handler) : this()
-        {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
-        }
-
-        public event Action<object?, T>? ProgressChanged;
-
-        protected virtual void OnReport(T value)
-        {
-            Action<T>? handler = _handler;
-            Action<object?, T>? changedEvent = ProgressChanged;
-            if (handler != null || changedEvent != null)
+            var sw = Stopwatch.StartNew();
+            return Delegate.Disposable(() =>
             {
-                _synchronizationContext.Post(_invokeHandlers, value);
-            }
+                sw.Stop();
+                progressHandler(new ProgressEventArgs(sw.ElapsedMilliseconds, sw.ElapsedMilliseconds));
+            });
         }
 
-        void IProgress<T>.Report(T value) { OnReport(value); }
+        public delegate void ProgressHandler(object sender, ProgressEventArgs e);
 
-        private void InvokeHandlers(object? state)
+        public class ProgressEventArgs
         {
-            T value = (T)state!;
+            public ProgressEventArgs()
+            {
 
-            Action<T>? handler = _handler;
-            Action<object?, T>? changedEvent = ProgressChanged;
+            }
 
-            handler?.Invoke(value);
-            changedEvent?.Invoke(this, value);
+            public ProgressEventArgs(long current, long total)
+            {
+                Current = current;
+                Total = total;
+            }
+            public long Current { get; set; }
+            public long Total { get; set; }
         }
-    }
 
-    internal static class ProgressStatics
-    {
-        internal static readonly SynchronizationContext DefaultContext = new SynchronizationContext();
     }
 
 }
