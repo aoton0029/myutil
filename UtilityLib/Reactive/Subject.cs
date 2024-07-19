@@ -35,7 +35,7 @@ namespace UtilityLib.Reactive
 
             Observers.Add(observer);
 
-            return Delegate.Disposable(() =>
+            return Delegates.Disposable(() =>
             {
                 var observers = Observers;
 
