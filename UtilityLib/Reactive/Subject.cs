@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.Reactive
 {
-    sealed class Subject<T> : IObservable<T>, IObserver<T>
+    class Subject<T> : IObservable<T>, IObserver<T>
     {
         List<IObserver<T>>? observers;
         bool completed;
@@ -35,7 +35,7 @@ namespace UtilityLib.Reactive
 
             Observers.Add(observer);
 
-            return Delegates.Disposable(() =>
+            return Delegate.Disposable(() =>
             {
                 var observers = Observers;
 
@@ -66,10 +66,9 @@ namespace UtilityLib.Reactive
 
             try
             {
+
                 for (var i = 0; i < observers.Count; i++)
-                {
                     observers[i].OnNext(value);
-                }
             }
             finally
             {
@@ -79,11 +78,9 @@ namespace UtilityLib.Reactive
             }
         }
 
-        public void OnError(Exception error) =>
-            OnFinality(ref this.error, error, (observer, err) => observer.OnError(err));
+        public void OnError(Exception error) => OnFinality(ref this.error, error, (observer, err) => observer.OnError(err));
 
-        public void OnCompleted() =>
-            OnFinality(ref this.completed, true, (observer, _) => observer.OnCompleted());
+        public void OnCompleted() => OnFinality(ref this.completed, true, (observer, _) => observer.OnCompleted());
 
         void OnFinality<TState>(ref TState? state, TState value, Action<IObserver<T>, TState> action)
         {
@@ -102,5 +99,4 @@ namespace UtilityLib.Reactive
                 action(observer, value);
         }
     }
-
 }
