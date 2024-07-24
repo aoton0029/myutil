@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UtilityLib.TreeNodes
 {
-    public class Tree
+    internal class Treenode_4
     {
+
         public interface ITreeNode<T>
         {
             T Value { get; set; }
@@ -17,14 +17,9 @@ namespace UtilityLib.TreeNodes
 
             void AddChild(ITreeNode<T> child);
             void RemoveChild(ITreeNode<T> child);
+            void Traverse(Action<ITreeNode<T>> visit);
         }
 
-        public interface ITree<T>
-        {
-            ITreeNode<T> Root { get; set; }
-
-            void Traverse(ITreeNode<T> node, Action<ITreeNode<T>> visit);
-        }
 
         public class TreeNode<T> : ITreeNode<T>
         {
@@ -49,28 +44,16 @@ namespace UtilityLib.TreeNodes
                 child.Parent = null;
                 Children.Remove(child);
             }
-        }
 
-        public class Treee<T> : ITree<T>
-        {
-            public ITreeNode<T> Root { get; set; }
-
-            public Treee(T rootValue)
+            public void Traverse(Action<ITreeNode<T>> visit)
             {
-                Root = new TreeNode<T>(rootValue);
-            }
-
-            public void Traverse(ITreeNode<T> node, Action<ITreeNode<T>> visit)
-            {
-                if (node == null)
-                    return;
-
-                visit(node);
-                foreach (var child in node.Children)
+                visit(this);
+                foreach (var child in Children)
                 {
-                    Traverse(child, visit);
+                    child.Traverse(visit);
                 }
             }
         }
     }
+    
 }
