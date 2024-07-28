@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace UtilityLib
 {
-    internal class TreeList
+    public class SynchContext
     {
+
+        public static SynchronizationContext SynchronizationContextStatic => SynchronizationContext.Current;
     }
 }

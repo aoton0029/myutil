@@ -105,5 +105,17 @@ namespace UtilityLib
             value1 = value2;
             value2 = tempValue;
         }
+
+        public static void SafeInvoke(this Control control, Action action)
+        {
+            if (control.InvokeRequired)
+            {
+                control.Invoke(new MethodInvoker(action));
+            }
+            else
+            {
+                action();
+            }
+        }
     }
 }
