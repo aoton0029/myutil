@@ -41,7 +41,7 @@ namespace UtilityLib.Tasks
                 {
                     _action();
                     progressValue = (progressValue + 10) % 100; // プログレスバーの値を更新
-                    _progress.Report(progressValue);
+                    //_progress.Report(progressValue);
                     await Task.Delay(_interval, cancellationToken);
                 }
                 catch (TaskCanceledException)

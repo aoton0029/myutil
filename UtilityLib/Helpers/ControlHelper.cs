@@ -31,11 +31,11 @@ namespace UtilityLib
             {
                 if (enabled)
                 {
-                    ControlHelper.SetWindowLong(c.Handle, -16, -134217729 & ControlHelper.GetWindowLong(c.Handle, -16));
+                    //ControlHelper.SetWindowLong(c.Handle, -16, -134217729 & ControlHelper.GetWindowLong(c.Handle, -16));
                 }
                 else
                 {
-                    ControlHelper.SetWindowLong(c.Handle, -16, 134217728 + ControlHelper.GetWindowLong(c.Handle, -16));
+                    //ControlHelper.SetWindowLong(c.Handle, -16, 134217728 + ControlHelper.GetWindowLong(c.Handle, -16));
                 }
             }
         }
@@ -260,7 +260,7 @@ namespace UtilityLib
                         parent.Controls.Add(control);
                     }
                 }
-                Forms.FrmWaiting frmWaitingEx = control.Tag as Forms.FrmWaiting;
+                Forms.FormWaiting frmWaitingEx = control.Tag as Forms.FormWaiting;
                 frmWaitingEx.Msg = strMessage;
                 frmWaitingEx.ShowForm(intSplashScreenDelayTime);
             }
@@ -303,9 +303,9 @@ namespace UtilityLib
             if (array.Length > 0)
             {
                 Control control2 = array[0];
-                if (control2.Tag != null && control2.Tag is Forms.FrmWaiting)
+                if (control2.Tag != null && control2.Tag is Forms.FormWaiting)
                 {
-                    Forms.FrmWaiting frmWaitingEx = control2.Tag as Forms.FrmWaiting;
+                    Forms.FormWaiting frmWaitingEx = control2.Tag as Forms.FormWaiting;
                     if (frmWaitingEx != null && !frmWaitingEx.IsDisposed && frmWaitingEx.Visible)
                     {
                         frmWaitingEx.Hide();
@@ -381,7 +381,7 @@ namespace UtilityLib
             {
                 Name = "myprogressPanelext",
                 Visible = false,
-                Tag = new Forms.FrmWaiting
+                Tag = new Forms.FormWaiting
                 {
                     TopMost = true,
                     Opacity = 0.0

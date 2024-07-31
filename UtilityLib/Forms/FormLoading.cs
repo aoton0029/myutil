@@ -82,8 +82,7 @@ namespace UtilityLib.Forms
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void FrmLoading_Load(object sender, EventArgs e)
         {
-            if (ControlHelper.IsDesignMode())
-                return;
+
             this.updateDBWorker.RunWorkerAsync();
         }
 
@@ -120,6 +119,16 @@ namespace UtilityLib.Forms
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             SetMessage((e.UserState == null) ? "" : e.UserState.ToString(), e.ProgressPercentage);
+        }
+
+        private void FormLoading_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,116 +1,116 @@
+ï»¿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using UtilityLib;
 
 namespace Sample
 {
     public partial class Form1 : Form
     {
-        DataTable sampleData;
-
         public Form1()
         {
             InitializeComponent();
-        }
-
-        public void changeUc(UserControl uc)
-        {
-
-        }
-
-        private void rdbSerail_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            DataTable leftTable = new DataTable();
-            leftTable.Columns.Add("ƒuƒƒbƒNƒR[ƒh", typeof(int));
-            leftTable.Columns.Add("ƒuƒƒbƒN–¼", typeof(string));
-            Random random = new Random();
-
-            for (int i = 1; i <= 30; i++)
+            foreach(int i in Enumerable.Range(1, 5))
             {
-                int rand = random.Next(1, 5);
-                leftTable.Rows.Add(rand, "ƒuƒƒbƒN_" + rand);
+                Debug.WriteLine(i);
+                //mm(10, 4, i);
             }
+            var ds = CountWays(10, 4);
+            Debug.WriteLine(string.Join(", ", ds));
+        }
 
-            // Rightƒe[ƒuƒ‹‚ÌƒTƒ“ƒvƒ‹ƒf[ƒ^
-            DataTable rightTable = new DataTable();
-            rightTable.Columns.Add("ƒuƒƒbƒNƒR[ƒh", typeof(int));
-            rightTable.Columns.Add("ƒp[ƒcƒiƒ“ƒo[", typeof(string));
 
-            int x = 1;
-            for (int i = 1; i <= 10; i++)
+
+        private int CountWays(int balls, int boxes)
+        {
+            int[,] dp = new int[balls + 1, boxes + 1];
+
+            for (int i = 0; i <= boxes; i++)
+                dp[0, i] = 1;
+
+            for (int i = 1; i <= balls; i++)
             {
-                for (int j = 1; j <= 3; j++)
+                for (int j = 1; j <= boxes; j++)
                 {
-                    rightTable.Rows.Add(i, "PN_" + x++);
+                    dp[i, j] = dp[i - 1, j] + dp[i, j - 1];
                 }
             }
 
-            DataTable resultTable = LeftJoin(leftTable, rightTable, "ƒuƒƒbƒNƒR[ƒh", "ƒuƒƒbƒNƒR[ƒh");
-
-            grid1.DataSource = leftTable;
-            grid2.DataSource = rightTable;
-            gridResult.DataSource = resultTable;
-
+            return dp[balls, boxes];
         }
 
-        public static DataTable LeftJoin(DataTable leftTable, DataTable rightTable, string leftJoinColumn, string rightJoinColumn)
+        private void mm(int balls, int boxes, int min)
         {
-            var resultTable = new DataTable();
+            List<int[]> results = new List<int[]>();
+            int[] current = new int[boxes];
 
-            // ¶ƒe[ƒuƒ‹‚ÌƒJƒ‰ƒ€‚ğƒRƒs[
-            foreach (DataColumn column in leftTable.Columns)
+            // æœ€å°å€‹æ•°ã‚’å„ç®±ã«å‰²ã‚ŠæŒ¯ã‚‹
+            int totalMinBalls = min * boxes;
+            if (totalMinBalls > balls)
             {
-                resultTable.Columns.Add(new DataColumn(column.ColumnName, column.DataType));
+                Debug.WriteLine("å‰²ã‚ŠæŒ¯ã‚‹ç‰ã®æ•°ãŒè¶³ã‚Šã¾ã›ã‚“ã€‚");
+                return;
             }
+            balls -= totalMinBalls;
 
-            // ‰Eƒe[ƒuƒ‹‚ÌƒJƒ‰ƒ€‚ğƒRƒs[
-            foreach (DataColumn column in rightTable.Columns)
+            // æ®‹ã‚Šã®ç‰ã‚’å‰²ã‚ŠæŒ¯ã‚‹
+            DistributeBalls(balls, boxes, 0, current, results, min);
+
+            // çµæœã®è¡¨ç¤º
+            foreach (var result in results)
             {
-                // d•¡‚·‚éƒJƒ‰ƒ€‚ª‚ ‚éê‡‚ÍƒŠƒl[ƒ€‚·‚éiƒIƒvƒVƒ‡ƒ“j
-                if (resultTable.Columns.Contains(column.ColumnName))
+                for (int i = 0; i < result.Length; i++)
                 {
-                    resultTable.Columns.Add(new DataColumn(column.ColumnName + "_Right", column.DataType));
+                    result[i] += min; // æœ€å°å€‹æ•°ã‚’åŠ ãˆã‚‹
                 }
-                else
-                {
-                    resultTable.Columns.Add(new DataColumn(column.ColumnName, column.DataType));
-                }
+                Console.WriteLine(string.Join(", ", result));
             }
 
-            // Left Join ‚ğÀs
-            var query = from leftRow in leftTable.AsEnumerable()
-                        join rightRow in rightTable.AsEnumerable()
-                        on leftRow[leftJoinColumn] equals rightRow[rightJoinColumn] into tempJoin
-                        from tempRow in tempJoin.DefaultIfEmpty()
-                        select new
-                        {
-                            LeftData = leftRow.ItemArray,
-                            RightData = tempRow != null ? tempRow.ItemArray : rightTable.NewRow().ItemArray
-                        };
+        }
 
-            // Œ‹‰Ê‚ğV‚µ‚¢ƒe[ƒuƒ‹‚ÉƒRƒs[
-            foreach (var item in query)
+        static void DistributeBalls(int balls, int boxes, int index, int[] current, List<int[]> results, int minBallsPerBox)
+        {
+            if (index == boxes - 1)
             {
-                var combinedRow = resultTable.NewRow();
-                combinedRow.ItemArray = item.LeftData.Concat(item.RightData).ToArray();
-                resultTable.Rows.Add(combinedRow);
+                current[index] = balls;
+                results.Add((int[])current.Clone());
+                return;
             }
 
-            return resultTable;
+            for (int i = 0; i <= balls; i++)
+            {
+                current[index] = i;
+                DistributeBalls(balls - i, boxes, index + 1, current, results, minBallsPerBox);
+            }
         }
 
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        // 5å€‹ã®ç®±ã«ç‰12å€‹ã‚’å‰²ã‚ŠæŒ¯ã‚‹ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã€‚
+        private void m(int max, int box, int min)
         {
-
+            int[] a = new int[box];
+            if (max < box * min)
+            {
+                Debug.WriteLine("Error");
+                return;
+            }
+            for (int i = 0; i < box; i++)
+            {
+                a[i] = min;
+            }
+            max -= box * min;
+            for (int i = 0; i < max; i++)
+            {
+                a[i % box]++;
+            }
+            Debug.WriteLine(string.Join(", ", a));
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-                    }
+
     }
 }

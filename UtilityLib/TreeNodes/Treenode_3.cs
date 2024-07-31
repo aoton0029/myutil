@@ -54,14 +54,14 @@ namespace UtilityLib.TreeNodes
                 {
                     throw new ArgumentNullException("name が null です．");
                 }
-                if (name.IsEmptyOrSpace())
-                {
-                    throw new ArgumentException("name が空文字です．");
-                }
-                if (name.Contains(TreeData.PathSeparator.ToString()))
-                {
-                    throw new TreeDataException("要素名に区切り文字を使用しないこと");
-                }
+                //if (name.IsEmptyOrSpace())
+                //{
+                //    throw new ArgumentException("name が空文字です．");
+                //}
+                //if (name.Contains(TreeData.PathSeparator.ToString()))
+                //{
+                //    throw new TreeDataException("要素名に区切り文字を使用しないこと");
+                //}
 
                 this.Name = name;
                 this.m_parentNode = null;
@@ -154,7 +154,7 @@ namespace UtilityLib.TreeNodes
                 {
                     if (this.NodeType == NODE_TYPE.NO_HAVE_DATA)
                     {
-                        throw new TreeDataException("この要素は格納値を持たないタイプ");
+                        //throw new TreeDataException("この要素は格納値を持たないタイプ");
                     }
                     return this.m_value;
                 }
@@ -162,7 +162,7 @@ namespace UtilityLib.TreeNodes
                 {
                     if (this.NodeType == NODE_TYPE.NO_HAVE_DATA)
                     {
-                        throw new TreeDataException("この要素は格納値を持たないタイプ");
+                        //throw new TreeDataException("この要素は格納値を持たないタイプ");
                     }
                     this.m_value = value;
                 }
@@ -420,10 +420,10 @@ namespace UtilityLib.TreeNodes
                 {
                     throw new ArgumentNullException("path が null");
                 }
-                if (path.IsEmptyOrSpace())
-                {
-                    throw new ArgumentException("path が空文字");
-                }
+                //if (path.IsEmptyOrSpace())
+                //{
+                //    throw new ArgumentException("path が空文字");
+                //}
 
                 String[] pathParam = path.Split(TreeData.PathSeparator);
                 notChildName = String.Empty;
@@ -432,7 +432,7 @@ namespace UtilityLib.TreeNodes
                 for (int index = 0; index < pathParam.Length; index++)
                 {
                     String search = pathParam[index];
-                    if (search.IsEmptyOrSpace()) { continue; }
+                    //if (search.IsEmptyOrSpace()) { continue; }
 
                     node = node[search];
                     if (node == null)
@@ -500,7 +500,7 @@ namespace UtilityLib.TreeNodes
             {
                 if (parent[child.Name] != null)
                 {
-                    throw new TreeDataException("要素名が重複");
+                    //throw new TreeDataException("要素名が重複");
                 }
 
                 child.m_parentNode = parent;
@@ -525,7 +525,7 @@ namespace UtilityLib.TreeNodes
                 for (uint index = 0; index < last; index++)
                 {
                     String child = childParam[index];
-                    if (child.IsEmptyOrSpace()) { continue; }
+                    //if (child.IsEmptyOrSpace()) { continue; }
 
                     if (node[child] == null)
                     {

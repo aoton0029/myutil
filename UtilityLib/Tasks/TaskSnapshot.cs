@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.Tasks
 {
+    public interface ICredentialProvider
+    {
+        Task<bool> IsValidAppIdAsync(string appId);
+
+        Task<string> GetAppPasswordAsync(string appId);
+
+        Task<bool> IsAuthenticationDisabledAsync();
+    }
     public interface ITask
     {
         /// <summary>
@@ -54,19 +62,19 @@ namespace UtilityLib.Tasks
             => State switch
             {
                 TaskState.Ready or TaskState.Started => "",
-                TaskState.Header => Resources.StateHeader,
-                TaskState.Data when UnitsTotal == -1 && UnitsProcessed == 0 => Resources.StateData,
+                //TaskState.Header => Resources.StateHeader,
+                //TaskState.Data when UnitsTotal == -1 && UnitsProcessed == 0 => Resources.StateData,
                 TaskState.Data when UnitsTotal == -1 => UnitsToString(UnitsProcessed),
                 TaskState.Data => $"{UnitsToString(UnitsProcessed)} / {UnitsToString(UnitsTotal)}",
-                TaskState.Complete => Resources.StateComplete,
-                TaskState.IOError => Resources.StateIOError,
+                //TaskState.Complete => Resources.StateComplete,
+                //TaskState.IOError => Resources.StateIOError,
                 _ => ""
             };
 
-        private string UnitsToString(long units)
-            => UnitsByte
-                ? units.FormatBytes()
-                : units.ToString();
+        private string UnitsToString(long units) => units.ToString();
+            //=> UnitsByte
+            //    ? units.FormatBytes()
+            //    : units.ToString();
     }
 
     public sealed class ResultTask<T>([Localizable(true)] string name, Func<T> work, Action? cancellationCallback = null) : TaskBase, IResultTask<T>

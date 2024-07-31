@@ -52,7 +52,7 @@ namespace UtilityLib.Threadings
             thread.Start();
             thread.Join();
 
-            error?.Rethrow();
+            //error?.Rethrow();
         }
 
         public static T RunSta<T>(Func<T> execute)
@@ -78,7 +78,7 @@ namespace UtilityLib.Threadings
             thread.Start();
             thread.Join();
 
-            error?.Rethrow();
+            //error?.Rethrow();
             return result;
         }
 

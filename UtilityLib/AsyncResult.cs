@@ -86,9 +86,9 @@ namespace UtilityLib
 
             if (_userCallback != null)
             {
-                var httpAsyncResult = this as ServiceClientImpl.HttpAsyncResult;
-                Debug.Assert(httpAsyncResult != null);
-                _userCallback(httpAsyncResult.AsyncState as RetryableAsyncResult);
+                //var httpAsyncResult = this as ServiceClientImpl.HttpAsyncResult;
+                //Debug.Assert(httpAsyncResult != null);
+                //_userCallback(httpAsyncResult.AsyncState as RetryableAsyncResult);
             }
         }
 
