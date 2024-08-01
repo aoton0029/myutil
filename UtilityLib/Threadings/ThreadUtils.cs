@@ -32,10 +32,6 @@ namespace UtilityLib.Threadings
 
         public static void RunSta(Action execute)
         {
-            #region Sanity checks
-            if (execute == null) throw new ArgumentNullException(nameof(execute));
-            #endregion
-
             Exception? error = null;
             var thread = new Thread(new ThreadStart(delegate
             {
@@ -57,10 +53,6 @@ namespace UtilityLib.Threadings
 
         public static T RunSta<T>(Func<T> execute)
         {
-            #region Sanity checks
-            if (execute == null) throw new ArgumentNullException(nameof(execute));
-            #endregion
-
             T result = default!;
             Exception? error = null;
             var thread = new Thread(new ThreadStart(delegate
@@ -82,5 +74,43 @@ namespace UtilityLib.Threadings
             return result;
         }
 
+        public static void RunTask(Func<Task> action)
+        {
+            var synchronizationContext = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(null);
+
+            try
+            {
+                action().Wait();
+            }
+            catch (AggregateException ex)
+            {
+                throw;
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+            }
+
+        }
+
+        public static T RunTask<T>(Func<Task<T>> action)
+        {
+            var synchronizationContext = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(null);
+
+            try
+            {
+                return action().Result;
+            }
+            catch (AggregateException ex)
+            {
+                throw;
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+            }
+        }
     }
 }

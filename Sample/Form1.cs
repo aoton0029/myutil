@@ -19,13 +19,15 @@ namespace Sample
             foreach(int i in Enumerable.Range(1, 5))
             {
                 Debug.WriteLine(i);
-                //mm(10, 4, i);
+                mm(10, 4, i);
             }
+        }
+
+        private void mmm()
+        {
             var ds = CountWays(10, 4);
             Debug.WriteLine(string.Join(", ", ds));
         }
-
-
 
         private int CountWays(int balls, int boxes)
         {
@@ -69,7 +71,7 @@ namespace Sample
                 {
                     result[i] += min; // 最小個数を加える
                 }
-                Console.WriteLine(string.Join(", ", result));
+                Debug.WriteLine(string.Join(", ", result));
             }
 
         }

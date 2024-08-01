@@ -16,6 +16,7 @@ namespace UtilityLib.Tasks
 
         Task<bool> IsAuthenticationDisabledAsync();
     }
+
     public interface ITask
     {
         /// <summary>
