@@ -35,7 +35,5 @@ namespace UtilityLib
             return a.Union<T>(b);
         }
 
-
-
     }
 }

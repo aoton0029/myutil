@@ -99,6 +99,12 @@ namespace UtilityLib
             }
         }
 
+        public static T Then<T>(this T t, Action<T> action)
+        {
+            action(t);
+            return t;
+        }
+
         public static void Swap<T>(ref T value1, ref T value2)
         {
             var tempValue = value1;
