@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using static UtilityLib.Navigations.NavigationTransitionInfo;
+using static UtilityLib.Navigations.WinUI.NavigationTransitionInfo;
 
-namespace UtilityLib.Navigations
+namespace UtilityLib.Navigations.WinUI
 {
     public class NavigationTransitionInfo : DependencyObject, INavigationTransitionInfoOverrides, ICustomQueryInterface, IWinRTObject, IDynamicInterfaceCastable, IEquatable<NavigationTransitionInfo>
     {
