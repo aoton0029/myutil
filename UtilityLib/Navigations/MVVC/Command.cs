@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilityLib.Navigations
+namespace UtilityLib.Navigations.MVVC
 {
     public enum HistoricalNavigationMode
     {
