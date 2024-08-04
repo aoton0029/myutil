@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UtilityLib.Navigations.MVVC;
 
-namespace UtilityLib.Navigations
+namespace UtilityLib.Navigations.Nav
 {
     public interface IController { }
 
