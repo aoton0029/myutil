@@ -29,5 +29,53 @@ namespace UtilityLib.Extentions
 
             return true;
         }
+
+        public static string ToUTF8(this byte[] content, int? index = null, int? count = null)
+        {
+            if (index is null || count is null)
+                return Encoding.UTF8.GetString(content);
+            else
+                return Encoding.UTF8.GetString(
+                    content,
+                    index ?? 0,
+                    count ?? content.Length
+                );
+        }
+
+        public static string ToUTF32(this byte[] content, int? index = null, int? count = null)
+        {
+            if (index is null || count is null)
+                return Encoding.UTF32.GetString(content);
+            else
+                return Encoding.UTF32.GetString(
+                    content,
+                    index ?? 0,
+                    count ?? content.Length
+                );
+        }
+
+        public static string ToUnicode(this byte[] content, int? index = null, int? count = null)
+        {
+            if (index is null || count is null)
+                return Encoding.Unicode.GetString(content);
+            else
+                return Encoding.Unicode.GetString(
+                    content,
+                    index ?? 0,
+                    count ?? content.Length
+                );
+        }
+
+        public static string ToASCII(this byte[] content, int? index = null, int? count = null)
+        {
+            if (index is null || count is null)
+                return Encoding.ASCII.GetString(content);
+            else
+                return Encoding.ASCII.GetString(
+                    content,
+                    index ?? 0,
+                    count ?? content.Length
+                );
+        }
     }
 }
