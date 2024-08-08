@@ -62,7 +62,7 @@
             btnSend.TabIndex = 2;
             btnSend.Text = "送信";
             btnSend.UseVisualStyleBackColor = true;
-            btnSend.Click += btnSend_Click;
+
             // 
             // txtRecv
             // 
@@ -84,7 +84,6 @@
             Controls.Add(txtSend);
             Name = "UcSerial";
             Size = new Size(350, 399);
-            Load += UcSerial_Load;
             ResumeLayout(false);
             PerformLayout();
         }
