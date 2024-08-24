@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static PageNavigationSample.Sample1.NavigationService;
 
 namespace PageNavigationSample.Sample1
 {
