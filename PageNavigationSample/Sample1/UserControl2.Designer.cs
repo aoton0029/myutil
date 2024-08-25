@@ -1,6 +1,6 @@
 ﻿namespace PageNavigationSample.Sample1
 {
-    partial class UcPage
+    partial class UserControl2
     {
         /// <summary> 
         /// 必要なデザイナー変数です。
@@ -28,15 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            SuspendLayout();
-            // 
-            // UcPage
-            // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            Name = "UcPage";
-            Size = new Size(399, 245);
-            ResumeLayout(false);
+            components = new System.ComponentModel.Container();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         }
 
         #endregion

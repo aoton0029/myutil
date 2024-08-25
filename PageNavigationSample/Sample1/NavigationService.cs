@@ -48,15 +48,14 @@ namespace PageNavigationSample.Sample1
             }
         }
 
-        public void Navigate(PageKey key, object data, NavigationMode? mode = null)
+        public void Navigate(PageKey key, object data)
         {
             if (_pageRegistry.ContainsKey(key))
             {
                 Type pageType = _pageRegistry[key];
-                NavigationMode navigationMode = mode ?? _defaultMode;
 
                 UserControl newControl;
-                if (navigationMode == NavigationMode.UseExistingInstance)
+                if (_defaultMode == NavigationMode.UseExistingInstance)
                 {
                     newControl = _historyStack.FirstOrDefault(c => c.GetType() == pageType) ?? (UserControl)Activator.CreateInstance(pageType);
                 }
@@ -68,6 +67,7 @@ namespace PageNavigationSample.Sample1
                 if (newControl is IPage page)
                 {
                     page.UpdateData(data);
+                    page.IShown();
                 }
 
                 _historyStack.Push(newControl);
@@ -86,6 +86,11 @@ namespace PageNavigationSample.Sample1
                 _historyStack.Pop();
                 var previousControl = _historyStack.Peek();
                 OnNavigate?.Invoke(previousControl);
+
+                if (previousControl is IPage page)
+                {
+                    page.IShown();
+                }
             }
         }
 

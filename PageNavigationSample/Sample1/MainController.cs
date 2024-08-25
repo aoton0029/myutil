@@ -11,7 +11,8 @@ namespace PageNavigationSample.Sample1
     {
         private readonly NavigationService _navigationService;
         private readonly Panel _mainPanel;
-        private object _sharedData;  // SharedDataをobjectとして保持
+        private PageKey _homePageKey;
+        private object _sharedData;
 
         public MainController(Panel mainPanel, NavigationMode defaultMode)
         {
@@ -22,19 +23,35 @@ namespace PageNavigationSample.Sample1
             _navigationService.OnNavigate += UpdateUI;
         }
 
+        public void SetHome(PageKey pageKey)
+        {
+            _homePageKey = pageKey;
+        }
+
         public void RegisterPage(PageKey key, Type pageType)
         {
             _navigationService.RegisterPage(key, pageType);
         }
 
-        public void NavigateTo(PageKey key, NavigationMode? mode = null)
+        public void NavigateTo(PageKey key)
         {
-            _navigationService.Navigate(key, _sharedData, mode);
+            _navigationService.Navigate(key, _sharedData);
         }
 
         public void GoBack()
         {
             _navigationService.GoBack();
+        }
+
+        public void Cancel()
+        {
+            // キャンセル時の特定のロジックがあればここに追加
+            GoHome(); // キャンセル時はホームに戻る例
+        }
+
+        public void GoHome()
+        {
+            _navigationService.Navigate(_homePageKey, _sharedData);
         }
 
         private void UpdateUI(UserControl control)
@@ -48,15 +65,14 @@ namespace PageNavigationSample.Sample1
         private void UpdateBreadcrumbs()
         {
             var breadcrumbs = _navigationService.GetBreadcrumbs();
+            // パンくずリストの更新処理をここに追加します
         }
 
-        // object型のSharedDataを更新するメソッド
         public void UpdateSharedData(object newValue)
         {
             _sharedData = newValue;
         }
 
-        // object型のSharedDataを取得するメソッド
         public T GetSharedData<T>()
         {
             return (T)_sharedData;
