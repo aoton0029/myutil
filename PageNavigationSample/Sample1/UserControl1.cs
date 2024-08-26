@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace PageNavigationSample.Sample1
 {
-    public partial class UserControl1 : PageBase
+    public partial class UserControl1 : BasePage
     {
         public UserControl1(MainController controller) : base(controller)
         {

@@ -3,55 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static PageNavigationSample.Sample1.NavigationService;
 
 namespace PageNavigationSample.Sample1
 {
+    public enum NavigationMode
+    {
+        UseExistingInstance, // 既存のインスタンスを使用して遷移
+        CreateNewInstance    // 新しいインスタンスを作成して遷移
+    }
+
     public class MainController
     {
-        private readonly NavigationService _navigationService;
+        private readonly Stack<UserControl> _historyStack = new Stack<UserControl>();
         private readonly Panel _mainPanel;
-        private PageKey _homePageKey;
         private object _sharedData;
+        private readonly PageKey _homePageKey;
+        private readonly NavigationMode _navigationMode;
 
-        public MainController(Panel mainPanel, NavigationMode defaultMode)
+        public MainController(Panel mainPanel, PageKey homePageKey, NavigationMode navigationMode)
         {
             _mainPanel = mainPanel;
-            _navigationService = NavigationService.GetInstance(defaultMode);
+            _homePageKey = homePageKey;
+            _navigationMode = navigationMode;
             _sharedData = null;
-
-            _navigationService.OnNavigate += UpdateUI;
-        }
-
-        public void SetHome(PageKey pageKey)
-        {
-            _homePageKey = pageKey;
-        }
-
-        public void RegisterPage(PageKey key, Type pageType)
-        {
-            _navigationService.RegisterPage(key, pageType);
         }
 
         public void NavigateTo(PageKey key)
         {
-            _navigationService.Navigate(key, _sharedData);
+            Type pageType = PageRegistry.GetPageType(key);
+            UserControl newControl;
+
+            if (_navigationMode == NavigationMode.UseExistingInstance)
+            {
+                newControl = _historyStack.FirstOrDefault(c => c.GetType() == pageType) ?? (UserControl)Activator.CreateInstance(pageType);
+            }
+            else
+            {
+                newControl = (UserControl)Activator.CreateInstance(pageType);
+            }
+
+            if (newControl is IPage page)
+            {
+                page.UpdateData(_sharedData);
+                page.IShown();
+            }
+
+            _historyStack.Push(newControl);
+            UpdateUI(newControl);
         }
 
         public void GoBack()
         {
-            _navigationService.GoBack();
+            if (_historyStack.Count > 1)
+            {
+                _historyStack.Pop();
+                var previousControl = _historyStack.Peek();
+                UpdateUI(previousControl);
+
+                if (previousControl is IPage page)
+                {
+                    page.IShown();
+                }
+            }
         }
 
         public void Cancel()
         {
-            // キャンセル時の特定のロジックがあればここに追加
-            GoHome(); // キャンセル時はホームに戻る例
+            GoBack();
         }
 
         public void GoHome()
         {
-            _navigationService.Navigate(_homePageKey, _sharedData);
+            _historyStack.Clear();
+            NavigateTo(_homePageKey);
         }
 
         private void UpdateUI(UserControl control)
@@ -64,7 +88,7 @@ namespace PageNavigationSample.Sample1
 
         private void UpdateBreadcrumbs()
         {
-            var breadcrumbs = _navigationService.GetBreadcrumbs();
+            var breadcrumbs = _historyStack.Select(c => c.GetType().Name).ToList();
             // パンくずリストの更新処理をここに追加します
         }
 
@@ -78,4 +102,5 @@ namespace PageNavigationSample.Sample1
             return (T)_sharedData;
         }
     }
+
 }

@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace PageNavigationSample.Sample1
 {
-    public interface IPage
+    internal class CustomController
     {
-        void UpdateData(object data);
-        void IShown();
-        MainController Controller { get; set; }  // MainControllerへの参照
     }
-
 }
