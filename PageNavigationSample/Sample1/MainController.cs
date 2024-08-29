@@ -12,6 +12,9 @@ namespace PageNavigationSample.Sample1
         CreateNewInstance    // 新しいインスタンスを作成して遷移
     }
 
+    public enum PageKey { }
+
+
     public class MainController
     {
         private readonly Stack<UserControl> _historyStack = new Stack<UserControl>();
