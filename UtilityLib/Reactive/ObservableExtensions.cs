@@ -8,16 +8,12 @@ namespace UtilityLib.Reactive
 {
     public static partial class ObservableExtensions
     {
-        public static IDisposable Disposable(Action delegatee) => new DelegatingDisposable(delegatee);
-
         public static IObserver<T> Observer<T>(Action<T> onNext, Action<Exception>? onError = null, Action? onCompleted = null) => new DelegatingObserver<T>(onNext, onError, onCompleted);
 
         public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception>? onError = null, Action? onCompleted = null) =>
             source == null
             ? throw new ArgumentNullException(nameof(source))
             : source.Subscribe(Observer(onNext, onError, onCompleted));
-
-        public static IDisposable Nop() => NopDisposable.Instance;
 
 
         public static IObservable<T> MyWhere<T>(this IObservable<T> source, Func<T, bool> predicate)
@@ -134,6 +130,99 @@ namespace UtilityLib.Reactive
                     },
                     () => observer.OnCompleted()
                 );
+            });
+        }
+
+        public static IObservable<long> Interval(TimeSpan period)
+        {
+            return new AnonymousObservable<long>(observer =>
+            {
+                var timer = new System.Threading.Timer(_ =>
+                {
+                    try
+                    {
+                        observer.OnNext(DateTimeOffset.Now.ToUnixTimeMilliseconds());
+                    }
+                    catch (Exception ex)
+                    {
+                        observer.OnError(ex);
+                    }
+                }, null, TimeSpan.Zero, period);
+
+                return Disposable.Create(() =>
+                {
+                    timer.Dispose();
+                    observer.OnCompleted();
+                });
+            });
+        }
+
+        public static IObservable<string> ReadFromFileAsync(this IObservable<Unit> trigger, string filePath)
+        {
+            return new AnonymousObservable<string>(observer =>
+            {
+                return trigger.Subscribe(async _ =>
+                {
+                    try
+                    {
+                        string content = await File.ReadAllTextAsync(filePath); // 非同期でファイルを読み込み
+                        observer.OnNext(content); // 読み込んだデータを発行
+                    }
+                    catch (Exception ex)
+                    {
+                        observer.OnError(ex);
+                    }
+                },
+                error => observer.OnError(error),
+                () => observer.OnCompleted());
+            });
+        }
+
+        public static IObservable<string> WriteToFileAsync(this IObservable<string> source, string filePath)
+        {
+            return new AnonymousObservable<string>(observer =>
+            {
+                return source.Subscribe(async content =>
+                {
+                    try
+                    {
+                        await File.WriteAllTextAsync(filePath, content); // 非同期でファイルに書き込み
+                        observer.OnNext(content); // 成功したデータを発行
+                    }
+                    catch (Exception ex)
+                    {
+                        observer.OnError(ex);
+                    }
+                },
+                error => observer.OnError(error),
+                () => observer.OnCompleted());
+            });
+        }
+
+        public static IObservable<TResult> FromAsync<TResult>(Func<Task<TResult>> asyncFunction)
+        {
+            return new AnonymousObservable<TResult>(observer =>
+            {
+                var task = asyncFunction();
+
+                task.ContinueWith(t =>
+                {
+                    if (t.IsFaulted && t.Exception != null)
+                    {
+                        observer.OnError(t.Exception.InnerException);
+                    }
+                    else if (t.IsCanceled)
+                    {
+                        observer.OnError(new TaskCanceledException(t));
+                    }
+                    else
+                    {
+                        observer.OnNext(t.Result);
+                        observer.OnCompleted();
+                    }
+                });
+
+                return Disposable.Empty; // 購読解除用のディスポーザブルを返す
             });
         }
     }
