@@ -24,18 +24,18 @@ namespace UtilityLib.Reactive
             if (this.error != null)
             {
                 observer.OnError(this.error);
-                //return Observable.Nop;
+                return ObservableExtensions.Nop();
             }
 
             if (this.completed)
             {
                 observer.OnCompleted();
-                //return Disposable.Nop;
+                return ObservableExtensions.Nop();
             }
 
             Observers.Add(observer);
 
-            return Observable.Disposable(() =>
+            return ObservableExtensions.Disposable(() =>
             {
                 var observers = Observers;
 
@@ -97,6 +97,26 @@ namespace UtilityLib.Reactive
 
             foreach (var observer in observers)
                 action(observer, value);
+        }
+    }
+
+    public class Unsubscriber<T> : IDisposable
+    {
+        private List<IObserver<T>> _observers;
+        private IObserver<T> _observer;
+
+        public Unsubscriber(List<IObserver<T>> observers, IObserver<T> observer)
+        {
+            this._observers = observers;
+            this._observer = observer;
+        }
+
+        public void Dispose()
+        {
+            if (_observer != null && _observers.Contains(_observer))
+            {
+                _observers.Remove(_observer);
+            }
         }
     }
 }
