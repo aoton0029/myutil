@@ -24,18 +24,18 @@ namespace UtilityLib.Reactive
             if (this.error != null)
             {
                 observer.OnError(this.error);
-                return ObservableExtensions.Nop();
+                return Disposable.Empty;
             }
 
             if (this.completed)
             {
                 observer.OnCompleted();
-                return ObservableExtensions.Nop();
+                return Disposable.Empty;
             }
 
             Observers.Add(observer);
 
-            return ObservableExtensions.Disposable(() =>
+            return Disposable.Create(() =>
             {
                 var observers = Observers;
 
