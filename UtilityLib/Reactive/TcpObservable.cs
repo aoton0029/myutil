@@ -145,5 +145,37 @@ namespace UtilityLib.Reactive
             _networkStream?.Dispose();
             _tcpClient?.Dispose();
         }
+
+        // 受信処理にタイムアウト機能を追加
+        public IObservable<string> ReceiveWithTimeout(TimeSpan timeout)
+        {
+            return new AnonymousObservable<string>(async observer =>
+            {
+                try
+                {
+                    if (_networkStream == null)
+                        throw new InvalidOperationException("Not connected to the server.");
+
+                    byte[] buffer = new byte[1024];
+                    var cts = new CancellationTokenSource(timeout);
+
+                    var bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length, cts.Token);
+                    string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
+                    observer.OnNext(receivedData);
+                    observer.OnCompleted();
+                }
+                catch (TaskCanceledException)
+                {
+                    observer.OnError(new TimeoutException("Receive operation timed out."));
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }
+
+                return Disposable.Empty;
+            });
+        }
     }
 }

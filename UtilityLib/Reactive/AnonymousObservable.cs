@@ -93,6 +93,11 @@ namespace UtilityLib.Reactive
             _disposables = new List<IDisposable>(disposables);
         }
 
+        public CompositeDisposable(params IDisposable[] disposables)
+        {
+            _disposables = new List<IDisposable>(disposables);
+        }
+
         public void Dispose()
         {
             foreach (var disposable in _disposables)

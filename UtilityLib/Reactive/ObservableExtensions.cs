@@ -399,7 +399,37 @@ namespace UtilityLib.Reactive
             });
         }
 
+        public static IObservable<T> Timeout<T>(this IObservable<T> source, TimeSpan timeout)
+        {
+            return new AnonymousObservable<T>(observer =>
+            {
+                var cts = new CancellationTokenSource();
+                var timeoutTask = Task.Delay(timeout, cts.Token);
 
+                var subscription = source.Subscribe(
+                    onNext: value =>
+                    {
+                        // タイムアウト前にデータを受信した場合、タイマーをキャンセル
+                        cts.Cancel();
+                        observer.OnNext(value);
+                    },
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                );
+
+                // タイムアウトの処理
+                timeoutTask.ContinueWith(task =>
+                {
+                    if (!task.IsCanceled) // タイムアウトが発生した場合
+                    {
+                        observer.OnError(new TimeoutException("The operation has timed out."));
+                        subscription.Dispose();
+                    }
+                });
+
+                return new CompositeDisposable(subscription, cts);
+            });
+        }
     }
 
 
