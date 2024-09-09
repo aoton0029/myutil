@@ -16,43 +16,39 @@ namespace UtilityLib.Reactive
             : source.Subscribe(Observer(onNext, onError, onCompleted));
 
 
-        public static IObservable<T> MyWhere<T>(this IObservable<T> source, Func<T, bool> predicate)
+        // Where: フィルタリングする拡張メソッド
+        public static IObservable<T> Where<T>(this IObservable<T> source, Func<T, bool> predicate)
         {
-            return new WhereObservable<T>(observer =>
+            return new AnonymousObservable<T>(observer =>
             {
-                return source.Subscribe(
-                    new WhereObserver<T>(
-                        value =>
+                return source.Subscribe(new AnonymousObserver<T>(
+                    onNext: value =>
+                    {
+                        if (predicate(value))
                         {
-                            //--- ここはOnNext実行時に呼び出される
-                            if (predicate(value))
-                            {
-                                observer.OnNext(value);
-                            }
-                        },
-                        observer.OnError,       //--- OnErrorと
-                        observer.OnCompleted)); //--- OnCompletedは何もせず素通し
+                            observer.OnNext(value);
+                        }
+                    },
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                ));
+            });
+        }
+
+        // Select: 変換する拡張メソッド
+        public static IObservable<TResult> Select<TSource, TResult>(this IObservable<TSource> source, Func<TSource, TResult> selector)
+        {
+            return new AnonymousObservable<TResult>(observer =>
+            {
+                return source.Subscribe(new AnonymousObserver<TSource>(
+                    onNext: value => observer.OnNext(selector(value)),
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                ));
             });
         }
 
 
-        public static IObservable<TResult> MySelect<T, TResult>(this IObservable<T> source, Func<T, TResult> selector)
-        {
-            //Observableは値を送信する側なので、変換された値を送信するためTResult型
-            return new SelectObservable<TResult>(observer =>
-            {
-                return source.Subscribe(
-                    //Observerは上からOnNextされた値を受け取るのでT型
-                    new SelectObserver<T>(
-                        value =>
-                        {
-                            //--- ここはOnNext実行時に呼び出される
-                            observer.OnNext(selector(value));
-                        },
-                        observer.OnError,       //--- OnErrorと
-                        observer.OnCompleted)); //--- OnCompletedは何もせず素通し
-            });
-        }
 
         public static IObservable<T> Repeat<T>(this IObservable<T> source, int repeatCount)
         {
@@ -225,6 +221,185 @@ namespace UtilityLib.Reactive
                 return Disposable.Empty; // 購読解除用のディスポーザブルを返す
             });
         }
+
+        public static IObservable<TResult> SelectMany<TSource, TResult>(this IObservable<TSource> source, Func<TSource, IObservable<TResult>> selector)
+        {
+            return new AnonymousObservable<TResult>(observer =>
+            {
+                var subscriptions = new List<IDisposable>();
+
+                var outerSubscription = source.Subscribe(
+                    onNext: value =>
+                    {
+                        var innerObservable = selector(value);
+                        var innerSubscription = innerObservable.Subscribe(
+                            onNext: observer.OnNext,
+                            onError: observer.OnError,
+                            onCompleted: observer.OnCompleted
+                        );
+                        subscriptions.Add(innerSubscription);
+                    },
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                );
+
+                subscriptions.Add(outerSubscription);
+                return new CompositeDisposable(subscriptions);
+            });
+        }
+
+        public static IObservable<TResult> Join<TLeft, TRight, TResult>(this IObservable<TLeft> left, IObservable<TRight> right, Func<TLeft, TRight, TResult> resultSelector)
+        {
+            return new AnonymousObservable<TResult>(observer =>
+            {
+                TLeft leftValue = default;
+                TRight rightValue = default;
+                bool leftHasValue = false;
+                bool rightHasValue = false;
+
+                var leftSubscription = left.Subscribe(
+                    onNext: lv =>
+                    {
+                        leftValue = lv;
+                        leftHasValue = true;
+                        if (rightHasValue)
+                        {
+                            observer.OnNext(resultSelector(leftValue, rightValue));
+                        }
+                    },
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                );
+
+                var rightSubscription = right.Subscribe(
+                    onNext: rv =>
+                    {
+                        rightValue = rv;
+                        rightHasValue = true;
+                        if (leftHasValue)
+                        {
+                            observer.OnNext(resultSelector(leftValue, rightValue));
+                        }
+                    },
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                );
+
+                return new CompositeDisposable(leftSubscription, rightSubscription);
+            });
+        }
+
+        public static IObservable<T> Merge<T>(this IObservable<T> first, IObservable<T> second)
+        {
+            return new AnonymousObservable<T>(observer =>
+            {
+                var subscriptions = new List<IDisposable>();
+
+                subscriptions.Add(first.Subscribe(observer));
+                subscriptions.Add(second.Subscribe(observer));
+
+                return new CompositeDisposable(subscriptions);
+            });
+        }
+
+        public static IObservable<T> Using<T, TResource>(Func<TResource> resourceFactory, Func<TResource, IObservable<T>> observableFactory) where TResource : IDisposable
+        {
+            return new AnonymousObservable<T>(observer =>
+            {
+                var resource = resourceFactory();
+                var observable = observableFactory(resource);
+                var subscription = observable.Subscribe(observer);
+
+                return new CompositeDisposable(subscription, resource);
+            });
+        }
+
+        public static IObservable<TEventArgs> FromEvent<TEventArgs>(Action<EventHandler<TEventArgs>> addHandler, Action<EventHandler<TEventArgs>> removeHandler)
+        {
+            return new AnonymousObservable<TEventArgs>(observer =>
+            {
+                EventHandler<TEventArgs> handler = (sender, args) => observer.OnNext(args);
+                addHandler(handler);
+
+                return Disposable.Create(() => removeHandler(handler));
+            });
+        }
+
+        public static IObservable<T> Concat<T>(this IObservable<T> first, IObservable<T> second)
+        {
+            return new AnonymousObservable<T>(observer =>
+            {
+                var subscriptions = new List<IDisposable>();
+
+                var firstCompleted = false;
+
+                var firstSubscription = first.Subscribe(
+                    onNext: observer.OnNext,
+                    onError: observer.OnError,
+                    onCompleted: () =>
+                    {
+                        firstCompleted = true;
+                        var secondSubscription = second.Subscribe(observer);
+                        subscriptions.Add(secondSubscription);
+                    });
+
+                subscriptions.Add(firstSubscription);
+
+                return new CompositeDisposable(subscriptions);
+            });
+        }
+
+        public static IConnectableObservable<T> Publish<T>(this IObservable<T> source)
+        {
+            var observers = new List<IObserver<T>>();
+            bool connected = false;
+
+            return new AnonymousConnectableObservable<T>(observer =>
+            {
+                if (!connected)
+                {
+                    source.Subscribe(
+                        onNext: value =>
+                        {
+                            foreach (var o in observers)
+                            {
+                                o.OnNext(value);
+                            }
+                        },
+                        onError: ex =>
+                        {
+                            foreach (var o in observers)
+                            {
+                                o.OnError(ex);
+                            }
+                        },
+                        onCompleted: () =>
+                        {
+                            foreach (var o in observers)
+                            {
+                                o.OnCompleted();
+                            }
+                        });
+                    connected = true;
+                }
+                observers.Add(observer);
+                return Disposable.Create(() => observers.Remove(observer));
+            });
+        }
+
+        public static IObservable<(T value, DateTime timestamp)> Timestamp<T>(this IObservable<T> source)
+        {
+            return new AnonymousObservable<(T value, DateTime timestamp)>(observer =>
+            {
+                return source.Subscribe(
+                    onNext: value => observer.OnNext((value, DateTime.Now)),
+                    onError: observer.OnError,
+                    onCompleted: observer.OnCompleted
+                );
+            });
+        }
+
+
     }
 
 

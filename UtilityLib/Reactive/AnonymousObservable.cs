@@ -83,4 +83,47 @@ namespace UtilityLib.Reactive
             return this.subscribe(observer);
         }
     }
+
+    public class CompositeDisposable : IDisposable
+    {
+        private readonly List<IDisposable> _disposables;
+
+        public CompositeDisposable(IEnumerable<IDisposable> disposables)
+        {
+            _disposables = new List<IDisposable>(disposables);
+        }
+
+        public void Dispose()
+        {
+            foreach (var disposable in _disposables)
+            {
+                disposable.Dispose();
+            }
+        }
+    }
+
+    public interface IConnectableObservable<T> : IObservable<T>
+    {
+        IDisposable Connect();
+    }
+
+    public class AnonymousConnectableObservable<T> : IConnectableObservable<T>
+    {
+        private readonly Func<IObserver<T>, IDisposable> _subscribe;
+
+        public AnonymousConnectableObservable(Func<IObserver<T>, IDisposable> subscribe)
+        {
+            _subscribe = subscribe;
+        }
+
+        public IDisposable Connect()
+        {
+            return _subscribe(new AnonymousObserver<T>(_ => { }, _ => { }, () => { }));
+        }
+
+        public IDisposable Subscribe(IObserver<T> observer)
+        {
+            return _subscribe(observer);
+        }
+    }
 }

@@ -7,71 +7,143 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.Reactive
 {
-    public static partial class ObservableExtensions
+    public class a 
     {
-        public static IObservable<string> SendAndReceive(this IObservable<string> source, TcpClientWrapper client)
+        public void Main()
         {
-            return new AnonymousObservable<string>(observer =>
+            var tcpClient = new ObservableTcpClient();
+
+            // サーバに接続し、メッセージを送信して、応答を受信
+            var tcpStream = tcpClient.Connect("localhost", 8080)
+                                     .SelectMany(_ => tcpClient.SendAndReceive("Hello, Server!"))
+                                     .SelectMany(_ => tcpClient.SendAndReceive("Another Message"))
+                                     .SelectMany(_ => tcpClient.Disconnect());
+
+            // ストリームに購読
+            var subscription = tcpStream.Subscribe(
+                onNext: result => Console.WriteLine($"Sent: {result.sent}, Received: {result.received}"),
+                onError: ex => Console.WriteLine($"Error: {ex.Message}"),
+                onCompleted: () => Console.WriteLine("Communication completed")
+            );
+
+            Console.ReadLine(); // 実行の維持
+        }
+    }
+
+
+    public class ObservableTcpClient : IDisposable
+    {
+        private readonly TcpClient _tcpClient;
+        private NetworkStream _networkStream;
+
+        public ObservableTcpClient()
+        {
+            _tcpClient = new TcpClient();
+        }
+
+        public IObservable<bool> Connect(string host, int port)
+        {
+            return new AnonymousObservable<bool>(async observer =>
             {
-                return source.Subscribe(async message =>
+                try
                 {
-                    try
-                    {
-                        string response = await client.SendAndReceiveAsync(message);
-                        observer.OnNext(response); // 受信したメッセージを発行
-                    }
-                    catch (Exception ex)
-                    {
-                        observer.OnError(ex);
-                    }
-                },
-                error => observer.OnError(error),
-                () => observer.OnCompleted());
+                    await _tcpClient.ConnectAsync(host, port);
+                    _networkStream = _tcpClient.GetStream();
+                    observer.OnNext(true);
+                    observer.OnCompleted();
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }
+                return Disposable.Empty;
             });
         }
 
-        public static IObservable<string> Send(this IObservable<string> source, TcpClientWrapper client)
+        public IObservable<int> Send(string message)
         {
-            return new AnonymousObservable<string>(observer =>
+            return new AnonymousObservable<int>(async observer =>
             {
-                return source.Subscribe(async message =>
+                try
                 {
-                    try
-                    {
-                        await client.SendAsync(message);
-                        observer.OnNext(message); // 成功したメッセージを発行
-                    }
-                    catch (Exception ex)
-                    {
-                        observer.OnError(ex);
-                    }
-                },
-                error => observer.OnError(error),
-                () => observer.OnCompleted());
+                    if (_networkStream == null)
+                        throw new InvalidOperationException("Not connected to the server.");
+
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    await _networkStream.WriteAsync(data, 0, data.Length);
+                    observer.OnNext(data.Length);
+                    observer.OnCompleted();
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }
+                return Disposable.Empty;
             });
         }
 
-        public static IObservable<string> Receive(this IObservable<Unit> trigger, TcpClientWrapper client)
+        public IObservable<string> Receive()
         {
-            return new AnonymousObservable<string>(observer =>
+            return new AnonymousObservable<string>(async observer =>
             {
-                return trigger.Subscribe(async _ =>
+                try
                 {
-                    try
-                    {
-                        string receivedMessage = await client.ReceiveAsync();
-                        observer.OnNext(receivedMessage); // 受信したメッセージを発行
-                    }
-                    catch (Exception ex)
-                    {
-                        observer.OnError(ex);
-                    }
-                },
-                error => observer.OnError(error),
-                () => observer.OnCompleted());
+                    if (_networkStream == null)
+                        throw new InvalidOperationException("Not connected to the server.");
+
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
+                    string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    observer.OnNext(receivedData);
+                    observer.OnCompleted();
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }
+                return Disposable.Empty;
             });
         }
 
+        public IObservable<(string sent, string received)> SendAndReceive(string message)
+        {
+            return new AnonymousObservable<(string sent, string received)>(observer =>
+            {
+                var sendObservable = Send(message);
+                var receiveObservable = Receive();
 
+                return sendObservable.SelectMany(_ => receiveObservable)
+                                     .Subscribe(
+                                         received => observer.OnNext((message, received)),
+                                         observer.OnError,
+                                         observer.OnCompleted
+                                     );
+            });
+        }
+
+        public IObservable<bool> Disconnect()
+        {
+            return new AnonymousObservable<bool>(observer =>
+            {
+                try
+                {
+                    _networkStream?.Close();
+                    _tcpClient.Close();
+                    observer.OnNext(true);
+                    observer.OnCompleted();
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }
+                return Disposable.Empty;
+            });
+        }
+
+        public void Dispose()
+        {
+            _networkStream?.Dispose();
+            _tcpClient?.Dispose();
+        }
     }
 }
