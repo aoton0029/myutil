@@ -139,3 +139,64 @@ public static class ObservableExtensions
         });
     }
 }
+
+
+using System;
+using System.Collections.Generic;
+
+public class ConnectableObservable<T> : IConnectableObservable<T>
+{
+    private readonly IObservable<T> _source;
+    private readonly List<IObserver<T>> _observers = new List<IObserver<T>>();
+    private IDisposable _connection;
+    private bool _connected = false;
+
+    public ConnectableObservable(IObservable<T> source)
+    {
+        _source = source;
+    }
+
+    public IDisposable Subscribe(IObserver<T> observer)
+    {
+        _observers.Add(observer);
+        return Disposable.Create(() => _observers.Remove(observer));
+    }
+
+    public IDisposable Connect()
+    {
+        if (!_connected)
+        {
+            _connection = _source.Subscribe(
+                onNext: value =>
+                {
+                    foreach (var observer in _observers)
+                    {
+                        observer.OnNext(value);
+                    }
+                },
+                onError: ex =>
+                {
+                    foreach (var observer in _observers)
+                    {
+                        observer.OnError(ex);
+                    }
+                },
+                onCompleted: () =>
+                {
+                    foreach (var observer in _observers)
+                    {
+                        observer.OnCompleted();
+                    }
+                });
+
+            _connected = true;
+        }
+
+        return Disposable.Create(() =>
+        {
+            _connection.Dispose();
+            _connected = false;
+        });
+    }
+}
+
