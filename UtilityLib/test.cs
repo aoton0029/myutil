@@ -200,3 +200,46 @@ public class ConnectableObservable<T> : IConnectableObservable<T>
     }
 }
 
+class Program
+{
+    static void Main()
+    {
+        var observable = new AnonymousObservable<int>(observer =>
+        {
+            Console.WriteLine("Subscribed");
+            for (int i = 0; i < 5; i++)
+            {
+                observer.OnNext(i);
+                Thread.Sleep(1000); // データが流れる間隔
+            }
+            observer.OnCompleted();
+            return Disposable.Empty;
+        });
+
+        // Publishして、複数のサブスクライバが同じデータストリームを共有できるようにする
+        var connectable = observable.Publish();
+
+        // サブスクリプション1
+        var subscription1 = connectable.Subscribe(
+            onNext: value => Console.WriteLine($"Subscription 1: {value}"),
+            onCompleted: () => Console.WriteLine("Subscription 1 Completed")
+        );
+
+        // サブスクリプション2
+        var subscription2 = connectable.Subscribe(
+            onNext: value => Console.WriteLine($"Subscription 2: {value}"),
+            onCompleted: () => Console.WriteLine("Subscription 2 Completed")
+        );
+
+        // データの送出を開始
+        var connection = connectable.Connect();
+
+        // 少し待って購読を解除
+        Thread.Sleep(5000);
+        subscription1.Dispose();
+        subscription2.Dispose();
+        connection.Dispose(); // 全ての購読が解除されたら購読を停止
+
+        Console.ReadLine();
+    }
+}
