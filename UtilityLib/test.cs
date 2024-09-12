@@ -366,4 +366,42 @@ public static Func<T1, IObservable<TResult>> ToAsync<T1, TResult>(Func<T1, TResu
 }
 
 
+public static class ObservableExtensions
+{
+    public static IObservable<T> Concat<T>(params IObservable<T>[] sources)
+    {
+        return new AnonymousObservable<T>(observer =>
+        {
+            int currentIndex = 0;
+            IDisposable currentSubscription = null;
 
+            Action subscribeToNext = null;
+
+            subscribeToNext = () =>
+            {
+                if (currentIndex >= sources.Length)
+                {
+                    observer.OnCompleted();
+                    return;
+                }
+
+                currentSubscription = sources[currentIndex].Subscribe(
+                    onNext: value => observer.OnNext(value),
+                    onError: ex => observer.OnError(ex),
+                    onCompleted: () =>
+                    {
+                        currentIndex++;
+                        subscribeToNext();
+                    }
+                );
+            };
+
+            subscribeToNext();
+
+            return Disposable.Create(() =>
+            {
+                currentSubscription?.Dispose();
+            });
+        });
+    }
+}
