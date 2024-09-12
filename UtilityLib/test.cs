@@ -252,4 +252,74 @@ public static class ObservableExtensions
     }
 }
 
+public static IObservable<long> Timer(TimeSpan dueTime, TimeSpan? period = null)
+{
+    return new AnonymousObservable<long>(observer =>
+    {
+        var count = 0L;
+        var timer = new System.Timers.Timer(dueTime.TotalMilliseconds);
+        
+        timer.Elapsed += (sender, args) =>
+        {
+            observer.OnNext(count++);
+            if (period.HasValue)
+            {
+                timer.Interval = period.Value.TotalMilliseconds;
+            }
+            else
+            {
+                observer.OnCompleted();
+                timer.Stop();
+            }
+        };
+
+        timer.Start();
+
+        return Disposable.Create(() => timer.Stop());
+    });
+}
+
+public static IObservable<T> Throw<T>(Exception error)
+{
+    return new AnonymousObservable<T>(observer =>
+    {
+        observer.OnError(error);
+        return Disposable.Empty;
+    });
+}
+
+public static IObservable<T> SubscribeOn<T>(this IObservable<T> source, TaskScheduler scheduler)
+{
+    return new AnonymousObservable<T>(observer =>
+    {
+        var task = Task.Factory.StartNew(() => source.Subscribe(observer), CancellationToken.None, TaskCreationOptions.None, scheduler);
+        return Disposable.Create(() => task.Dispose());
+    });
+}
+
+public static IObservable<T> Finally<T>(this IObservable<T> source, Action finallyAction)
+{
+    return new AnonymousObservable<T>(observer =>
+    {
+        var subscription = source.Subscribe(observer);
+        return Disposable.Create(() =>
+        {
+            try
+            {
+                subscription.Dispose();
+            }
+            finally
+            {
+                finallyAction();
+            }
+        });
+    });
+}
+
+public static IObservable<T> Create<T>(Func<IObserver<T>, IDisposable> subscribe)
+{
+    return new AnonymousObservable<T>(subscribe);
+}
+
+
 
