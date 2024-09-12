@@ -321,5 +321,49 @@ public static IObservable<T> Create<T>(Func<IObserver<T>, IDisposable> subscribe
     return new AnonymousObservable<T>(subscribe);
 }
 
+public static Func<IObservable<TResult>> ToAsync<TResult>(Func<TResult> function)
+{
+    return () => new AnonymousObservable<TResult>(observer =>
+    {
+        Task.Run(() =>
+        {
+            try
+            {
+                var result = function();
+                observer.OnNext(result);
+                observer.OnCompleted();
+            }
+            catch (Exception ex)
+            {
+                observer.OnError(ex);
+            }
+        });
+
+        return Disposable.Empty;
+    });
+}
+
+public static Func<T1, IObservable<TResult>> ToAsync<T1, TResult>(Func<T1, TResult> function)
+{
+    return arg1 => new AnonymousObservable<TResult>(observer =>
+    {
+        Task.Run(() =>
+        {
+            try
+            {
+                var result = function(arg1);
+                observer.OnNext(result);
+                observer.OnCompleted();
+            }
+            catch (Exception ex)
+            {
+                observer.OnError(ex);
+            }
+        });
+
+        return Disposable.Empty;
+    });
+}
+
 
 
