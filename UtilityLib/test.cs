@@ -243,3 +243,13 @@ class Program
         Console.ReadLine();
     }
 }
+
+public static class ObservableExtensions
+{
+    public static IConnectableObservable<T> Publish<T>(this IObservable<T> source)
+    {
+        return new ConnectableObservable<T>(source);
+    }
+}
+
+
