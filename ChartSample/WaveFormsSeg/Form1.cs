@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using static ChartSample.WaveFormsSeg.WaveformSegment;
+using static ChartSample.WaveFormsSeg.WaveformStep;
 
 namespace ChartSample.WaveFormsSeg
 {
@@ -17,105 +17,56 @@ namespace ChartSample.WaveFormsSeg
         public Form1()
         {
             InitializeComponent();
+            InitializeChart();
+            // サンプルのWaveformStepリストを作成
+            List<WaveformStep> steps = new List<WaveformStep>()
+            {
+                // 1秒間、周波数が10Hzから20Hzにリニアスイープする正弦波
+                new WaveformStep(1.0, 10, 20, 1.0, 0, WaveformType.Sine, SweepShape.Linear),
+    
+                // 2秒間、周波数が5Hzから50Hzにログスイープする矩形波
+                new WaveformStep(2.0, 5, 50, 0.5, 1.0, WaveformType.Square, SweepShape.Logarithmic),
+            };
 
-            DisplayWaveform(CreateSampleData());
+            // シーケンスを生成
+            WaveformSequence sequence = new WaveformSequence(steps, 1000);  // 1000Hzのサンプルレート
+
+            // 全区間のシーケンスデータを生成
+            List<double> data = sequence.GenerateFullSequence();
+
+            // 生成したデータをチャートに表示
+            PlotWaveform(data, 1000);
         }
 
-        private WaveformSequence CreateSampleData()
+        private void InitializeChart()
         {
-            var sequence = new WaveformSequence();
+            chart1.Series.Clear();
+            ChartArea chartArea = new ChartArea("WaveformArea");
+            chart1.ChartAreas.Add(chartArea);
 
-            // 正弦波セグメント
-            WaveformSegment sineSegment = new WaveformSegment
-            {
-                Period = 1.0,
-                Frequency = 1.0,
-                Amplitude = 5.0,
-                StartSeconds = 0,
-                EndSeconds = 5,
-                WaveType = WaveformType.Sine
-            };
-            sequence.Segments.Add( sineSegment );
-
-            // 矩形波セグメント
-            WaveformSegment squareSegment = new WaveformSegment
-            {
-                Period = 1.0,
-                Frequency = 1.0,
-                Amplitude = 5.0,
-                StartSeconds = 5,
-                EndSeconds = 10,
-                WaveType = WaveformType.Square
-            };
-            sequence.Segments.Add(squareSegment);
-
-            // 三角波セグメント
-            WaveformSegment triangleSegment = new WaveformSegment
-            {
-                Period = 1.0,
-                Frequency = 1.0,
-                Amplitude = 5.0,
-                StartSeconds = 10,
-                EndSeconds = 15,
-                WaveType = WaveformType.Triangle
-            };
-            sequence.Segments.Add(triangleSegment);
-
-            // 方形波セグメント
-            WaveformSegment sawtoothSegment = new WaveformSegment
-            {
-                Period = 1.0,
-                Frequency = 1.0,
-                Amplitude = 5.0,
-                StartSeconds = 15,
-                EndSeconds = 20,
-                WaveType = WaveformType.Sawtooth
-            };
-            sequence.Segments.Add(sawtoothSegment);
-
-            return sequence;
-        }
-
-        private void DisplayWaveform(WaveformSequence sequence)
-        {
-            var chart = chart1;
-            var chartArea = new ChartArea();
-
-            var series = new Series
+            Series waveformSeries = new Series("Waveform")
             {
                 ChartType = SeriesChartType.Line
             };
 
-            // 波形データの追加と最小値、最大値の計算
-            var waveformData = sequence.GenerateWaveformSequence();
-            double minValue = double.MaxValue;
-            double maxValue = double.MinValue;
+            chart1.Series.Add(waveformSeries);
+            this.Controls.Add(chart1);
+        }
 
-            foreach (var point in waveformData)
+        // 波形データを生成してChartに表示
+        private void PlotWaveform(List<double> waveformData, double sampleRate)
+        {
+            var series = chart1.Series["Waveform"];
+            series.Points.Clear();  // 前のデータをクリア
+
+            double time = 0;
+            double timeStep = 1.0 / sampleRate;
+
+            for (int i = 0; i < waveformData.Count; i++)
             {
-                series.Points.AddXY(point.Time, point.Value);
-                if (point.Value < minValue) minValue = point.Value;
-                if (point.Value > maxValue) maxValue = point.Value;
+                series.Points.AddXY(time, waveformData[i]);
+                time += timeStep;
             }
-
-            // Y軸の最小値、最大値の1.1倍を設定
-            double rangePadding = 0.1 * Math.Max(Math.Abs(maxValue), Math.Abs(minValue));
-            chartArea.AxisY.Minimum = minValue - rangePadding;
-            chartArea.AxisY.Maximum = maxValue + rangePadding;
-
-            // X軸、Y軸の自動調整を有効化
-            chartArea.AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
-            chartArea.AxisY.IntervalAutoMode = IntervalAutoMode.VariableCount;
-
-            // Y軸の0を常に表示
-            chartArea.AxisY.Crossing = 0;
-
-            chart.ChartAreas.Add(chartArea);
-            chart.Series.Add(series);
-            chart.Dock = DockStyle.Fill;
-
-            // フォームのPanelにチャートを追加
-            this.Controls.Add(chart);
         }
     }
 }
