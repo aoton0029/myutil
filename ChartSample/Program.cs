@@ -16,7 +16,7 @@ namespace ChartSample
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new WaveFormsSeg.Form1());
+            Application.Run(new Form2());
         }
     }
 }
