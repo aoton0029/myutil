@@ -139,5 +139,41 @@ namespace ChartSample
 
             return waveform;
         }
+
+        public List<decimal> GenerateWaveform()
+        {
+            int totalSamples = (int)(_duration * _sampleRate);  // 総サンプル数を計算
+            List<decimal> waveform = new List<decimal>(totalSamples);
+
+            for (int i = 0; i < totalSamples; i++)
+            {
+                decimal time = (decimal)i / _sampleRate;  // 時間を計算
+
+                // 周波数の計算
+                decimal freq = _isSweepFreq ? _startFreq + (_stopFreq - _startFreq) * time / _duration : _startFreq;
+                decimal angle = 2 * (decimal)Math.PI * freq * time;
+
+                // 波形の基礎値（正弦波を例に）
+                decimal baseValue = 0;
+                if (_wavetype == "Sine")
+                {
+                    baseValue = (decimal)Math.Sin((double)angle);
+                }
+                // 他の波形（例えばSquare, Triangleなど）もここに追加可能
+
+                // 振幅の適用
+                decimal amplitude = _isSweepAmpl ? _startAmpl + (_stopAmpl - _startAmpl) * time / _duration : _startAmpl;
+                baseValue *= amplitude;
+
+                // DCオフセットの適用
+                decimal dcOffset = _isSweepDcOffset ? _startDcOffset + (_stopDcOffset - _startDcOffset) * time / _duration : _startDcOffset;
+                baseValue += dcOffset;
+
+                // 最終的な波形値をリストに追加
+                waveform.Add(baseValue);
+            }
+
+            return waveform;
+        }
     }
 }
