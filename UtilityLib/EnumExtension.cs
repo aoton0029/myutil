@@ -82,6 +82,20 @@ namespace UtilityLib
             column.DisplayMember = "Key";
             column.ValueMember = "Value";
         }
+
+        static List<T> TrigsrcsOfBitfield<T>(int bf) where T : Enum
+        {
+            var r = new List<T>();
+            var trigger_values = (T[])Enum.GetValues(typeof(T));
+            foreach (var tv in trigger_values)
+            {
+                if ((bf & (1 << (int)tv)) != 0)
+                {
+                    r.Add(tv);
+                }
+            }
+            return r;
+        }
     }
 
     public class EnumListView<TEnum> : ReadOnlyObservableCollection<TEnum> where TEnum : struct, Enum
