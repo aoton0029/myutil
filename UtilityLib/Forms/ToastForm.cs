@@ -8,7 +8,7 @@ namespace UtilityLib.Forms
 {
     public class ToastForm : Form
     {
-        private System.Timers.Timer timer;
+        private System.Windows.Forms.Timer timer;
 
         public ToastForm(string message, int duration = 3000)
         {
@@ -29,7 +29,7 @@ namespace UtilityLib.Forms
             this.Controls.Add(label);
 
             // タイマーを設定して自動的に閉じるようにする
-            timer = new System.Timers.Timer();
+            timer = new System.Windows.Forms.Timer();
             timer.Interval = duration;
             timer.Tick += (s, e) => { this.Close(); };
             timer.Start();

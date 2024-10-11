@@ -41,6 +41,7 @@ namespace UtilityLib.Results
         public bool IsSuccess => !IsFailure;
 
         private readonly string _error;
+
         public string Error => ResultCommonLogic.GetErrorWithSuccessGuard(IsFailure, _error);
 
         private Result(bool isFailure, string error)
@@ -139,6 +140,21 @@ namespace UtilityLib.Results
         }
     }
 
+    [Serializable]
+    internal class ResultFailureException : Exception
+    {
+        public ResultFailureException()
+        {
+        }
+
+        public ResultFailureException(string? message) : base(message)
+        {
+        }
+
+        public ResultFailureException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
+    }
 
     public readonly partial struct Result<T, E> : IResult<T, E>, ISerializable
     {
@@ -206,4 +222,26 @@ namespace UtilityLib.Results
         }
     }
 
+    [Serializable]
+    internal class ResultFailureException<E> : Exception
+    {
+        private E? error;
+
+        public ResultFailureException()
+        {
+        }
+
+        public ResultFailureException(E? error)
+        {
+            this.error = error;
+        }
+
+        public ResultFailureException(string? message) : base(message)
+        {
+        }
+
+        public ResultFailureException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
+    }
 }

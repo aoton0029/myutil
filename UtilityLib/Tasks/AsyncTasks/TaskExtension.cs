@@ -9,6 +9,32 @@ namespace UtilityLib.Tasks.AsyncTasks
 {
     public static class TaskExtensions
     {
+        public static void WaitAndUnwrapException(this Task task)
+        {
+            try
+            {
+                task.Wait(); // Blocking wait
+            }
+            catch (AggregateException ex)
+            {
+                // Unwrap the first inner exception
+                throw ex.InnerException ?? ex;
+            }
+        }
+
+        public static T WaitAndUnwrapException<T>(this Task<T> task)
+        {
+            try
+            {
+                return task.Result; // Blocking wait with result
+            }
+            catch (AggregateException ex)
+            {
+                // Unwrap the first inner exception
+                throw ex.InnerException ?? ex;
+            }
+        }
+
         public static Task WaitAsync(this Task @this, CancellationToken cancellationToken)
         {
             if (!cancellationToken.CanBeCanceled)

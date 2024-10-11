@@ -27,8 +27,8 @@ namespace UtilityLib.Results
             if (ReferenceEquals(this, other))
                 return true;
 
-            if (ValueObject.GetUnproxiedType(this) != ValueObject.GetUnproxiedType(other))
-                return false;
+            //if (ValueObject.GetUnproxiedType(this) != ValueObject.GetUnproxiedType(other))
+            //    return false;
 
             if (IsTransient() || other.IsTransient())
                 return false;
@@ -57,10 +57,10 @@ namespace UtilityLib.Results
             return !(a == b);
         }
 
-        public override int GetHashCode()
-        {
-            return (ValueObject.GetUnproxiedType(this).ToString() + Id).GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return (ValueObject.GetUnproxiedType(this).ToString() + Id).GetHashCode();
+        //}
 
         public virtual int CompareTo(Entity<TId> other)
         {

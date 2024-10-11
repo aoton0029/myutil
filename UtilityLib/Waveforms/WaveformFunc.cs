@@ -85,11 +85,16 @@ namespace UtilityLib.Waveforms
 
         public double Phase { get; }
 
-        public bool Equals(WaveformParameters other) => this.BinaryEquals(other);
+        //public bool Equals(WaveformParameters other) => this.BinaryEquals(other);
 
         public override bool Equals(object? obj) => (obj is WaveformParameters other) && this.Equals(other);
 
-        public override int GetHashCode() => this.GetBinaryHashCode();
+        bool IEquatable<WaveformParameters>.Equals(WaveformParameters other)
+        {
+            throw new NotImplementedException();
+        }
+
+        //public override int GetHashCode() => this.GetBinaryHashCode();
 
         public static bool operator ==(WaveformParameters left, WaveformParameters right) => left.Equals(right);
 

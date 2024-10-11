@@ -67,7 +67,7 @@ namespace UtilityLib.Tasks
 
         public virtual void Output<T>(string title, IEnumerable<T> data)
         {
-            Output(title, StringUtils.Join(Environment.NewLine, data.Select(x => x?.ToString() ?? "")));
+            Output(title, string.Join(Environment.NewLine, data.Select(x => x?.ToString() ?? "")));
         }
 
         public abstract void Error(Exception exception);

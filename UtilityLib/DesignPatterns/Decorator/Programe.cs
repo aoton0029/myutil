@@ -29,7 +29,7 @@ namespace UtilityLib.DesignPatterns.Decorator
 
             // Convert decompressed data back to string
             string decompressedString = System.Text.Encoding.UTF8.GetString(decompressedData);
-            Console.WriteLine($"Decompressed data: {decompressedString}")
+            Console.WriteLine($"Decompressed data: {decompressedString}");
         }
     }
 }

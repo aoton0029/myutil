@@ -44,7 +44,7 @@ public class TouchManager
         RegisterTouchWindow(_control.Handle, 0);
         _control.HandleCreated += (s, e) => RegisterTouchWindow(_control.Handle, 0);
         _control.HandleDestroyed += (s, e) => UnregisterTouchWindow(_control.Handle);
-        _control.WndProc += new WndProcDelegate(WndProc);
+        //_control.WndProc += new WndProcDelegate(WndProc);
     }
 
     private void WndProc(ref Message m)

@@ -75,16 +75,16 @@ namespace UtilityLib.Results
 
         internal static bool ErrorStateGuard<E>(bool isFailure, E error)
         {
-            if (isFailure)
-            {
-                if (error == null || (error is string && error.Equals(string.Empty)))
-                    throw new ArgumentNullException(nameof(error), Result.Messages.ErrorObjectIsNotProvidedForFailure);
-            }
-            else
-            {
-                if (!EqualityComparer<E>.Default.Equals(error, default))
-                    throw new ArgumentException(Result.Messages.ErrorObjectIsProvidedForSuccess, nameof(error));
-            }
+            //if (isFailure)
+            //{
+            //    if (error == null || (error is string && error.Equals(string.Empty)))
+            //        throw new ArgumentNullException(nameof(error), Result.Messages.ErrorObjectIsNotProvidedForFailure);
+            //}
+            //else
+            //{
+            //    if (!EqualityComparer<E>.Default.Equals(error, default))
+            //        throw new ArgumentException(Result.Messages.ErrorObjectIsProvidedForSuccess, nameof(error));
+            //}
 
             return isFailure;
         }
@@ -102,4 +102,19 @@ namespace UtilityLib.Results
         }
     }
 
+    [Serializable]
+    internal class ResultSuccessException : Exception
+    {
+        public ResultSuccessException()
+        {
+        }
+
+        public ResultSuccessException(string? message) : base(message)
+        {
+        }
+
+        public ResultSuccessException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
+    }
 }

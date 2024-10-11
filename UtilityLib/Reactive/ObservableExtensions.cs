@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,10 +11,10 @@ namespace UtilityLib.Reactive
     {
         public static IObserver<T> Observer<T>(Action<T> onNext, Action<Exception>? onError = null, Action? onCompleted = null) => new DelegatingObserver<T>(onNext, onError, onCompleted);
 
-        public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception>? onError = null, Action? onCompleted = null) =>
-            source == null
-            ? throw new ArgumentNullException(nameof(source))
-            : source.Subscribe(Observer(onNext, onError, onCompleted));
+        //public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception>? onError = null, Action? onCompleted = null) =>
+        //    source == null
+        //    ? throw new ArgumentNullException(nameof(source))
+        //    : source.Subscribe(Observer(onNext, onError, onCompleted));
 
 
         // Where: フィルタリングする拡張メソッド

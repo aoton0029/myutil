@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartSample", "ChartSample\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveSample", "ReactiveSample\ReactiveSample.csproj", "{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleTcpClient", "SampleTcpClient\SampleTcpClient.csproj", "{A3F12D13-02F9-4C27-9DA6-0B87A9BAA838}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{162FE0FA-49EC-4FE3-81D6-C9DEBA7C1134}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3F12D13-02F9-4C27-9DA6-0B87A9BAA838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F12D13-02F9-4C27-9DA6-0B87A9BAA838}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F12D13-02F9-4C27-9DA6-0B87A9BAA838}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F12D13-02F9-4C27-9DA6-0B87A9BAA838}.Release|Any CPU.Build.0 = Release|Any CPU
+		{162FE0FA-49EC-4FE3-81D6-C9DEBA7C1134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{162FE0FA-49EC-4FE3-81D6-C9DEBA7C1134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{162FE0FA-49EC-4FE3-81D6-C9DEBA7C1134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{162FE0FA-49EC-4FE3-81D6-C9DEBA7C1134}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

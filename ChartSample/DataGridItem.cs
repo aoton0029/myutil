@@ -142,6 +142,8 @@ namespace ChartSample
 
         public List<decimal> GenerateWaveform()
         {
+            int _duration = 0;
+            int _sampleRate = 0;
             int totalSamples = (int)(_duration * _sampleRate);  // 総サンプル数を計算
             List<decimal> waveform = new List<decimal>(totalSamples);
 
