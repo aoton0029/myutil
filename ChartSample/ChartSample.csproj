@@ -54,10 +54,14 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataGridItem.cs" />
+    <Compile Include="Models\ChartItem.cs" />
+    <Compile Include="Models\DataGridItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="WaveFormGenerator.cs" />
+    <Compile Include="WaveFormMng.cs" />
+    <Compile Include="_WaveFormMng.cs" />
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
@@ -88,8 +92,6 @@
       <Version>0.9.7.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

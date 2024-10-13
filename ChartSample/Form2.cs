@@ -1,4 +1,6 @@
-﻿using ChartSample.WaveFormsSeg;
+﻿using ChartSample.Models;
+using LiveCharts.Wpf;
+using LiveCharts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,26 +10,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ChartSample
 {
     public partial class Form2 : Form
     {
         BindingSource bindingSource;
-        BindingList<DataGridItem> items;
+        WaveFormMng _mng = new WaveFormMng();
+        List<double> points;
 
         public Form2()
         {
             InitializeComponent();
 
             DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)grid.Columns[0];
-            comboBoxColumn.SetEnumDataSource<WaveformType>();
+            comboBoxColumn.SetEnumDataSource<Common.WaveformType>();
 
             bindingSource = new BindingSource();
-            items = new BindingList<DataGridItem>();
-            bindingSource.DataSource = items;
+            bindingSource.DataSource = _mng.datas;
             grid.DataSource = bindingSource;
             bindingSource.ListChanged += BindingSource_ListChanged;
+
+            
 
         }
 
@@ -52,7 +57,20 @@ namespace ChartSample
             DataGridItem changedItem = sender as DataGridItem;
             if (changedItem != null)
             {
-                //MessageBox.Show($"Property {e.PropertyName} changed on item {changedItem.WaveType}");
+                Debug.WriteLine($"Property {e.PropertyName} changed on item {changedItem.WaveType}");
+                List<ChartItem> c =  _mng.Generate();
+                cartesianChart1.Series = new SeriesCollection
+                {
+                    new LineSeries
+                    {
+                        Title = "Series 1",
+                        Values = new ChartValues<double>(c.Select(x => x.Value)),
+                        Stroke = System.Windows.Media.Brushes.Blue,    // 線の色
+                        Fill = System.Windows.Media.Brushes.Transparent,  // 塗りつぶしを透明に
+                        StrokeThickness = 2,   // 線の太さ
+                        PointGeometry = null,  // データポイントを非表示に
+                    }
+                };
             }
         }
 
