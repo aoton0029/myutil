@@ -37,14 +37,14 @@
             frame1.Location = new Point(0, 0);
             frame1.Margin = new Padding(0);
             frame1.Name = "frame1";
-            frame1.Size = new Size(1184, 681);
+            frame1.Size = new Size(1384, 761);
             frame1.TabIndex = 0;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1184, 681);
+            ClientSize = new Size(1384, 761);
             Controls.Add(frame1);
             Name = "Form1";
             Text = "Form1";

@@ -74,9 +74,9 @@
             // 
             groupBox1.Controls.Add(button4);
             groupBox1.Font = new Font("Yu Gothic UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            groupBox1.Location = new Point(36, 511);
+            groupBox1.Location = new Point(36, 497);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(1044, 162);
+            groupBox1.Size = new Size(1044, 176);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "メンテナンス";

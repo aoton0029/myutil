@@ -24,7 +24,7 @@ namespace PrintSample.Pages
 
         private void button2_Click(object sender, EventArgs e)
         {
-            NavigationService.Instance.Navigate(new ());
+            NavigationService.Instance.Navigate(new UcManager());
         }
     }
 }

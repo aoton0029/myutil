@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PrintSample.Pages
+namespace PrintSample
 {
-    public partial class UcManager : UcPage
+    public partial class UcSeal : UserControl
     {
-        public UcManager()
+        public UcSeal()
         {
             InitializeComponent();
         }
