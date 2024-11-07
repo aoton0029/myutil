@@ -1,0 +1,159 @@
+TableLayoutPanelとTimerを使ったページング機能を持つ汎用的なUserControlを作成します。このUserControlを他のフォームやコントロールに配置して、どのUserControlリストでもページングできるようにします。
+
+1. PageControlPanel クラスの作成
+
+以下のコードでは、PageControlPanelという名前のカスタムUserControlを作成します。このコントロールには、ページングするためのTableLayoutPanelと「次へ」「前へ」のボタンが含まれています。
+
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+public partial class PageControlPanel : UserControl
+{
+    private List<UserControl> userControls; // 表示するUserControlのリスト
+    private int currentPage = 0;            // 現在のページ
+    private int totalPages;                 // 総ページ数
+    private int rows;                       // 行数
+    private int columns;                    // 列数
+    private Timer timer;
+
+    public PageControlPanel()
+    {
+        InitializeComponent();
+
+        // 次へ・前へボタンのイベント設定
+        btnNext.Click += (s, e) => GoToNextPage();
+        btnPrevious.Click += (s, e) => GoToPreviousPage();
+    }
+
+    // UserControlのリストを設定し、行数・列数を指定する
+    public void Initialize(List<UserControl> controls, int rowCount, int colCount, int intervalMs = 5000)
+    {
+        userControls = controls;
+        rows = rowCount;
+        columns = colCount;
+
+        // ページ総数の計算
+        int itemsPerPage = rows * columns;
+        totalPages = (int)Math.Ceiling((double)userControls.Count / itemsPerPage);
+
+        // TableLayoutPanelの設定
+        SetupTableLayoutPanel();
+
+        // 初期ページを表示
+        DisplayCurrentPage();
+
+        // タイマーの設定
+        timer = new Timer { Interval = intervalMs };
+        timer.Tick += (s, e) => GoToNextPage();
+        timer.Start();
+    }
+
+    private void SetupTableLayoutPanel()
+    {
+        tableLayoutPanel.Controls.Clear();
+        tableLayoutPanel.RowCount = rows;
+        tableLayoutPanel.ColumnCount = columns;
+        
+        // 行と列のサイズを設定
+        tableLayoutPanel.RowStyles.Clear();
+        tableLayoutPanel.ColumnStyles.Clear();
+        
+        for (int i = 0; i < rows; i++)
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
+        
+        for (int j = 0; j < columns; j++)
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / columns));
+    }
+
+    private void DisplayCurrentPage()
+    {
+        tableLayoutPanel.Controls.Clear();
+        int startIndex = currentPage * rows * columns;
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                int index = startIndex + i * columns + j;
+                if (index >= userControls.Count) return;
+                var userControl = userControls[index];
+                tableLayoutPanel.Controls.Add(userControl, j, i);
+            }
+        }
+    }
+
+    private void GoToNextPage()
+    {
+        currentPage = (currentPage + 1) % totalPages;
+        DisplayCurrentPage();
+    }
+
+    private void GoToPreviousPage()
+    {
+        currentPage = (currentPage - 1 + totalPages) % totalPages;
+        DisplayCurrentPage();
+    }
+}
+
+2. デザイナーコードの追加
+
+PageControlPanelのデザインにTableLayoutPanelとボタンを追加します。
+
+partial class PageControlPanel
+{
+    private TableLayoutPanel tableLayoutPanel;
+    private Button btnNext;
+    private Button btnPrevious;
+
+    private void InitializeComponent()
+    {
+        this.tableLayoutPanel = new TableLayoutPanel();
+        this.btnNext = new Button();
+        this.btnPrevious = new Button();
+
+        // TableLayoutPanelの設定
+        this.tableLayoutPanel.Dock = DockStyle.Fill;
+        this.Controls.Add(this.tableLayoutPanel);
+
+        // 次へボタンの設定
+        this.btnNext.Text = "Next";
+        this.btnNext.Dock = DockStyle.Bottom;
+        this.Controls.Add(this.btnNext);
+
+        // 前へボタンの設定
+        this.btnPrevious.Text = "Previous";
+        this.btnPrevious.Dock = DockStyle.Bottom;
+        this.Controls.Add(this.btnPrevious);
+    }
+}
+
+3. 使用方法
+
+PageControlPanelを任意のフォームに配置して使う場合、以下のように設定します。
+
+public partial class MainForm : Form
+{
+    public MainForm()
+    {
+        InitializeComponent();
+
+        // UserControlリストの作成
+        var controls = new List<UserControl>();
+        for (int i = 0; i < 20; i++)
+        {
+            controls.Add(new MyUserControl()); // MyUserControlはユーザーが定義したカスタムUserControl
+        }
+
+        // PageControlPanelの初期化
+        pageControlPanel.Initialize(controls, rowCount: 3, colCount: 3, intervalMs: 5000);
+    }
+}
+
+4. 説明
+
+Initializeメソッド：外部からUserControlのリストと行数、列数、ページ切り替え間隔を設定するためのメソッドです。
+
+タイマー機能：自動ページ切り替えのためにTimerを使用しています。間隔は引数intervalMs
+
+
