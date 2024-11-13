@@ -15,5 +15,14 @@ namespace UtilityLib
             /// </summary>
             public void Dispose() => callback();
         }
+
+        public static void Dispose<T>(ref T obj) where T : class, IDisposable
+        {
+            if (obj != null)
+            {
+                obj.Dispose();
+                obj = null;
+            }
+        }
     }
 }
