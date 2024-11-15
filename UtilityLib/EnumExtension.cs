@@ -89,10 +89,11 @@ namespace UtilityLib
             var trigger_values = (T[])Enum.GetValues(typeof(T));
             foreach (var tv in trigger_values)
             {
-                if ((bf & (1 << (int)tv)) != 0)
-                {
-                    r.Add(tv);
-                }
+                //int i = (int)tv;
+                //if ((bf & (1 << i)) != 0)
+                //{
+                //    r.Add(tv);
+                //}
             }
             return r;
         }

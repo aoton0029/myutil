@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleTcpClient", "SampleTc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{162FE0FA-49EC-4FE3-81D6-C9DEBA7C1134}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlSample", "ControlSample\ControlSample.csproj", "{083CCED6-1D5C-4076-910E-3A283B1AB554}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlSample", "ControlSample\ControlSample.csproj", "{083CCED6-1D5C-4076-910E-3A283B1AB554}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteLib", "SqliteLib\SqliteLib.csproj", "{857DFDAB-4037-427F-8011-D2C68731A257}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{083CCED6-1D5C-4076-910E-3A283B1AB554}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{083CCED6-1D5C-4076-910E-3A283B1AB554}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{083CCED6-1D5C-4076-910E-3A283B1AB554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{857DFDAB-4037-427F-8011-D2C68731A257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857DFDAB-4037-427F-8011-D2C68731A257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857DFDAB-4037-427F-8011-D2C68731A257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857DFDAB-4037-427F-8011-D2C68731A257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

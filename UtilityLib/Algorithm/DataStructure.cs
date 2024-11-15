@@ -19,11 +19,11 @@ namespace UtilityLib.Algorithm
             public PriorityQueue()
             {
                 // 順序と優先度で比較されるようカスタムコンパレータを指定
-                queue = new SortedSet<(T, int)>(Comparer<(T, int)>.Create((x, y) =>
-                {
-                    //int cmp = x.Item.CompareTo(y.Item);
-                    //return cmp == 0 ? x.Order.CompareTo(y.Order) : cmp;
-                }));
+                //queue = new SortedSet<(T, int)>(Comparer<(T, int)>.Create((x, y) =>
+                //{
+                //    int cmp = x.Item1.CompareTo(y.Item1);
+                //    return cmp == 0 ? x.Order.CompareTo(y.Order) : cmp;
+                //}));
             }
 
             // 要素を追加

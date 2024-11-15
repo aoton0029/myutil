@@ -29,7 +29,7 @@ namespace UtilityLib.Threadings
                 GetWaitHandle().WaitOne();
 
             // close the wait handle
-            DisposableUtility.Dispose(ref m_waitHandle);
+            DisposableHelper.Dispose(ref m_waitHandle);
 
             // rethrow any exception that occurred during processing
             if (m_exception != null)
@@ -124,7 +124,7 @@ namespace UtilityLib.Threadings
                 if (Interlocked.CompareExchange(ref m_waitHandle, mre, null) != null)
                 {
                     // we lost the race to create the event; dispose the unnecessary one
-                    DisposableUtility.Dispose(ref mre);
+                    DisposableHelper.Dispose(ref mre);
                 }
                 else
                 {
