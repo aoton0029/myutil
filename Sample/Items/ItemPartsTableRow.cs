@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sample.UserControls
+namespace Sample.Items
 {
-    public partial class UcParts : UserControl
+    public partial class ItemPartsTableRow : UserControl
     {
-        public UcParts()
+        public ItemPartsTableRow()
         {
             InitializeComponent();
         }

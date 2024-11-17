@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sample.Items
+namespace Sample
 {
-    public partial class ItemRow : UserControl
+    public partial class FormSelectSeihin : Form
     {
-        public ItemRow()
+        public FormSelectSeihin()
         {
             InitializeComponent();
         }

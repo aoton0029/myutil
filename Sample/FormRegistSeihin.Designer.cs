@@ -205,7 +205,7 @@
             button5.Name = "button5";
             button5.Size = new Size(190, 47);
             button5.TabIndex = 23;
-            button5.Text = "他の製品からコピー";
+            button5.Text = "既存製品からコピー";
             button5.UseVisualStyleBackColor = true;
             // 
             // label10
