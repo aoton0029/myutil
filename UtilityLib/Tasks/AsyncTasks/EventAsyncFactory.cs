@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static UtilityLib.Interop;
 
 namespace UtilityLib.Tasks.AsyncTasks
 {
+    public struct EventArguments<TSender, TEventArgs>
+    {
+        public TSender Sender { get; set; }
+        public TEventArgs EventArgs { get; set; }
+    }
+
     public static class EventAsyncFactory
     {
         public static async Task<TEventArguments> FromAnyEvent<TDelegate, TEventArguments>(Func<Action<TEventArguments>, TDelegate> convert,
