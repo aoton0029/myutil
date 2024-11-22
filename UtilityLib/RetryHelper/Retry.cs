@@ -75,6 +75,25 @@ namespace UtilityLib.RetryHelper
             return retryResult.Finish(lastValueOnTimeout ? lastValue : defaultOnTimeout, true);
         }
 
+        public static RetryResult<bool> While(Action retryAction, TimeSpan? timeout = null, TimeSpan? interval = null, bool throwOnTimeout = false, bool ignoreException = false, string timeoutMessage = null)
+        {
+            return While(
+                () =>
+                {
+                    retryAction();
+                    return true; // Actionが成功すればtrueを返す
+                },
+                result => result, // 常にtrueなら終了
+                timeout,
+                interval,
+                throwOnTimeout,
+                ignoreException,
+                timeoutMessage,
+                lastValueOnTimeout: false,
+                defaultOnTimeout: false
+            );
+        }
+
         /// <summary>
         /// Retries while the given method evaluates to true and returns the value from the method.
         /// If it fails, it returns the default of <typeparamref name="T"/>.

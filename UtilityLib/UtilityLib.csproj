@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="swipeform.cs" />
+    <None Include="Input\swipeform.cs" />
   </ItemGroup>
 
 </Project>
