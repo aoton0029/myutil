@@ -37,7 +37,16 @@ namespace UtilityLib.RetryHelper
         /// <param name="lastValueOnTimeout">A flag indicating if the last value should be returned on timeout. Returns the default if the value could never be fetched.</param>
         /// <param name="defaultOnTimeout">Allows to define a default value in case of a timeout.</param>
         /// <returns>The value from <paramref name="retryMethod"/> or the default of <typeparamref name="T"/>.</returns>
-        public static RetryResult<T> While<T>(Func<T> retryMethod, Func<T, bool> checkMethod, TimeSpan? timeout = null, TimeSpan? interval = null, bool throwOnTimeout = false, bool ignoreException = false, string timeoutMessage = null, bool lastValueOnTimeout = false, T defaultOnTimeout = default(T))
+        public static RetryResult<T> While<T>(Func<T> retryMethod
+                                            , Func<T, bool> checkMethod
+                                            , TimeSpan? timeout = null
+                                            , TimeSpan? interval = null
+                                            , bool throwOnTimeout = false
+                                            , bool ignoreException = false
+                                            , string timeoutMessage = null
+                                            , bool lastValueOnTimeout = false
+                                            , T defaultOnTimeout = default(T)
+                                            , int? maxRetries = null)
         {
             var retryResult = new RetryResult<T>();
             timeout = timeout ?? DefaultTimeout;
@@ -45,9 +54,10 @@ namespace UtilityLib.RetryHelper
             var startTime = DateTime.UtcNow;
             Exception lastException = null;
             T lastValue = defaultOnTimeout;
+
             do
             {
-                retryResult.Iterations++;
+                retryResult.RetryCount++;
                 try
                 {
                     lastValue = retryMethod();
@@ -65,8 +75,16 @@ namespace UtilityLib.RetryHelper
                     lastException = ex;
                     retryResult.SetException(ex);
                 }
+
+                if (maxRetries.HasValue && retryResult.RetryCount >= maxRetries.Value)
+                {
+                    return retryResult.Finish(lastValue, true);
+                }
+
                 Thread.Sleep(interval.Value);
-            } while (!IsTimeoutReached(startTime, timeout.Value));
+            } 
+            while (!IsTimeoutReached(startTime, timeout.Value));
+
             if (throwOnTimeout)
             {
                 timeoutMessage = timeoutMessage ?? "Timeout occurred in retry";

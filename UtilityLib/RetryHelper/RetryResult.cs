@@ -71,7 +71,7 @@ namespace UtilityLib.RetryHelper
         /// <summary>
         /// Contains the counter on how many iterations the retry did before returning.
         /// </summary>
-        public long Iterations { get; internal set; }
+        public long RetryCount { get; internal set; }
 
         /// <summary>
         /// Finishes the retry and sets the according values.
