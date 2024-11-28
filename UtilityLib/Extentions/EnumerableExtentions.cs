@@ -8,6 +8,16 @@ namespace UtilityLib
 {
     public static class EnumerableExtentions
     {
+        public static IEnumerable<int> To(this int fromNumber, int toNumber)
+        {
+            while (fromNumber < toNumber)
+            {
+                yield return fromNumber;
+                fromNumber++;
+            }
+        }
+
+
         public static void ForEach<T>(this IEnumerable<T> self, Action<T> action)
         {
             foreach (var item in self)

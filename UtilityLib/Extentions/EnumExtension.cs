@@ -3,17 +3,98 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UtilityLib.Observers;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace UtilityLib
 {
     public static class EnumExtension
     {
+        public static bool Has<T>(this Enum source, params T[] values)
+        {
+            var value = Convert.ToInt32(source, CultureInfo.InvariantCulture);
+
+            foreach (var i in values)
+            {
+                var mask = Convert.ToInt32(i, CultureInfo.InvariantCulture);
+
+                if ((value & mask) == 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static T As<T>(this object value)
+        {
+            return (value != null && value is T) ? (T)value : default(T);
+        }
+
+        public static bool Has<T>(this Enum source, T values)
+        {
+            var value = Convert.ToInt32(source, CultureInfo.InvariantCulture);
+            var mask = Convert.ToInt32(values, CultureInfo.InvariantCulture);
+
+            return (value & mask) != 0;
+        }
+
+        public static T Add<T>(this Enum source, T v)
+        {
+            var value = Convert.ToInt32(source, CultureInfo.InvariantCulture);
+            var mask = Convert.ToInt32(v, CultureInfo.InvariantCulture);
+
+            return Enum.ToObject(typeof(T), value | mask).As<T>();
+        }
+
+        public static T Remove<T>(this Enum source, T v)
+        {
+            var value = Convert.ToInt32(source, CultureInfo.InvariantCulture);
+            var mask = Convert.ToInt32(v, CultureInfo.InvariantCulture);
+
+            return Enum.ToObject(typeof(T), value & ~mask).As<T>();
+        }
+
+        public static T AsEnum<T>(this string value)
+        {
+            try
+            {
+                return Enum.Parse(typeof(T), value, true).As<T>();
+            }
+            catch
+            {
+                return default(T);
+            }
+        }
+
+
+        public enum Status
+        {
+            [Description("Success")]
+            Success = 1,
+
+            [Description("Error")]
+            Error = 2,
+
+            [Description("Pending")]
+            Pending = 3
+        }
+
+        public static string GetDescription(Status status)
+        {
+            var fieldInfo = status.GetType().GetField(status.ToString());
+            var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            return attributes.Length > 0 ? attributes[0].Description : status.ToString();
+        }
+
         /// <summary>
         /// EnumのDescription属性を取得します。
         /// </summary>
