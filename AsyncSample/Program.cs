@@ -1,4 +1,4 @@
-namespace UnsafeSample
+namespace AsyncSample
 {
     internal static class Program
     {
