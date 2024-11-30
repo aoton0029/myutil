@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PageNavigation\**" />
+    <EmbeddedResource Remove="PageNavigation\**" />
+    <None Remove="PageNavigation\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="swipeform.cs" />
   </ItemGroup>
 
@@ -22,7 +28,6 @@
     <Folder Include="DesignPatterns\Adapter\" />
     <Folder Include="DesignPatterns\State\" />
     <Folder Include="DesignPatterns\Strategy\" />
-    <Folder Include="PageNavigation\" />
     <Folder Include="SerialPorts\Simple\" />
   </ItemGroup>
 
