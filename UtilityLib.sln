@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteLib", "SqliteLib\Sqli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncSample", "AsyncSample\AsyncSample.csproj", "{1147805E-1082-41D1-ABB5-3A15EA4070BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate1", "ProjectTemplate1\ProjectTemplate1.csproj", "{6EC972D3-FCD3-4B87-8E84-87BB38DCE66E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{1147805E-1082-41D1-ABB5-3A15EA4070BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1147805E-1082-41D1-ABB5-3A15EA4070BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1147805E-1082-41D1-ABB5-3A15EA4070BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC972D3-FCD3-4B87-8E84-87BB38DCE66E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EC972D3-FCD3-4B87-8E84-87BB38DCE66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EC972D3-FCD3-4B87-8E84-87BB38DCE66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EC972D3-FCD3-4B87-8E84-87BB38DCE66E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
