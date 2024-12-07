@@ -178,68 +178,7 @@ namespace UtilityLib
             }
         }
 
-        private void sample()
-        {
-            DataTable dt1 = createSampleData();
+       
 
-            DataTableUtility.AddPathColumn(dt1, "ID", "ParentID", "Path");
-            DataTableUtility.AddHierarchyColumn(dt1, "ID", "ParentID", "level");
-
-            // ルートに紐づく階層順にソート
-            DataView dv = new DataView(dt1);
-            dv.Sort = "Path ASC";
-
-            // ソートされた結果を表示
-            DataTable sortedDt = dv.ToTable();
-
-        }
-
-        private DataTable createSampleData()
-        {
-            // データテーブルを作成
-            DataTable sampleData = new DataTable("TreeTable");
-            sampleData.Columns.Add("ID", typeof(int));
-            sampleData.Columns.Add("ParentID", typeof(int));
-
-            // ランダム数生成器を作成
-            Random random = new Random();
-
-            // ルートノードを作成
-            int rootCount = 10;
-            int totalRows = 65;
-            int maxLevel = 5;
-            int currentID = 1;
-
-            // ルートノードを追加
-            for (int i = 0; i < rootCount; i++)
-            {
-                sampleData.Rows.Add(currentID, DBNull.Value);
-                currentID++;
-            }
-
-            // 各ルートノードに対して子ノードを再帰的に追加
-            for (int i = 1; i <= rootCount; i++)
-            {
-                AddChildNodes(sampleData, i, 1, maxLevel, ref currentID, random, totalRows);
-            }
-
-            return sampleData;
-
-            void AddChildNodes(DataTable table, int parentID, int currentLevel, int maxLevel, ref int currentID, Random random, int totalRows)
-            {
-                if (currentLevel >= maxLevel || currentID >= totalRows) return;
-
-                int childCount = random.Next(1, 4); // 各ノードの子の数を1から3の間でランダムに決定
-
-                for (int i = 0; i < childCount && currentID < totalRows; i++)
-                {
-                    table.Rows.Add(currentID, parentID);
-                    int newParentID = currentID;
-                    currentID++;
-
-                    AddChildNodes(table, newParentID, currentLevel + 1, maxLevel, ref currentID, random, totalRows);
-                }
-            }
-        }
     }
 }

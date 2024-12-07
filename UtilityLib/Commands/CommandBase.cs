@@ -8,11 +8,10 @@ namespace UtilityLib.Commands
 {
     public abstract class CommandBase : ICommand
     {
-        private readonly SynchronizationContext? InitialSyncContext;
 
         protected CommandBase()
         {
-            this.InitialSyncContext = SynchronizationContext.Current;
+
         }
 
         public event EventHandler? CanExecuteChanged;
@@ -24,12 +23,6 @@ namespace UtilityLib.Commands
         protected void NotifyCanExecuteChanged()
         {
             this.OnCanExecuteChanged(EventArgs.Empty);
-        }
-
-        protected virtual void OnCanExecuteChanged(EventArgs e)
-        {
-            if (this.InitialSyncContext is null) { this.OnCanExecuteChanged((object)e); }
-            else { this.InitialSyncContext.Post(this.OnCanExecuteChanged, (object)e); }
         }
 
         private void OnCanExecuteChanged(object? e)
