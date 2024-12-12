@@ -96,16 +96,16 @@ namespace UtilityLib.Navigations
             }
 
             // 新しいUserControlを生成
-            var control = _serviceProvider.GetService<T>();
+            var control = _serviceProvider.GetService(typeof(T));
             if (control is IUserControl navigable)
             {
-                navigable.OnNavigatedTo(parameter);
+                navigable.OnNavigated(parameter);
             }
 
             // UserControlをPanelに追加
             _parentControl.Controls.Clear();
-            _parentControl.Controls.Add(control);
-            control.Dock = DockStyle.Fill;
+            _parentControl.Controls.Add((UserControl)control);
+            ((UserControl)control).Dock = DockStyle.Fill;
         }
     }
 
@@ -129,10 +129,10 @@ namespace UtilityLib.Navigations
 
             ServiceProvider = new ServiceProvider(services);
             // MainFormを起動し、NavigationServiceで初期画面を設定
-            INavigationService navigationService = ServiceProvider.GetService(typeof(INavigationService));
-            navigationService.Initialize<UcHome>();
+            //INavigationService navigationService = ServiceProvider.GetService(typeof(INavigationService));
+            //navigationService.Initialize<UcHome>();
 
-            Application.Run(new MainForm(navigationService));
+            //Application.Run(new MainForm(navigationService));
         }
     }
 
