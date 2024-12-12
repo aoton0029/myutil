@@ -246,5 +246,322 @@ namespace UtilityLib
             return orderedRows;
         }
 
+        public static DataRow GetRowWithMaxValue(DataTable dataTable, string columnName)
+        {
+            DataRow maxRow = null;
+            double maxValue = double.MinValue;
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                double currentValue = Convert.ToDouble(row[columnName]);
+                if (currentValue > maxValue)
+                {
+                    maxValue = currentValue;
+                    maxRow = row;
+                }
+            }
+
+            return maxRow;
+        }
+
+        public static List<T> GetUniqueValues<T>(DataTable dataTable, string columnName)
+        {
+            var uniqueValues = new HashSet<T>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                uniqueValues.Add((T)Convert.ChangeType(row[columnName], typeof(T)));
+            }
+
+            return uniqueValues.ToList();
+        }
+
+        public static DataTable MergeTables(DataTable table1, DataTable table2, string[] keyColumns)
+        {
+            DataTable resultTable = table1.Clone();
+
+            foreach (DataRow row in table1.Rows)
+            {
+                resultTable.ImportRow(row);
+            }
+
+            foreach (DataRow row in table2.Rows)
+            {
+                bool match = resultTable.AsEnumerable()
+                    .Any(existingRow => keyColumns.All(key => existingRow[key].Equals(row[key])));
+
+                if (!match)
+                {
+                    resultTable.ImportRow(row);
+                }
+            }
+
+            return resultTable;
+        }
+
+        public static DataTable GroupBy(DataTable dataTable, string groupColumn, string aggregateColumn, Func<IEnumerable<object>, object> aggregateFunction)
+        {
+            var groupedTable = new DataTable();
+            groupedTable.Columns.Add(groupColumn, dataTable.Columns[groupColumn].DataType);
+            groupedTable.Columns.Add("Aggregate", typeof(object));
+
+            var groups = dataTable.AsEnumerable()
+                .GroupBy(row => row[groupColumn]);
+
+            foreach (var group in groups)
+            {
+                var newRow = groupedTable.NewRow();
+                newRow[groupColumn] = group.Key;
+                newRow["Aggregate"] = aggregateFunction(group.Select(row => row[aggregateColumn]));
+                groupedTable.Rows.Add(newRow);
+            }
+
+            return groupedTable;
+        }
+
+        public static void AddConditionFlagColumn(DataTable dataTable, string flagColumn, string condition)
+        {
+            if (!dataTable.Columns.Contains(flagColumn))
+            {
+                dataTable.Columns.Add(flagColumn, typeof(bool));
+            }
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                row[flagColumn] = dataTable.Select(condition).Contains(row);
+            }
+        }
+
+        public static void ChangeColumnType(DataTable dataTable, string columnName, Type newType)
+        {
+            if (!dataTable.Columns.Contains(columnName))
+                throw new ArgumentException($"Column '{columnName}' does not exist.");
+
+            // 新しい列を作成
+            string tempColumnName = columnName + "_temp";
+            dataTable.Columns.Add(tempColumnName, newType);
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (!row.IsNull(columnName))
+                {
+                    row[tempColumnName] = Convert.ChangeType(row[columnName], newType);
+                }
+            }
+
+            // 古い列を削除して新しい列に置き換え
+            dataTable.Columns.Remove(columnName);
+            dataTable.Columns[tempColumnName].ColumnName = columnName;
+        }
+
+        public static void UpdateRowsByCondition(DataTable dataTable, string condition, string columnName, object newValue)
+        {
+            var rows = dataTable.Select(condition);
+            foreach (var row in rows)
+            {
+                row[columnName] = newValue;
+            }
+        }
+
+        /// <summary>
+        /// データテーブル間で行を移動する汎用メソッド
+        /// </summary>
+        /// <param name="sourceTable">元のデータテーブル</param>
+        /// <param name="destinationTable">移動先のデータテーブル</param>
+        /// <param name="filterExpression">行を移動させる条件を表すフィルタ式</param>
+        public static void MoveRowsFlexible(DataTable sourceTable, DataTable destinationTable, string filterExpression)
+        {
+            // フィルタ条件に一致する行を取得
+            DataRow[] rowsToMove = sourceTable.Select(filterExpression);
+
+            foreach (DataRow sourceRow in rowsToMove)
+            {
+                // 移動先の新しい行を作成
+                DataRow newRow = destinationTable.NewRow();
+
+                foreach (DataColumn destinationColumn in destinationTable.Columns)
+                {
+                    // 移動先の列名が元のテーブルに存在する場合のみ値をコピー
+                    if (sourceTable.Columns.Contains(destinationColumn.ColumnName))
+                    {
+                        newRow[destinationColumn.ColumnName] = sourceRow[destinationColumn.ColumnName];
+                    }
+                }
+
+                // 移動先テーブルに行を追加
+                destinationTable.Rows.Add(newRow);
+
+                // 元のテーブルから行を削除
+                sourceTable.Rows.Remove(sourceRow);
+            }
+        }
+
+        /// <summary>
+        /// 指定された列から最大値を取得する汎用メソッド
+        /// </summary>
+        /// <param name="table">データテーブル</param>
+        /// <param name="columnName">最大値を取得する列の名前</param>
+        /// <typeparam name="T">列のデータ型</typeparam>
+        /// <returns>最大値。データが存在しない場合はデフォルト値を返す。</returns>
+        public static T GetMaxValue<T>(DataTable table, string columnName)
+        {
+            if (!table.Columns.Contains(columnName))
+                throw new ArgumentException($"列 '{columnName}' が存在しません。");
+
+            // 列データをフィルタして最大値を取得
+            var values = table.AsEnumerable()
+                              .Where(row => !row.IsNull(columnName)) // DBNullを無視
+                              .Select(row => row.Field<T>(columnName));
+
+            return values.Any() ? values.Max() : default(T); // 値がなければデフォルト値を返す
+        }
+
+        /// <summary>
+        /// 指定した列から値を検索して結果を返す汎用メソッド。
+        /// </summary>
+        /// <typeparam name="T">戻り値の型</typeparam>
+        /// <param name="dataTable">検索対象のデータテーブル</param>
+        /// <param name="columnName">検索対象の列名</param>
+        /// <param name="searchValue">検索する値</param>
+        /// <returns>検索結果の値を返す。見つからない場合はデフォルト値を返す。</returns>
+        public static T FindValue<T>(DataTable dataTable, string columnName, object searchValue)
+        {
+            if (!dataTable.Columns.Contains(columnName))
+            {
+                throw new ArgumentException($"列 '{columnName}' は存在しません。");
+            }
+
+            // 列の型を確認
+            var columnType = dataTable.Columns[columnName].DataType;
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (row[columnName].Equals(searchValue))
+                {
+                    // 見つかった行の値を指定した型に変換して返す
+                    return (T)Convert.ChangeType(row[columnName], typeof(T));
+                }
+            }
+
+            // 見つからない場合はデフォルト値を返す
+            return default;
+        }
+
+        /// <summary>
+        /// データテーブルから別のデータテーブルへ行を移動させるメソッド
+        /// </summary>
+        /// <param name="sourceTable">元のデータテーブル</param>
+        /// <param name="destinationTable">移動先のデータテーブル</param>
+        /// <param name="filterExpression">行を移動させる条件を表すフィルタ式</param>
+        public static void MoveRows(DataTable sourceTable, DataTable destinationTable, string filterExpression)
+        {
+            // フィルタ条件に一致する行を取得
+            DataRow[] rowsToMove = sourceTable.Select(filterExpression);
+
+            foreach (DataRow row in rowsToMove)
+            {
+                // 移動先テーブルに新しい行を作成
+                DataRow newRow = destinationTable.NewRow();
+
+                // 元の行の値をコピー
+                newRow.ItemArray = row.ItemArray;
+
+                // 移動先テーブルに追加
+                destinationTable.Rows.Add(newRow);
+
+                // 元のテーブルから削除
+                sourceTable.Rows.Remove(row);
+            }
+        }
+
+        /// <summary>
+        /// 指定された条件に基づいて、片方のDataTableからもう片方にデータを移動します。
+        /// </summary>
+        /// <param name="sourceTable">移動元のDataTable</param>
+        /// <param name="targetTable">移動先のDataTable</param>
+        /// <param name="filterExpression">移動するデータを指定するフィルタ条件</param>
+        /// <param name="keyColumnName">一意のキー列名</param>
+        public void MoveRows(DataTable sourceTable, DataTable targetTable, string filterExpression, string keyColumnName)
+        {
+            // フィルタ条件に一致する行を取得
+            DataRow[] rowsToMove = sourceTable.Select(filterExpression);
+
+            foreach (DataRow row in rowsToMove)
+            {
+                // 移動先に同じキーの行が存在しない場合に移動
+                if (!RowExistsInTable(targetTable, keyColumnName, row[keyColumnName]))
+                {
+                    DataRow newRow = targetTable.NewRow();
+                    newRow.ItemArray = row.ItemArray;
+                    targetTable.Rows.Add(newRow);
+                }
+
+                // 元のDataTableから行を削除
+                sourceTable.Rows.Remove(row);
+            }
+        }
+
+        /// <summary>
+        /// 指定されたキー値がDataTableに存在するかを確認します。
+        /// </summary>
+        /// <param name="table">チェック対象のDataTable</param>
+        /// <param name="keyColumnName">キー列名</param>
+        /// <param name="keyValue">チェックするキー値</param>
+        /// <returns>キー値が存在する場合はtrue、存在しない場合はfalse</returns>
+        private bool RowExistsInTable(DataTable table, string keyColumnName, object keyValue)
+        {
+            return table.Select($"{keyColumnName} = '{keyValue}'").Length > 0;
+        }
+
+        /// <summary>
+        /// 指定した行インデックスを移動元DataTableから移動先DataTableに移動します。
+        /// </summary>
+        /// <param name="sourceTable">移動元のDataTable</param>
+        /// <param name="targetTable">移動先のDataTable</param>
+        /// <param name="rowIndex">移動する行のインデックス</param>
+        public void MoveRowByIndex(DataTable sourceTable, DataTable targetTable, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= sourceTable.Rows.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), "指定された行インデックスが無効です。");
+            }
+
+            // 移動元から行を取得
+            DataRow rowToMove = sourceTable.Rows[rowIndex];
+
+            // 新しい行を移動先に追加
+            DataRow newRow = targetTable.NewRow();
+            newRow.ItemArray = rowToMove.ItemArray;
+            targetTable.Rows.Add(newRow);
+
+            // 移動元の行を削除
+            sourceTable.Rows.RemoveAt(rowIndex);
+        }
+
+        /// <summary>
+        /// 指定したキー値を持つ行を移動元DataTableから移動先DataTableに移動します。
+        /// </summary>
+        /// <param name="sourceTable">移動元のDataTable</param>
+        /// <param name="targetTable">移動先のDataTable</param>
+        /// <param name="keyColumnName">キー列名</param>
+        /// <param name="keyValue">移動する行のキー値</param>
+        public void MoveRowByKey(DataTable sourceTable, DataTable targetTable, string keyColumnName, object keyValue)
+        {
+            DataRow[] rowsToMove = sourceTable.Select($"{keyColumnName} = '{keyValue}'");
+            if (rowsToMove.Length == 0)
+            {
+                throw new ArgumentException("指定されたキー値に一致する行が見つかりません。", nameof(keyValue));
+            }
+
+            DataRow rowToMove = rowsToMove[0];
+
+            // 新しい行を移動先に追加
+            DataRow newRow = targetTable.NewRow();
+            newRow.ItemArray = rowToMove.ItemArray;
+            targetTable.Rows.Add(newRow);
+
+            // 元のテーブルから行を削除
+            sourceTable.Rows.Remove(rowToMove);
+        }
     }
 }

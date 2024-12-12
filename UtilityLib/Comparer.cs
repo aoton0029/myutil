@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilityLib.Extentions
+namespace UtilityLib
 {
     public static class Comparers
     {
@@ -49,7 +49,23 @@ namespace UtilityLib.Extentions
             return (firstValue.IsEqualTo(secondValue) || firstValue.IsLessThan(secondValue));
         }
 
+        public static int Compare<T>(T x, T y) where T : IComparable<T>
+        {
+            if (x == null && y == null) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
 
-        
+            return x.CompareTo(y);
+        }
+
+        public static int CompareValues<T>(T x, T y)
+        {
+            return Comparer<T>.Default.Compare(x, y);
+        }
+
+        public static bool AreEqual<T>(T x, T y)
+        {
+            return EqualityComparer<T>.Default.Equals(x, y);
+        }
     }
 }
