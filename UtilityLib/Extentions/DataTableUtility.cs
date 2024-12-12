@@ -35,52 +35,6 @@ namespace UtilityLib
             return dt;
         }
 
-        //public static DataTable LeftJoin(DataTable leftTable, DataTable rightTable, string leftJoinColumn, string rightJoinColumn)
-        //{
-        //    var resultTable = new DataTable();
-
-        //    // 左テーブルのカラムをコピー
-        //    foreach (DataColumn column in leftTable.Columns)
-        //    {
-        //        resultTable.Columns.Add(new DataColumn(column.ColumnName, column.DataType));
-        //    }
-
-        //    // 右テーブルのカラムをコピー
-        //    foreach (DataColumn column in rightTable.Columns)
-        //    {
-        //        // 重複するカラムがある場合はリネームする（オプション）
-        //        if (resultTable.Columns.Contains(column.ColumnName))
-        //        {
-        //            resultTable.Columns.Add(new DataColumn(column.ColumnName + "_Right", column.DataType));
-        //        }
-        //        else
-        //        {
-        //            resultTable.Columns.Add(new DataColumn(column.ColumnName, column.DataType));
-        //        }
-        //    }
-
-        //    // Left Join を実行
-        //    var query = from leftRow in leftTable.AsEnumerable()
-        //                join rightRow in rightTable.AsEnumerable()
-        //                on leftRow[leftJoinColumn] equals rightRow[rightJoinColumn] into tempJoin
-        //                from tempRow in tempJoin.DefaultIfEmpty()
-        //                select new
-        //                {
-        //                    LeftData = leftRow.ItemArray,
-        //                    RightData = tempRow != null ? tempRow.ItemArray : rightTable.NewRow().ItemArray
-        //                };
-
-        //    // 結果を新しいテーブルにコピー
-        //    foreach (var item in query)
-        //    {
-        //        var combinedRow = resultTable.NewRow();
-        //        combinedRow.ItemArray = item.LeftData.Concat(item.RightData).ToArray();
-        //        resultTable.Rows.Add(combinedRow);
-        //    }
-
-        //    return resultTable;
-        //}
-
         public static DataTable InnerJoin(DataTable dt1, DataTable dt2, string key1, string key2)
         {
             DataTable dt = new DataTable();
@@ -178,7 +132,119 @@ namespace UtilityLib
             }
         }
 
-       
+        /// <summary>
+        /// 列名を指定して2つのDataTableの差分行を取得する
+        /// </summary>
+        /// <param name="table1">比較元のDataTable</param>
+        /// <param name="table2">比較先のDataTable</param>
+        /// <param name="columnsToCompare1">table1の比較対象列名リスト</param>
+        /// <param name="columnsToCompare2">table2の比較対象列名リスト</param>
+        /// <returns>差分行を含むDataTable</returns>
+        public static DataTable GetDifferenceRows(
+            DataTable table1,
+            DataTable table2,
+            List<string> columnsToCompare1,
+            List<string> columnsToCompare2)
+        {
+            if (columnsToCompare1.Count != columnsToCompare2.Count)
+            {
+                throw new ArgumentException("比較対象列名リストの数が一致していません。");
+            }
+
+            // 差分を格納する結果用DataTable
+            DataTable result = table1.Clone();
+
+            // table2の比較列データをハッシュセットに変換
+            var table2KeySet = new HashSet<string>(
+                table2.AsEnumerable().Select(row => string.Join(
+                    "|",
+                    columnsToCompare2.Select(col => row[col]?.ToString() ?? string.Empty)
+                ))
+            );
+
+            // table1の行を比較して差分を取得
+            foreach (var row in table1.AsEnumerable())
+            {
+                var key = string.Join(
+                    "|",
+                    columnsToCompare1.Select(col => row[col]?.ToString() ?? string.Empty)
+                );
+
+                if (!table2KeySet.Contains(key))
+                {
+                    result.ImportRow(row);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// DataTableにクエリを実行する汎用メソッド
+        /// </summary>
+        /// <param name="table">対象のDataTable</param>
+        /// <param name="filterExpression">フィルタリング条件（例: "Age > 30 AND Name = 'Alice'"）</param>
+        /// <param name="sortExpression">並び替え条件（例: "Age DESC, Name ASC"）</param>
+        /// <returns>クエリ結果を含むDataTable</returns>
+        public static DataTable ExecuteQuery(
+            DataTable table,
+            string filterExpression = null,
+            string sortExpression = null)
+        {
+            // フィルタリングと並び替えを適用
+            DataRow[] filteredRows = string.IsNullOrEmpty(filterExpression)
+                ? table.Select()
+                : table.Select(filterExpression);
+
+            // フィルタ結果を元に新しいDataTableを作成
+            DataTable result = table.Clone();
+            foreach (var row in filteredRows)
+            {
+                result.ImportRow(row);
+            }
+
+            // 並び替えを適用
+            if (!string.IsNullOrEmpty(sortExpression))
+            {
+                result = result.AsEnumerable()
+                    .OrderBy(row => 0) // 初期化用ダミー
+                    .OrderByDynamic(sortExpression)
+                    .CopyToDataTable();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 動的なOrderByを実現する拡張メソッド
+        /// </summary>
+        public static IOrderedEnumerable<DataRow> OrderByDynamic(
+            this IEnumerable<DataRow> source,
+            string sortExpression)
+        {
+            var sortColumns = sortExpression.Split(',').Select(s => s.Trim()).ToArray();
+
+            IOrderedEnumerable<DataRow> orderedRows = null;
+
+            foreach (var sortColumn in sortColumns)
+            {
+                var parts = sortColumn.Split(' ');
+                var columnName = parts[0];
+                var direction = parts.Length > 1 && parts[1].Equals("DESC", StringComparison.OrdinalIgnoreCase)
+                    ? "DESC"
+                    : "ASC";
+
+                orderedRows = orderedRows == null
+                    ? (direction == "DESC"
+                        ? source.OrderByDescending(row => row[columnName])
+                        : source.OrderBy(row => row[columnName]))
+                    : (direction == "DESC"
+                        ? orderedRows.ThenByDescending(row => row[columnName])
+                        : orderedRows.ThenBy(row => row[columnName]));
+            }
+
+            return orderedRows;
+        }
 
     }
 }
