@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncSample", "AsyncSample\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClientSample", "HttpClientSample\HttpClientSample.csproj", "{6A12613C-FA67-4A3F-BEFE-E1E04329BD7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveformSample", "WaveformSample\WaveformSample.csproj", "{EAC9D003-19CA-40F5-9FF5-722A174E59B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet45", "DotNet45\DotNet45.csproj", "{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{6A12613C-FA67-4A3F-BEFE-E1E04329BD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A12613C-FA67-4A3F-BEFE-E1E04329BD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A12613C-FA67-4A3F-BEFE-E1E04329BD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAC9D003-19CA-40F5-9FF5-722A174E59B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAC9D003-19CA-40F5-9FF5-722A174E59B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAC9D003-19CA-40F5-9FF5-722A174E59B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAC9D003-19CA-40F5-9FF5-722A174E59B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
