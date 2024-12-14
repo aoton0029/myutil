@@ -54,7 +54,7 @@ namespace UtilityLib.DIs
 
             if (descriptor.Lifetime == ServiceLifetime.Singleton)
             {
-                descriptor.SetInstance(implementation);
+                //descriptor.SetInstance(implementation);
             }
 
             return implementation;

@@ -10,12 +10,26 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UtilityLib.Observers;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace UtilityLib
 {
     public static class EnumExtension
     {
+        public static TEnum ParseEnum<TEnum>(string value, bool ignoreCase = true) where TEnum : struct, Enum
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(nameof(value), "値がnullまたは空です。");
+            }
+
+            if (Enum.TryParse(value, ignoreCase, out TEnum result))
+            {
+                return result;
+            }
+
+            throw new ArgumentException($"'{value}' は {typeof(TEnum).Name} の有効な値ではありません。");
+        }
+
         public static bool Has<T>(this Enum source, params T[] values)
         {
             var value = Convert.ToInt32(source, CultureInfo.InvariantCulture);
@@ -147,7 +161,7 @@ namespace UtilityLib
         /// <summary>
         /// ComboBoxにEnumをデータソースとして設定します。
         /// </summary>
-        public static void SetEnumDataSource<T>(this ComboBox comboBox) where T : Enum
+        public static void SetEnumDataSource<T>(this System.Windows.Forms.ComboBox comboBox) where T : Enum
         {
             comboBox.DataSource = ToDataSource<T>();
             comboBox.DisplayMember = "Key";
@@ -223,6 +237,8 @@ namespace UtilityLib
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
     }
+
+
 
     [Serializable]
     [DebuggerDisplay("Value = {" + nameof(Value) + "}")]

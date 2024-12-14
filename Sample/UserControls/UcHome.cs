@@ -29,7 +29,7 @@ namespace Sample.UserControls
 
         private void button3_Click(object sender, EventArgs e)
         {
-            NavigationService.Instance.NavigateTo(new UcParts());
+            //NavigationService.Instance.NavigateTo(new UcParts());
         }
 
         private void button4_Click(object sender, EventArgs e)
