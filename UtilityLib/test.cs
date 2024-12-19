@@ -1,3 +1,33 @@
+-- 動的SQLを生成する
+DECLARE @cols NVARCHAR(MAX);
+DECLARE @query NVARCHAR(MAX);
+
+-- OptionIDのリストを取得し、列名を動的に生成する
+SELECT @cols = STRING_AGG(CONCAT('OptionID', OptionID, '_Quantity'), ',')
+FROM (SELECT DISTINCT OptionID FROM Parts) AS Options;
+
+-- 動的SQLのクエリを作成する
+SET @query = '
+SELECT PartNumber, ' + @cols + '
+FROM (
+    SELECT 
+        PartNumber, 
+        CONCAT(''OptionID'', OptionID, ''_Quantity'') AS ColumnName,
+        Quantity
+    FROM Parts
+) AS SourceTable
+PIVOT (
+    MAX(Quantity)
+    FOR ColumnName IN (' + @cols + ')
+) AS PivotTable
+ORDER BY PartNumber;
+';
+
+-- クエリを実行する
+EXEC sp_executesql @query;
+
+
+
 DECLARE @cols NVARCHAR(MAX), @query NVARCHAR(MAX);
 
 -- 動的に列名を生成
