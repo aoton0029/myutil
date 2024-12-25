@@ -133,3 +133,148 @@ public class CustomForm : Form
         Application.Run(new CustomForm());
     }
 }
+
+
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class CustomForm : Form
+{
+    private Rectangle minimizeButtonRect;
+    private Rectangle maximizeButtonRect;
+    private Rectangle pinButtonRect;
+    private Rectangle searchBoxRect;
+
+    private bool isPinned = false;
+    private bool isMaximized = false;
+    private TextBox searchTextBox;
+
+    public CustomForm()
+    {
+        // フォームのスタイルを設定
+        this.FormBorderStyle = FormBorderStyle.None;
+        this.DoubleBuffered = true; // スムーズな描画
+        this.Padding = new Padding(1);
+
+        // ウィンドウのサイズ変更やドラッグを有効化
+        this.MouseDown += CustomForm_MouseDown;
+        this.Paint += CustomForm_Paint;
+        this.MouseClick += CustomForm_MouseClick;
+        this.Resize += CustomForm_Resize;
+
+        // ボタンの位置を初期化
+        UpdateButtonPositions();
+
+        // 検索ボックスの設定
+        searchTextBox = new TextBox
+        {
+            Location = new Point(searchBoxRect.X + 5, searchBoxRect.Y + 5),
+            Width = 150,
+            Height = 20,
+            BorderStyle = BorderStyle.None
+        };
+        this.Controls.Add(searchTextBox);
+    }
+
+    private void UpdateButtonPositions()
+    {
+        int titleBarHeight = 30;
+
+        minimizeButtonRect = new Rectangle(this.ClientSize.Width - 90, 5, 25, 25);
+        maximizeButtonRect = new Rectangle(this.ClientSize.Width - 60, 5, 25, 25);
+        pinButtonRect = new Rectangle(this.ClientSize.Width - 120, 5, 25, 25);
+        searchBoxRect = new Rectangle(10, 5, 160, titleBarHeight - 10);
+    }
+
+    private void CustomForm_Paint(object sender, PaintEventArgs e)
+    {
+        Graphics g = e.Graphics;
+
+        // タイトルバーの背景を描画
+        g.FillRectangle(Brushes.DarkBlue, 0, 0, this.ClientSize.Width, 30);
+
+        // タイトルを描画
+        g.DrawString("カスタムウィンドウ", this.Font, Brushes.White, new Point(180, 5));
+
+        // 各ボタンを描画
+        // 最小化ボタン
+        g.FillRectangle(Brushes.Gray, minimizeButtonRect);
+        g.DrawString("_", this.Font, Brushes.White, minimizeButtonRect.Location);
+
+        // 最大化ボタン
+        g.FillRectangle(Brushes.Gray, maximizeButtonRect);
+        g.DrawString(isMaximized ? "□" : "☐", this.Font, Brushes.White, maximizeButtonRect.Location);
+
+        // ピンボタン
+        g.FillRectangle(isPinned ? Brushes.Green : Brushes.Gray, pinButtonRect);
+        g.DrawString("📌", this.Font, Brushes.White, pinButtonRect.Location);
+
+        // 検索ボックスの枠
+        g.DrawRectangle(Pens.White, searchBoxRect);
+    }
+
+    private void CustomForm_MouseClick(object sender, MouseEventArgs e)
+    {
+        if (minimizeButtonRect.Contains(e.Location))
+        {
+            // 最小化ボタン
+            this.WindowState = FormWindowState.Minimized;
+        }
+        else if (maximizeButtonRect.Contains(e.Location))
+        {
+            // 最大化ボタン
+            if (isMaximized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                isMaximized = false;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Maximized;
+                isMaximized = true;
+            }
+            UpdateButtonPositions();
+            this.Invalidate();
+        }
+        else if (pinButtonRect.Contains(e.Location))
+        {
+            // ピン固定ボタン
+            isPinned = !isPinned;
+            this.TopMost = isPinned; // ピン固定をトグル
+            this.Invalidate();
+        }
+    }
+
+    private void CustomForm_Resize(object sender, EventArgs e)
+    {
+        UpdateButtonPositions();
+        this.Invalidate();
+    }
+
+    private void CustomForm_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left && e.Y <= 30)
+        {
+            // ウィンドウをドラッグ可能にする
+            ReleaseCapture();
+            SendMessage(this.Handle, 0xA1, 0x2, 0);
+        }
+    }
+
+    // Windows API のインポート
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+    // エントリポイント
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new CustomForm());
+    }
+}
