@@ -28,12 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            dataGridView1 = new DataGridView();
+            ColumnId = new DataGridViewTextBoxColumn();
+            ColumnName = new DataGridViewTextBoxColumn();
+            ColumnDesc = new DataGridViewTextBoxColumn();
+            ucdd1 = new UcDD();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            SuspendLayout();
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { ColumnId, ColumnName, ColumnDesc });
+            dataGridView1.Location = new Point(12, 212);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(776, 226);
+            dataGridView1.TabIndex = 0;
+            dataGridView1.MouseDown += dataGridView1_MouseDown;
+            // 
+            // ColumnId
+            // 
+            ColumnId.DataPropertyName = "Id";
+            ColumnId.HeaderText = "id";
+            ColumnId.Name = "ColumnId";
+            // 
+            // ColumnName
+            // 
+            ColumnName.DataPropertyName = "Name";
+            ColumnName.HeaderText = "Name";
+            ColumnName.Name = "ColumnName";
+            // 
+            // ColumnDesc
+            // 
+            ColumnDesc.DataPropertyName = "Description ";
+            ColumnDesc.HeaderText = "Desc";
+            ColumnDesc.Name = "ColumnDesc";
+            // 
+            // ucdd1
+            // 
+            ucdd1.AllowDrop = true;
+            ucdd1.BackColor = SystemColors.ActiveCaption;
+            ucdd1.Location = new Point(12, 12);
+            ucdd1.Name = "ucdd1";
+            ucdd1.Size = new Size(435, 170);
+            ucdd1.TabIndex = 1;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(ucdd1);
+            Controls.Add(dataGridView1);
+            Name = "Form1";
+            Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn ColumnId;
+        private DataGridViewTextBoxColumn ColumnName;
+        private DataGridViewTextBoxColumn ColumnDesc;
+        private UcDD ucdd1;
     }
 }
