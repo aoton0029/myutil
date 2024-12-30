@@ -1,0 +1,2 @@
+https://goatreview.com/execution-context-asynclocal-threadlocal-dotnet/
+https://goatreview.com/understanding-ambient-context-pattern-net/?utm_source=newsletter.csharpdigest.net&utm_medium=referral&utm_campaign=automating-santa-s-workshop-with-nservicebus
