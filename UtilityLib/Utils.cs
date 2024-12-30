@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +13,23 @@ namespace UtilityLib
 {
     static class Utils
     {
+        public static string ToStringDesc<T>(T aModel) where T : class
+        {
+            // クラスの型情報を取得
+            var properties = aModel.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(prop => Attribute.IsDefined(prop, typeof(DescriptionAttribute))) // Description属性が付いているものだけを選択
+                .Select(prop =>
+                {
+                    var attr = (DescriptionAttribute)Attribute.GetCustomAttribute(prop, typeof(DescriptionAttribute));
+                    var description = attr?.Description ?? prop.Name; // 属性のDescriptionを取得
+                    var value = prop.GetValue(aModel) ?? "null";        // プロパティの値を取得
+                    return $"{description}: {value}";
+                });
+
+            return string.Join(", ", properties);
+        }
+
         public static void AutoFillDefault<T>(this List<T> self, int count)
         {
             for (int x = 0; x < count; ++x)
@@ -133,6 +154,33 @@ namespace UtilityLib
                 return await task;
             throw new TimeoutException("The operation has timed out.");
         }
+
+        public static Func<T, TResult> Memoize<T, TResult>(this Func<T, TResult> func)
+        {
+            var cache = new ConcurrentDictionary<T, TResult>();
+            return arg => cache.GetOrAdd(arg, func);
+        }
+
+        public static bool IsValidIpAddress(this string ipAddress)
+        {
+            return IPAddress.TryParse(ipAddress, out _);
+        }
+
+        public static TimeSpan MeasureExecutionTime(this Action action)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            action();
+            stopwatch.Stop();
+            return stopwatch.Elapsed;
+        }
+
+        public static void CenterControl(Control parent, Control child)
+        {
+            child.Left = (parent.ClientSize.Width - child.Width) / 2;
+            child.Top = (parent.ClientSize.Height - child.Height) / 2;
+        }
+
+
 
     }
 }
