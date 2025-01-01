@@ -28,7 +28,7 @@
     <Folder Include="DesignPatterns\Adapter\" />
     <Folder Include="DesignPatterns\State\" />
     <Folder Include="DesignPatterns\Strategy\" />
-    <Folder Include="DesignPatterns\Memento\" />
+    <Folder Include="Mvvms\Messaging\" />
     <Folder Include="SerialPorts\Simple\" />
   </ItemGroup>
 

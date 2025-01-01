@@ -7,6 +7,29 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.DesignPatterns.Memento
 {
+    private class Memento : IMemento
+    {
+        public IMementoable Originator { get; }
+
+        public bool IsEditing { get; }
+
+        public Fish? CurrentItem { get; }
+
+        public ImmutableList<Fish> Items { get; }
+
+        public Memento(
+            MainViewModel snapshotable,
+            bool isEditing,
+            Fish? currentItem,
+            ImmutableList<Fish> items)
+        {
+            this.Originator = snapshotable;
+            this.IsEditing = isEditing;
+            this.CurrentItem = currentItem;
+            this.Items = items;
+        }
+    }
+
     internal class Program
     {
         private readonly IMementoCaretaker? _caretaker;
