@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace UtilityLib.Models
@@ -70,4 +71,62 @@ namespace UtilityLib.Models
         /// </summary>
         public bool IsForceRefresh => _forceRefresh;
     }
+
+    public class JsonCache<T>
+    {
+        private readonly string _cacheFilePath;
+        private readonly TimeSpan _cacheDuration;
+        private DateTime _lastUpdated;
+        private T _cachedData;
+
+        public JsonCache(string cacheFilePath, TimeSpan cacheDuration)
+        {
+            _cacheFilePath = cacheFilePath;
+            _cacheDuration = cacheDuration;
+            _lastUpdated = DateTime.MinValue;
+        }
+
+        // キャッシュからデータを取得する
+        public T Get(Func<T> fetchData)
+        {
+            if (IsCacheExpired() || _cachedData == null)
+            {
+                Console.WriteLine("Fetching new data...");
+                _cachedData = fetchData();
+                SaveCache(_cachedData);
+            }
+            else
+            {
+                Console.WriteLine("Using cached data...");
+                _cachedData = LoadCache();
+            }
+
+            return _cachedData;
+        }
+
+        // キャッシュの有効期限を確認する
+        private bool IsCacheExpired()
+        {
+            return !File.Exists(_cacheFilePath) || DateTime.Now - _lastUpdated > _cacheDuration;
+        }
+
+        // キャッシュを保存する
+        private void SaveCache(T data)
+        {
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_cacheFilePath, json);
+            _lastUpdated = DateTime.Now;
+        }
+
+        // キャッシュを読み込む
+        private T LoadCache()
+        {
+            if (!File.Exists(_cacheFilePath))
+                return default;
+
+            var json = File.ReadAllText(_cacheFilePath);
+            return JsonSerializer.Deserialize<T>(json);
+        }
+    }
+
 }
