@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveformSample", "WaveformS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet45", "DotNet45\DotNet45.csproj", "{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSample", "DbSample\DbSample.csproj", "{5D8335CB-75D0-4795-AF9F-7F485A634A72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9E0B2CF-08B6-410A-ACA4-5CAF1BB53337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
