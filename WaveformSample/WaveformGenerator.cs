@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WaveformSample
 {
-    public interface IWaveformGenerator
+    public static class WaveformGenerator
     {
-        double[] Generate(int length, double frequency, double amplitude);
+
     }
 }
