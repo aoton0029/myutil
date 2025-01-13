@@ -278,3 +278,50 @@ public class CustomForm : Form
         Application.Run(new CustomForm());
     }
 }
+
+
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class CustomColorComponent : Component
+{
+    private Color customColor = Color.FromArgb(255, 128, 0); // 初期色
+
+    [Category("Custom Colors")]
+    [Description("Select a custom color.")]
+    [TypeConverter(typeof(CustomColorConverter))]
+    public Color CustomColor
+    {
+        get { return customColor; }
+        set { customColor = value; }
+    }
+}
+
+public class CustomColorConverter : ColorConverter
+{
+    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+    {
+        // 標準色にカスタム色を追加
+        var standardColors = new[]
+        {
+            Color.Red,
+            Color.Green,
+            Color.Blue,
+            Color.FromArgb(255, 128, 0), // カスタム色
+            Color.FromArgb(128, 0, 255)  // 別のカスタム色
+        };
+        return new StandardValuesCollection(standardColors);
+    }
+
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+    {
+        return true; // 標準値のサポート
+    }
+
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+    {
+        return false; // カスタム値も許可
+    }
+}
