@@ -1,0 +1,7 @@
+https://tex2e.github.io/blog/programming/design-principles-practices-patterns
+https://github.com/CommunityToolkit/dotnet/blob/main/src/CommunityToolkit.Mvvm/Messaging/IMessengerExtensions.cs
+https://goatreview.com/understanding-ambient-context-pattern-net/?utm_source=newsletter.csharpdigest.net&utm_medium=referral&utm_campaign=automating-santa-s-workshop-with-nservicebus
+https://github.com/mzwierzchlewski/DataProcessing.Channels/tree/main/src/DataProcessing
+https://maciejz.dev/processing-data-in-parallel-channels/?utm_source=newsletter.csharpdigest.net&utm_medium=referral&utm_campaign=processing-data-in-parallel-using-channels
+https://newsletter.csharpdigest.net/archive?page=10
+https://goatreview.com/
