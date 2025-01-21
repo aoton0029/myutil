@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilityLib.DesignPatterns
+namespace UtilityLib.DataProcesses.DataProcessors
 {
-    internal class DpUtil
-    {
-    }
+    public record DataWithKey(int Key, string Data);
 }
