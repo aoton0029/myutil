@@ -325,3 +325,126 @@ public class CustomColorConverter : ColorConverter
         return false; // カスタム値も許可
     }
 }
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var channel = new Channel<DataTable>();
+        var cancellationTokenSource = new CancellationTokenSource();
+
+        // データテーブルを取得するメソッドのリスト
+        var dataTableTasks = new List<Func<Task<DataTable>>>
+        {
+            async () => await GetDataTableAsync("Table1"),
+            async () => await GetDataTableAsync("Table2"),
+            async () => await GetDataTableAsync("Table3")
+        };
+
+        // Producer: 各データ取得タスクを並列実行してチャネルに送信
+        Task producer = Task.Run(async () =>
+        {
+            try
+            {
+                var tasks = new List<Task>();
+                foreach (var getDataTable in dataTableTasks)
+                {
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        var dataTable = await getDataTable();
+                        channel.Send(dataTable); // チャネルに送信
+                    }, cancellationTokenSource.Token));
+                }
+                await Task.WhenAll(tasks); // 全タスクの完了を待機
+                channel.Close(); // 全てのデータ送信が終わったらチャネルを閉じる
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Producer error: {ex.Message}");
+                channel.Close();
+            }
+        });
+
+        // Consumer: チャネルからデータを受信して処理
+        Task consumer = Task.Run(async () =>
+        {
+            try
+            {
+                while (!channel.IsClosed || channel.HasData)
+                {
+                    var dataTable = await channel.ReceiveAsync();
+                    Console.WriteLine($"Received DataTable: {dataTable.TableName} with {dataTable.Rows.Count} rows");
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("Channel closed.");
+            }
+        });
+
+        // ProducerとConsumerのタスクを待機
+        await Task.WhenAll(producer, consumer);
+    }
+
+    // サンプルのデータテーブルを取得する非同期メソッド
+    private static async Task<DataTable> GetDataTableAsync(string tableName)
+    {
+        await Task.Delay(1000); // データ取得の遅延をシミュレート
+        var dataTable = new DataTable(tableName);
+        dataTable.Columns.Add("Id", typeof(int));
+        dataTable.Columns.Add("Name", typeof(string));
+
+        // サンプルデータの追加
+        for (int i = 0; i < 5; i++)
+        {
+            dataTable.Rows.Add(i, $"{tableName}_Row{i}");
+        }
+
+        return dataTable;
+    }
+}
+
+// Channelクラス (先ほどの拡張済みバージョンを使用)
+public class Channel<T>
+{
+    private readonly BlockingCollection<T> _queue = new BlockingCollection<T>();
+
+    public void Send(T item)
+    {
+        if (!_queue.IsAddingCompleted)
+        {
+            _queue.Add(item);
+        }
+        else
+        {
+            throw new InvalidOperationException("Channel is closed and cannot send data.");
+        }
+    }
+
+    public T Receive()
+    {
+        return _queue.Take();
+    }
+
+    public async Task<T> ReceiveAsync()
+    {
+        return await Task.Run(() => _queue.Take());
+    }
+
+    public void Close()
+    {
+        _queue.CompleteAdding();
+    }
+
+    public bool IsClosed => _queue.IsAddingCompleted;
+    public bool HasData => _queue.Count > 0;
+}
