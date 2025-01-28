@@ -448,3 +448,132 @@ public class Channel<T>
     public bool IsClosed => _queue.IsAddingCompleted;
     public bool HasData => _queue.Count > 0;
 }
+
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+
+public class AsyncProcessor
+{
+    // タスクの定義を保持
+    private readonly List<Func<DataTable>> _methods;
+
+    // 結果を格納する辞書
+    private readonly ConcurrentDictionary<string, DataTable> _results;
+
+    // 同時実行制御用のSemaphoreSlim
+    private readonly SemaphoreSlim _semaphore;
+
+    public AsyncProcessor(int maxDegreeOfParallelism)
+    {
+        _methods = new List<Func<DataTable>>();
+        _results = new ConcurrentDictionary<string, DataTable>();
+        _semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
+    }
+
+    // メソッドを登録
+    public void AddMethod(string key, Func<DataTable> method)
+    {
+        _methods.Add(async () =>
+        {
+            await _semaphore.WaitAsync();
+            try
+            {
+                var result = method();
+                _results[key] = result;
+                return result;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        });
+    }
+
+    // 非同期並列処理を実行
+    public async Task ExecuteAsync()
+    {
+        var tasks = new List<Task>();
+
+        foreach (var method in _methods)
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                await method();
+            }));
+        }
+
+        await Task.WhenAll(tasks);
+    }
+
+    // 結果を取得
+    public ConcurrentDictionary<string, DataTable> GetResults()
+    {
+        return _results;
+    }
+}
+
+public class Program
+{
+    // シミュレーション用の同期メソッド
+    public static DataTable GetDataByOrderNumber(string orderNumber)
+    {
+        var table = new DataTable();
+        table.Columns.Add("OrderNumber");
+        table.Rows.Add(orderNumber);
+        return table;
+    }
+
+    public static DataTable GetDataByOrderKeyAndDetailNumber(int orderKey, int detailNumber)
+    {
+        var table = new DataTable();
+        table.Columns.Add("OrderKey");
+        table.Columns.Add("DetailNumber");
+        table.Rows.Add(orderKey, detailNumber);
+        return table;
+    }
+
+    public static DataTable GetDataBySerialNumber(string serialNumber)
+    {
+        var table = new DataTable();
+        table.Columns.Add("SerialNumber");
+        table.Rows.Add(serialNumber);
+        return table;
+    }
+
+    public static async Task Main(string[] args)
+    {
+        Console.WriteLine("Processing data...");
+
+        var processor = new AsyncProcessor(2); // 同時実行数を2に制限
+
+        // メソッドを登録
+        processor.AddMethod("OrderNumber", () => GetDataByOrderNumber("12345"));
+        processor.AddMethod("OrderKeyDetail", () => GetDataByOrderKeyAndDetailNumber(1, 2));
+        processor.AddMethod("SerialNumber", () => GetDataBySerialNumber("SN-001"));
+
+        // 非同期処理を実行
+        await processor.ExecuteAsync();
+
+        // 結果を取得して出力
+        var results = processor.GetResults();
+        foreach (var key in results.Keys)
+        {
+            Console.WriteLine($"Result for {key}:");
+            foreach (DataRow row in results[key].Rows)
+            {
+                foreach (var item in row.ItemArray)
+                {
+                    Console.Write(item + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        Console.WriteLine("Processing completed.");
+    }
+}
