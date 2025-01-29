@@ -1,3 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+public enum FilterOperator
+{
+    Equals,
+    NotEquals,
+    GreaterThan,
+    GreaterThanOrEqual,
+    LessThan,
+    LessThanOrEqual,
+    Contains,  // 文字列の部分一致検索
+    StartsWith,
+    EndsWith,
+    In          // 複数値のリストとの一致
+}
+
+public class Filter<T>
+{
+    public string PropertyName { get; set; } // フィルター対象のプロパティ名
+    public FilterOperator Operator { get; set; } // 比較演算子
+    public T Value { get; set; } // フィルター値
+    public List<T>? Values { get; set; } // 複数値（`In` 演算子用）
+
+    public Expression<Func<TEntity, bool>> ToExpression<TEntity>()
+    {
+        var parameter = Expression.Parameter(typeof(TEntity), "x");
+        var member = Expression.Property(parameter, PropertyName);
+        var constant = Expression.Constant(Value);
+
+        Expression body = Operator switch
+        {
+            FilterOperator.Equals => Expression.Equal(member, constant),
+            FilterOperator.NotEquals => Expression.NotEqual(member, constant),
+            FilterOperator.GreaterThan => Expression.GreaterThan(member, constant),
+            FilterOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(member, constant),
+            FilterOperator.LessThan => Expression.LessThan(member, constant),
+            FilterOperator.LessThanOrEqual => Expression.LessThanOrEqual(member, constant),
+            FilterOperator.Contains when typeof(T) == typeof(string) => Expression.Call(
+                member, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, constant),
+            FilterOperator.StartsWith when typeof(T) == typeof(string) => Expression.Call(
+                member, typeof(string).GetMethod("StartsWith", new[] { typeof(string) })!, constant),
+            FilterOperator.EndsWith when typeof(T) == typeof(string) => Expression.Call(
+                member, typeof(string).GetMethod("EndsWith", new[] { typeof(string) })!, constant),
+            FilterOperator.In when Values != null && Values.Any() =>
+                Expression.Call(typeof(Enumerable), "Contains", new[] { typeof(T) },
+                    Expression.Constant(Values), member),
+            _ => throw new NotSupportedException($"Unsupported operator: {Operator}")
+        };
+
+        return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
+    }
+}
+
+
 private void c1FlexGrid1_OwnerDrawCell(object sender, C1.Win.C1FlexGrid.OwnerDrawCellEventArgs e)
 {
     var grid = sender as C1.Win.C1FlexGrid.C1FlexGrid;
