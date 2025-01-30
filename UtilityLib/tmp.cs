@@ -1,6 +1,85 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+public enum FilterOperator
+{
+    Equals,
+    NotEquals,
+    GreaterThan,
+    GreaterThanOrEqual,
+    LessThan,
+    LessThanOrEqual,
+    Contains,  // LIKE '%value%'
+    StartsWith,
+    EndsWith,
+    In
+}
+
+public enum FilterLogic
+{
+    And,
+    Or
+}
+
+public class Filter<T>
+{
+    public string ColumnName { get; set; } = string.Empty;
+    public FilterOperator Operator { get; set; }
+    public T? Value { get; set; }
+    public List<T>? Values { get; set; }
+
+    public string ToRowFilter()
+    {
+        if (string.IsNullOrEmpty(ColumnName))
+            throw new InvalidOperationException("ColumnName is required.");
+
+        string valueStr = Value switch
+        {
+            string s => $"'{s.Replace("'", "''")}'",
+            DateTime d => $"#{d:yyyy-MM-dd HH:mm:ss}#",
+            bool b => b ? "TRUE" : "FALSE",
+            null => "NULL",
+            _ => Value.ToString()
+        };
+
+        return Operator switch
+        {
+            FilterOperator.Equals => $"{ColumnName} = {valueStr}",
+            FilterOperator.NotEquals => $"{ColumnName} <> {valueStr}",
+            FilterOperator.GreaterThan => $"{ColumnName} > {valueStr}",
+            FilterOperator.GreaterThanOrEqual => $"{ColumnName} >= {valueStr}",
+            FilterOperator.LessThan => $"{ColumnName} < {valueStr}",
+            FilterOperator.LessThanOrEqual => $"{ColumnName} <= {valueStr}",
+            FilterOperator.Contains => $"{ColumnName} LIKE '%{Value}%'",
+            FilterOperator.StartsWith => $"{ColumnName} LIKE '{Value}%'",
+            FilterOperator.EndsWith => $"{ColumnName} LIKE '%{Value}'",
+            FilterOperator.In when Values != null && Values.Any() =>
+                $"{ColumnName} IN ({string.Join(", ", Values.Select(v => $"'{v}'"))})",
+            _ => throw new NotSupportedException($"Unsupported operator: {Operator}")
+        };
+    }
+}
+
+public class CompositeFilter
+{
+    public List<object> Filters { get; set; } = new();
+    public FilterLogic Logic { get; set; } = FilterLogic.And;
+
+    public string ToRowFilter()
+    {
+        var filterStrings = Filters.Select(f =>
+            f is CompositeFilter composite ? $"({composite.ToRowFilter()})" :
+            f is Filter<object> simple ? simple.ToRowFilter() :
+            throw new InvalidOperationException("Invalid filter type"));
+
+        return string.Join($" {Logic} ", filterStrings);
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 public enum FilterOperator
