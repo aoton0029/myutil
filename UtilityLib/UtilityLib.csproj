@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DesignPatterns\Proxy\" />
     <Folder Include="DesignPatterns\Adapter\" />
     <Folder Include="DesignPatterns\State\" />
     <Folder Include="DesignPatterns\Strategy\" />

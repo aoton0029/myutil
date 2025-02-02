@@ -5,3 +5,5 @@ https://github.com/mzwierzchlewski/DataProcessing.Channels/tree/main/src/DataPro
 https://maciejz.dev/processing-data-in-parallel-channels/?utm_source=newsletter.csharpdigest.net&utm_medium=referral&utm_campaign=processing-data-in-parallel-using-channels
 https://newsletter.csharpdigest.net/archive?page=10
 https://goatreview.com/
+https://github.com/klasyc/ScpiNet
+https://www.javatpoint.com/structural-design-patterns-in-c-sharp
