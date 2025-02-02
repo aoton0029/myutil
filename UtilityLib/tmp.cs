@@ -1,3 +1,93 @@
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+public class ProducerConsumerService : IDisposable
+{
+    private readonly Timer _timer;
+    private readonly ConcurrentQueue<string> _dataQueue;
+    private readonly Form _form;
+    private bool _isFetching = false; // データ取得中フラグ
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1); // 同時実行制御
+
+    public event Action<List<string>>? DataReceived; // UI に複数のデータを渡す
+
+    public ProducerConsumerService(Form form)
+    {
+        _form = form;
+        _dataQueue = new ConcurrentQueue<string>();
+
+        // 5秒ごとにデータ取得
+        _timer = new Timer(Callback, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+    }
+
+    private async void Callback(object? state)
+    {
+        if (_isFetching) return; // 既に取得中ならスキップ
+        _isFetching = true;
+
+        try
+        {
+            await _semaphore.WaitAsync();
+            
+            // 並列で複数のデータ取得
+            var tasks = new List<Task<string>>
+            {
+                FetchDataFromDatabaseAsync("Source 1"),
+                FetchDataFromDatabaseAsync("Source 2"),
+                FetchDataFromDatabaseAsync("Source 3")
+            };
+
+            var results = await Task.WhenAll(tasks);
+            foreach (var result in results)
+            {
+                _dataQueue.Enqueue(result);
+            }
+
+            DataReceived?.Invoke(new List<string>(results)); // UI に通知
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"データ取得エラー: {ex.Message}");
+            RestartTimer();
+        }
+        finally
+        {
+            _isFetching = false;
+            _semaphore.Release();
+        }
+    }
+
+    // 複数のデータソースから並列でデータ取得
+    private async Task<string> FetchDataFromDatabaseAsync(string source)
+    {
+        await Task.Delay(new Random().Next(500, 2000)); // 疑似的な遅延
+        return $"{source} のデータ取得: {DateTime.Now:HH:mm:ss}";
+    }
+
+    public void StopTimer()
+    {
+        _timer.Change(Timeout.Infinite, Timeout.Infinite);
+    }
+
+    public void RestartTimer()
+    {
+        _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(5));
+    }
+
+    public void Dispose()
+    {
+        _timer.Dispose();
+    }
+}
+
+
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
