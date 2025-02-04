@@ -1,4 +1,45 @@
 using System;
+using System.Linq;
+using System.Windows.Forms;
+
+public class MainForm : Form
+{
+    public MainForm()
+    {
+        this.Text = "メインフォーム";
+        this.Size = new System.Drawing.Size(500, 400);
+
+        Button btnOpenDialog = new Button
+        {
+            Text = "ダイアログを開く",
+            Location = new System.Drawing.Point(20, 20),
+            AutoSize = true
+        };
+        btnOpenDialog.Click += (s, e) => OpenDialog();
+        this.Controls.Add(btnOpenDialog);
+
+        this.Click += (s, e) => FocusLatestDialog();
+    }
+
+    private void OpenDialog()
+    {
+        DialogForm dialog = new DialogForm();
+        this.AddOwnedForm(dialog);
+        dialog.FormClosed += (s, e) => this.RemoveOwnedForm(dialog);
+        dialog.Show(); // モーダレスで開く
+    }
+
+    private void FocusLatestDialog()
+    {
+        if (this.OwnedForms.Length > 0)
+        {
+            Form latestDialog = this.OwnedForms.LastOrDefault();
+            latestDialog?.Activate(); // 最後に開いたダイアログにフォーカスを当てる
+        }
+    }
+}
+
+using System;
 using System.Windows.Forms;
 
 public class MainForm : Form
