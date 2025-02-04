@@ -1,3 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        var rawChannel = Channel.CreateBounded<int>(10); // Producer → Processor
+        var processedChannel = Channel.CreateBounded<int>(10); // Processor → Consumer
+
+        var producer = Producer(rawChannel.Writer);
+        var processor = Processor(rawChannel.Reader, processedChannel.Writer);
+        var consumer = Consumer(processedChannel.Reader);
+
+        await Task.WhenAll(producer, processor, consumer);
+        Console.WriteLine("Processing complete.");
+    }
+
+    static async Task Producer(ChannelWriter<int> writer)
+    {
+        for (int i = 1; i <= 20; i++)
+        {
+            await writer.WriteAsync(i);
+            Console.WriteLine($"Produced: {i}");
+            await Task.Delay(100);
+        }
+        writer.Complete();
+    }
+
+    static async Task Processor(ChannelReader<int> reader, ChannelWriter<int> writer)
+    {
+        await foreach (var item in reader.ReadAllAsync())
+        {
+            int processed = item * 2;
+            await writer.WriteAsync(processed);
+            Console.WriteLine($"Processed: {processed}");
+            await Task.Delay(200);
+        }
+        writer.Complete();
+    }
+
+    static async Task Consumer(ChannelReader<int> reader)
+    {
+        await foreach (var item in reader.ReadAllAsync())
+        {
+            Console.WriteLine($"Consumed: {item}");
+            await Task.Delay(300);
+        }
+    }
+}
+
+
 static async Task<DataTable> ProcessDataTableWithBatchAsync(DataTable inputTable)
 {
     DataTable resultTable = new DataTable();
