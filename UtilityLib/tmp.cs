@@ -1,3 +1,58 @@
+static async Task<DataTable> ProcessDataTableWithBatchAsync(DataTable inputTable)
+{
+    DataTable resultTable = new DataTable();
+    resultTable.Columns.Add("ID", typeof(int));
+    resultTable.Columns.Add("ProcessedName", typeof(string));
+
+    var processedRows = new ConcurrentBag<DataRow>();
+
+    var options = new ExecutionDataflowBlockOptions
+    {
+        MaxDegreeOfParallelism = Environment.ProcessorCount
+    };
+
+    // バッチ処理 (100行ずつ)
+    var batchBlock = new BatchBlock<DataRow>(100);
+
+    var transformBlock = new TransformBlock<DataRow[], DataRow[]>(async rows =>
+    {
+        await Task.Delay(50); // 模擬処理
+        return rows.Select(row =>
+        {
+            DataRow newRow = resultTable.NewRow();
+            newRow["ID"] = row["ID"];
+            newRow["ProcessedName"] = $"Processed_{row["Name"]}";
+            return newRow;
+        }).ToArray();
+    }, options);
+
+    var actionBlock = new ActionBlock<DataRow[]>(rows =>
+    {
+        foreach (var row in rows)
+        {
+            processedRows.Add(row);
+        }
+    });
+
+    batchBlock.LinkTo(transformBlock, new DataflowLinkOptions { PropagateCompletion = true });
+    transformBlock.LinkTo(actionBlock, new DataflowLinkOptions { PropagateCompletion = true });
+
+    foreach (DataRow row in inputTable.Rows)
+    {
+        batchBlock.Post(row);
+    }
+
+    batchBlock.Complete();
+    await actionBlock.Completion;
+
+    foreach (var row in processedRows)
+    {
+        resultTable.Rows.Add(row.ItemArray);
+    }
+
+    return resultTable;
+}
+
 using System;
 using System.ComponentModel;
 using System.Data;
