@@ -1,4 +1,69 @@
 using System;
+using System.Windows.Forms;
+
+public class MainForm : Form
+{
+    private Button btnOpenDialog;
+    private OwnedDialogForm? dialog;
+
+    public MainForm()
+    {
+        btnOpenDialog = new Button
+        {
+            Text = "ダイアログを開く",
+            Location = new System.Drawing.Point(20, 20)
+        };
+        btnOpenDialog.Click += (s, e) => OpenDialog();
+        Controls.Add(btnOpenDialog);
+    }
+
+    private void OpenDialog()
+    {
+        if (dialog == null || dialog.IsDisposed)
+        {
+            dialog = new OwnedDialogForm
+            {
+                Owner = this // このフォームを所有者に設定
+            };
+            dialog.Show();
+        }
+        else
+        {
+            dialog.BringToFront();
+        }
+    }
+
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new MainForm());
+    }
+}
+
+public class OwnedDialogForm : Form
+{
+    public OwnedDialogForm()
+    {
+        Text = "Owned ダイアログ";
+        Size = new System.Drawing.Size(300, 200);
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        // Ownerが設定されていなければ閉じる
+        if (Owner == null)
+        {
+            MessageBox.Show("このダイアログは特定のフォームからのみ開けます。");
+            Close();
+        }
+    }
+}
+
+
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
