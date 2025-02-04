@@ -1,3 +1,85 @@
+using System;
+using System.ComponentModel;
+using System.Data;
+using System.Windows.Forms;
+
+public class CustomComboBox : ComboBox, ISupportInitialize
+{
+    private bool _useAlternativeData = false;
+    private bool _initializing = false;
+
+    [Category("Custom Properties")]
+    [Description("別のデータセットを使用するかどうかを切り替えます。")]
+    public bool UseAlternativeData
+    {
+        get { return _useAlternativeData; }
+        set
+        {
+            if (_useAlternativeData != value)
+            {
+                _useAlternativeData = value;
+                UpdateDataSource(); // プロパティ変更時にデータソースを更新
+            }
+        }
+    }
+
+    public CustomComboBox()
+    {
+        if (!DesignMode)
+        {
+            InitializeDataSource();
+        }
+    }
+
+    public void BeginInit()
+    {
+        _initializing = true;
+    }
+
+    public void EndInit()
+    {
+        _initializing = false;
+        if (DesignMode)
+        {
+            InitializeDataSource();
+        }
+    }
+
+    private void InitializeDataSource()
+    {
+        UpdateDataSource();
+    }
+
+    private void UpdateDataSource()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("ID", typeof(int));
+        dt.Columns.Add("Name", typeof(string));
+
+        if (_useAlternativeData)
+        {
+            dt.Rows.Add(101, "オプション A");
+            dt.Rows.Add(102, "オプション B");
+            dt.Rows.Add(103, "オプション C");
+        }
+        else
+        {
+            dt.Rows.Add(1, "選択肢1");
+            dt.Rows.Add(2, "選択肢2");
+            dt.Rows.Add(3, "選択肢3");
+        }
+
+        this.DataSource = dt;
+        this.DisplayMember = "Name";
+        this.ValueMember = "ID";
+
+        if (this.Items.Count > 0)
+        {
+            this.SelectedIndex = 0;
+        }
+    }
+}
+
 
 using System;
 using System.Collections.Concurrent;
