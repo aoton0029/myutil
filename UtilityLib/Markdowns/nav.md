@@ -1,3 +1,192 @@
+ServiceProvider は、SharedData を ServiceCollection に シングルトン として登録し、画面 (UserControl) に渡しています。
+
+
+---
+
+どこで SharedData を渡しているのか？
+
+SharedData の登録は MainForm のコンストラクタ内 で行っています。
+
+MainForm.cs
+
+public class MainForm : Form
+{
+    private readonly ServiceProvider _serviceProvider;
+    private readonly NavigationService _navigationService;
+    private Panel _panel;
+
+    public MainForm()
+    {
+        Width = 400;
+        Height = 250;
+
+        // ① ServiceCollection に SharedData をシングルトンとして登録
+        var services = new ServiceCollection();
+        services.AddSingleton(new SharedData()); // ← ここで登録！
+        _serviceProvider = services.BuildServiceProvider();
+
+        _panel = new Panel { Dock = DockStyle.Fill };
+        Controls.Add(_panel);
+
+        // ② NavigationService を作成し、DI コンテナを渡す
+        _navigationService = new NavigationService(_panel, _serviceProvider);
+
+        // ③ 画面を登録
+        _navigationService.RegisterPage<Page1>();
+        _navigationService.RegisterPage<Page2>();
+        _navigationService.RegisterPage<Page3>();
+        _navigationService.RegisterPage<Page4>();
+
+        // ④ 最初のページを表示
+        _navigationService.NavigateTo<Page1>();
+    }
+}
+
+SharedData を ServiceCollection に シングルトンとして登録
+
+ServiceProvider を構築 (BuildServiceProvider)
+
+NavigationService に渡す
+
+NavigationService は UserControl を管理
+
+
+
+---
+
+UserControl の中で SharedData をどう取得するのか？
+
+各 UserControl (Page1, Page2, Page3, Page4) では、コンストラクタで SharedData を受け取る設計 になっています。
+
+例えば Page1.cs では:
+
+public class Page1 : UserControl
+{
+    private readonly SharedData _sharedData;
+
+    public Page1(NavigationService navigation, SharedData sharedData)
+    {
+        _sharedData = sharedData; // ← ここで受け取る
+    }
+}
+
+この Page1 のインスタンスを作るとき、NavigationService は ServiceProvider から SharedData を取得します。
+
+
+---
+
+どこで SharedData を Page1 に渡しているのか？
+
+NavigationService の RegisterPage<TPage>() メソッドで UserControl を作成していますが、
+UserControl は SharedData を必要とするので、ServiceProvider から取得するように修正します。
+
+NavigationService.cs（修正後）
+
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Linq;
+using System.Reflection;
+
+public class NavigationService
+{
+    private readonly Panel _hostPanel;
+    private readonly Dictionary<Type, UserControl> _pages = new();
+    private readonly ServiceProvider _serviceProvider;
+
+    public NavigationService(Panel hostPanel, ServiceProvider serviceProvider)
+    {
+        _hostPanel = hostPanel;
+        _serviceProvider = serviceProvider;
+    }
+
+    public void RegisterPage<TPage>() where TPage : UserControl
+    {
+        var pageType = typeof(TPage);
+        
+        // コンストラクタの引数を解決する
+        var constructor = pageType.GetConstructors().First();
+        var parameters = constructor.GetParameters()
+            .Select(p => _serviceProvider.GetService(p.ParameterType))
+            .ToArray();
+        
+        var pageInstance = (TPage)Activator.CreateInstance(pageType, parameters);
+        _pages[pageType] = pageInstance;
+    }
+
+    public void NavigateTo<TPage>() where TPage : UserControl
+    {
+        if (_pages.TryGetValue(typeof(TPage), out var page))
+        {
+            _hostPanel.Controls.Clear();
+            _hostPanel.Controls.Add(page);
+            page.Dock = DockStyle.Fill;
+        }
+        else
+        {
+            throw new InvalidOperationException($"Page {typeof(TPage).Name} is not registered.");
+        }
+    }
+}
+
+変更点
+
+1. RegisterPage<TPage>() のときに、ページのコンストラクタの引数を ServiceProvider から取得
+
+
+2. SharedData を 自動で注入 できるようになった
+
+
+
+
+---
+
+最終的な流れ
+
+MainForm
+
+1. ServiceCollection に SharedData を登録
+
+
+2. ServiceProvider を作成
+
+
+3. NavigationService に ServiceProvider を渡す
+
+
+
+NavigationService
+
+4. RegisterPage<TPage>() で ServiceProvider から SharedData を取得
+
+
+5. UserControl に SharedData を渡してインスタンスを作成
+
+
+
+各 UserControl
+
+6. SharedData にアクセスしてデータを保存・取得
+
+
+
+
+---
+
+結論
+
+SharedData は MainForm で ServiceCollection に登録
+
+NavigationService で ServiceProvider から SharedData を取得
+
+UserControl では SharedData をコンストラクタ経由で受け取る
+
+
+こうすることで、各ページ (UserControl) 間で データを共有 しながら、画面遷移がスムーズに できるようになっています！
+
+
+
+
 WinFormsでシンプルなDIコンテナ（ServiceCollection、ServiceProvider、ServiceDescriptor）とNavigationServiceを独自実装し、UserControlを使った画面遷移を行う仕組みを作ります。また、画面間で共有データを保持する仕組みも組み込みます。
 
 
