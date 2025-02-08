@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet45", "DotNet45\DotNet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSample", "DbSample\DbSample.csproj", "{5D8335CB-75D0-4795-AF9F-7F485A634A72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormSample", "FormSample\FormSample.csproj", "{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D8335CB-75D0-4795-AF9F-7F485A634A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PageNavigationSample
+namespace FormSample
 {
-    public partial class UcPage2 : UserControl
+    public partial class Form2 : Form
     {
-        public UcPage2()
+        public Form2()
         {
             InitializeComponent();
         }
