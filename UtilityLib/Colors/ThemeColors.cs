@@ -52,9 +52,9 @@ namespace UtilityLib.Colors
         // **Azure テーマ**
         public static ThemeColors AzureTheme => new ThemeColors
         {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
+            Primary = ColorTranslator.FromHtml("#007FFF"),
+            PrimaryVariant = ColorTranslator.FromHtml("#005FCC"),
+            Secondary = ColorTranslator.FromHtml("#0096FF"),
             SecondaryVariant = ColorTranslator.FromHtml("#018786"),
             Tertiary = ColorTranslator.FromHtml("#FF6F00"), // オレンジ系
             TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
@@ -66,106 +66,5 @@ namespace UtilityLib.Colors
             Error = ColorTranslator.FromHtml("#B00020") // マテリアルデザインのエラーカラー
         };
 
-        // **Soft Ivory Theme (#FCF9EF)**
-        public static ThemeColors SoftIvoryTheme => new ThemeColors
-        {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
-            SecondaryVariant = ColorTranslator.FromHtml("#018786"),
-            Tertiary = ColorTranslator.FromHtml("#FF6F00"), // オレンジ系
-            TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
-            Accent = ColorTranslator.FromHtml("#FF0266"),
-            Background = ColorTranslator.FromHtml("#FCF9EF"),  // Soft Ivory
-            Surface = ColorTranslator.FromHtml("#F5F5F5"),
-            TextPrimary = ColorTranslator.FromHtml("#000000"),
-            TextSecondary = ColorTranslator.FromHtml("#757575"),
-            Error = ColorTranslator.FromHtml("#B00020")
-        };
-
-        // **Warm Beige Theme (#F4EEE9)**
-        public static ThemeColors WarmBeigeTheme => new ThemeColors
-        {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
-            SecondaryVariant = ColorTranslator.FromHtml("#018786"),
-            Tertiary = ColorTranslator.FromHtml("#FF6F00"),
-            TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
-            Accent = ColorTranslator.FromHtml("#FF0266"),
-            Background = ColorTranslator.FromHtml("#F4EEE9"),  // Warm Beige
-            Surface = ColorTranslator.FromHtml("#EDE7E3"),
-            TextPrimary = ColorTranslator.FromHtml("#000000"),
-            TextSecondary = ColorTranslator.FromHtml("#757575"),
-            Error = ColorTranslator.FromHtml("#B00020")
-        };
-
-        // **Soft Pink Theme (#F8F2F7)**
-        public static ThemeColors SoftPinkTheme => new ThemeColors
-        {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
-            SecondaryVariant = ColorTranslator.FromHtml("#018786"),
-            Tertiary = ColorTranslator.FromHtml("#FF6F00"),
-            TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
-            Accent = ColorTranslator.FromHtml("#FF0266"),
-            Background = ColorTranslator.FromHtml("#F8F2F7"),  // Soft Pink
-            Surface = ColorTranslator.FromHtml("#F0E4EC"),
-            TextPrimary = ColorTranslator.FromHtml("#000000"),
-            TextSecondary = ColorTranslator.FromHtml("#757575"),
-            Error = ColorTranslator.FromHtml("#B00020")
-        };
-
-        // **Soft Blue Theme (#EAF1F2)**
-        public static ThemeColors SoftBlueTheme => new ThemeColors
-        {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
-            SecondaryVariant = ColorTranslator.FromHtml("#018786"),
-            Tertiary = ColorTranslator.FromHtml("#FF6F00"), // オレンジ系
-            TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
-            Accent = ColorTranslator.FromHtml("#FF0266"),
-            Background = ColorTranslator.FromHtml("#EAF1F2"),  // ソフトブルー
-            Surface = ColorTranslator.FromHtml("#DCE8EA"),
-            TextPrimary = ColorTranslator.FromHtml("#000000"),
-            TextSecondary = ColorTranslator.FromHtml("#757575"),
-            Error = ColorTranslator.FromHtml("#B00020")
-        };
-
-        // **Soft Green Theme (#E5EDE9)**
-        public static ThemeColors SoftGreenTheme => new ThemeColors
-        {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
-            SecondaryVariant = ColorTranslator.FromHtml("#018786"),
-            Tertiary = ColorTranslator.FromHtml("#FF6F00"),
-            TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
-            Accent = ColorTranslator.FromHtml("#FF0266"),
-            Background = ColorTranslator.FromHtml("#E5EDE9"),  // ソフトグリーン
-            Surface = ColorTranslator.FromHtml("#D9E2DC"),
-            TextPrimary = ColorTranslator.FromHtml("#000000"),
-            TextSecondary = ColorTranslator.FromHtml("#757575"),
-            Error = ColorTranslator.FromHtml("#B00020")
-        };
-
-        // **Pale Blue Theme (#E6EAF2)**
-        public static ThemeColors PaleBlueTheme => new ThemeColors
-        {
-            Primary = ColorTranslator.FromHtml("#6200EE"),
-            PrimaryVariant = ColorTranslator.FromHtml("#3700B3"),
-            Secondary = ColorTranslator.FromHtml("#03DAC6"),
-            SecondaryVariant = ColorTranslator.FromHtml("#018786"),
-            Tertiary = ColorTranslator.FromHtml("#FF6F00"),
-            TertiaryVariant = ColorTranslator.FromHtml("#E65100"),
-            Accent = ColorTranslator.FromHtml("#FF0266"),
-            Background = ColorTranslator.FromHtml("#E6EAF2"),  // ペールブルー
-            Surface = ColorTranslator.FromHtml("#D8DFEB"),
-            TextPrimary = ColorTranslator.FromHtml("#000000"),
-            TextSecondary = ColorTranslator.FromHtml("#757575"),
-            Error = ColorTranslator.FromHtml("#B00020")
-        };
     }
 }

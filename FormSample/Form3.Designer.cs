@@ -32,6 +32,8 @@
             button2 = new Button();
             button3 = new Button();
             panel1 = new Panel();
+            dataGridView1 = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -57,7 +59,7 @@
             button2.Name = "button2";
             button2.Size = new Size(127, 40);
             button2.TabIndex = 1;
-            button2.Text = "検索履歴";
+            button2.Text = "検索詳細";
             button2.UseVisualStyleBackColor = true;
             // 
             // button3
@@ -80,21 +82,31 @@
             panel1.Location = new Point(5, 45);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1763, 145);
+            panel1.Size = new Size(1430, 76);
             panel1.TabIndex = 3;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(5, 158);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(1430, 567);
+            dataGridView1.TabIndex = 4;
             // 
             // Form3
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1784, 961);
+            ClientSize = new Size(1444, 737);
+            Controls.Add(dataGridView1);
             Controls.Add(panel1);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Name = "Form3";
             Text = "Form3";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -105,5 +117,6 @@
         private Button button2;
         private Button button3;
         private Panel panel1;
+        private DataGridView dataGridView1;
     }
 }
