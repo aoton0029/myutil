@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSample", "DbSample\DbSamp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormSample", "FormSample\FormSample.csproj", "{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorSample", "ColorSample\ColorSample.csproj", "{02F1787F-FD1E-4759-A61B-EAA828804A7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F1787F-FD1E-4759-A61B-EAA828804A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F1787F-FD1E-4759-A61B-EAA828804A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F1787F-FD1E-4759-A61B-EAA828804A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F1787F-FD1E-4759-A61B-EAA828804A7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
