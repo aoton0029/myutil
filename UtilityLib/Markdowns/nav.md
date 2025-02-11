@@ -1,3 +1,204 @@
+改良版 RegisterFormNavigationService
+
+現在のページ型・遷移先のページ型・シェアデータを受け取る 条件分岐ルール を設定し、戻る際にも適用できるように RegisterFormNavigationService を拡張します。
+
+新しい要件
+
+✅ 動的な条件分岐
+
+Next() の際、現在のページ型・遷移先のページ型・シェアデータを考慮して次の画面を決定 ✅ 戻る際の条件分岐
+
+Previous() でも条件分岐を適用し、特定の画面をスキップ可能 ✅ 登録画面をスキップ
+
+例: 登録画面を通過後、すでに登録されていれば戻る際も登録画面をスキップ ✅ カスタムルールの設定
+
+ユーザーが独自のナビゲーションルールを追加可能 (RegisterNavigationRule())
+
+
+
+---
+
+改良後の RegisterFormNavigationService
+
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+public class RegisterFormNavigationService : NavigationService
+{
+    private Stack<Type> _history = new();
+    private Action<object> _onComplete;
+    private object _formData;
+    private Dictionary<(Type current, Type next), Func<object, Type>> _navigationRules = new();
+    private Dictionary<(Type current, Type previous), Func<object, Type>> _backNavigationRules = new();
+
+    public RegisterFormNavigationService(Panel container, object sharedData, Action<object> onComplete)
+        : base(container, sharedData)
+    {
+        _onComplete = onComplete;
+        _formData = new Dictionary<string, object>();
+    }
+
+    public void Start<T>() where T : UserControl
+    {
+        _history.Clear();
+        Navigate(typeof(T));
+    }
+
+    public void RegisterNavigationRule<TCurrent, TNext>(Func<object, Type> rule)
+        where TCurrent : UserControl
+        where TNext : UserControl
+    {
+        _navigationRules[(typeof(TCurrent), typeof(TNext))] = rule;
+    }
+
+    public void RegisterBackNavigationRule<TCurrent, TPrevious>(Func<object, Type> rule)
+        where TCurrent : UserControl
+        where TPrevious : UserControl
+    {
+        _backNavigationRules[(typeof(TCurrent), typeof(TPrevious))] = rule;
+    }
+
+    public void Next(Type nextPageType)
+    {
+        if (!typeof(UserControl).IsAssignableFrom(nextPageType))
+            throw new ArgumentException("Next page must be a UserControl.");
+
+        Type currentPageType = _currentPage?.GetType();
+
+        if (_navigationRules.TryGetValue((currentPageType, nextPageType), out var rule))
+        {
+            nextPageType = rule(_sharedData);
+        }
+
+        _history.Push(currentPageType);
+        Navigate(nextPageType);
+    }
+
+    public void Previous()
+    {
+        if (_history.Count > 0)
+        {
+            Type previousPage = _history.Pop();
+            Type currentPageType = _currentPage?.GetType();
+
+            if (_backNavigationRules.TryGetValue((currentPageType, previousPage), out var rule))
+            {
+                previousPage = rule(_sharedData);
+            }
+
+            Navigate(previousPage);
+        }
+    }
+
+    public void Cancel()
+    {
+        if (_history.Count > 0)
+        {
+            Type firstPage = _history.ToArray()[^1];
+            _history.Clear();
+            Navigate(firstPage);
+        }
+    }
+
+    public void Complete()
+    {
+        _onComplete?.Invoke(_formData);
+    }
+
+    public void SaveData(string key, object value)
+    {
+        if (_formData is Dictionary<string, object> data)
+        {
+            data[key] = value;
+        }
+    }
+
+    public object GetData(string key)
+    {
+        if (_formData is Dictionary<string, object> data && data.ContainsKey(key))
+        {
+            return data[key];
+        }
+        return null;
+    }
+}
+
+
+---
+
+使用例
+
+(1) 画面の登録
+
+_navigationService.RegisterStep<Step1Page>();
+_navigationService.RegisterStep<RegistrationPage>();
+_navigationService.RegisterStep<ConfirmationPage>();
+_navigationService.RegisterStep<CompletePage>();
+
+
+---
+
+(2) Next() の際のルールを設定
+
+登録ページ (RegistrationPage) を通過後、すでに登録済みならスキップ
+
+
+_navigationService.RegisterNavigationRule<Step1Page, RegistrationPage>((sharedData) =>
+{
+    bool isRegistered = (bool)_navigationService.GetData("IsRegistered");
+    return isRegistered ? typeof(ConfirmationPage) : typeof(RegistrationPage);
+});
+
+
+---
+
+(3) Previous() の際のルールを設定
+
+ConfirmationPage から戻る際、 すでに登録されていたら Step1Page まで戻る
+
+
+_navigationService.RegisterBackNavigationRule<ConfirmationPage, RegistrationPage>((sharedData) =>
+{
+    bool isRegistered = (bool)_navigationService.GetData("IsRegistered");
+    return isRegistered ? typeof(Step1Page) : typeof(RegistrationPage);
+});
+
+
+---
+
+(4) 画面遷移時の動作
+
+✅ Step1Page から Next()
+
+未登録 → RegistrationPage
+
+登録済み → ConfirmationPage
+
+
+✅ ConfirmationPage から Previous()
+
+登録済み → Step1Page
+
+未登録 → RegistrationPage
+
+
+
+---
+
+より柔軟なカスタマイズが可能に！
+
+
+---
+
+結論
+
+この実装により、「登録画面を一度通過したら、もう戻らない」 といった動的ナビゲーションが可能になります。
+特に、ユーザーの選択や状態によって画面フローが変わるアプリケーション に最適です！ 🚀
+
+
+
+
 ServiceProvider は、SharedData を ServiceCollection に シングルトン として登録し、画面 (UserControl) に渡しています。
 
 
