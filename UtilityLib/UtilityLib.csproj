@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DataProcesses\Simple\" />
     <Folder Include="DesignPatterns\Adapter\" />
     <Folder Include="DesignPatterns\State\" />
     <Folder Include="DesignPatterns\Strategy\" />

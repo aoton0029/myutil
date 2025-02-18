@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.DataProcesses
 {
+    public record DataWithKey(int Key, string Data);
+
     public partial class BackgroundDataProcessor : BackgroundService, IDataProcessor
     {
         private readonly Channel<DataWithKey> _internalQueue = Channel.CreateUnbounded<DataWithKey>(new UnboundedChannelOptions { SingleReader = true });
