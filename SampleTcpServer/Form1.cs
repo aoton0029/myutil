@@ -1,3 +1,5 @@
+using SampleTcpServer.Simples;
+
 namespace SampleTcpServer
 {
     public partial class Form1 : Form

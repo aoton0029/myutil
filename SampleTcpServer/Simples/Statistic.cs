@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTcpServer
+namespace SampleTcpServer.Simples
 {
     public class Statistic
     {
@@ -14,7 +14,7 @@ namespace SampleTcpServer
 
         public DateTime StartTime_startTime => _startTime;
         public TimeSpan UpTime => DateTime.Now.ToUniversalTime() - _startTime;
-        public long ReceivedBytes { get => _receivedBytes; internal set=> _receivedBytes = value; }
+        public long ReceivedBytes { get => _receivedBytes; internal set => _receivedBytes = value; }
         public long SentBytes { get => _sentBytes; internal set => _sentBytes = value; }
 
         public Statistic()

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTcpServer
+namespace SampleTcpServer.Simples
 {
     internal class Common
     {

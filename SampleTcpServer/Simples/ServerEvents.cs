@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTcpServer
+namespace SampleTcpServer.Simples
 {
     public enum DisconnectReason
     {
