@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTcpServer
+namespace SampleTcpServer.Simples
 {
     public class Client
     {
@@ -377,7 +377,7 @@ namespace SampleTcpServer
             if (!_isConnected) throw new IOException("Not connected to the server; use Connect() first.");
 
             byte[] bytes = Encoding.UTF8.GetBytes(data);
-            this.Send(bytes);
+            Send(bytes);
         }
 
         public void Send(byte[] data)
@@ -407,7 +407,7 @@ namespace SampleTcpServer
         {
             if (string.IsNullOrEmpty(data)) throw new ArgumentNullException(nameof(data));
             if (!_isConnected) throw new IOException("Not connected to the server; use Connect() first.");
-            if (token == default(CancellationToken)) token = _token;
+            if (token == default) token = _token;
 
             byte[] bytes = Encoding.UTF8.GetBytes(data);
 
@@ -423,7 +423,7 @@ namespace SampleTcpServer
         {
             if (data == null || data.Length < 1) throw new ArgumentNullException(nameof(data));
             if (!_isConnected) throw new IOException("Not connected to the server; use Connect() first.");
-            if (token == default(CancellationToken)) token = _token;
+            if (token == default) token = _token;
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -439,7 +439,7 @@ namespace SampleTcpServer
             if (stream == null) throw new ArgumentNullException(nameof(stream));
             if (!stream.CanRead) throw new InvalidOperationException("Cannot read from supplied stream.");
             if (!_isConnected) throw new IOException("Not connected to the server; use Connect() first.");
-            if (token == default(CancellationToken)) token = _token;
+            if (token == default) token = _token;
 
             await SendInternalAsync(contentLength, stream, token).ConfigureAwait(false);
         }
@@ -582,7 +582,7 @@ namespace SampleTcpServer
                 {
                     IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
                     TcpConnectionInformation[] tcpConnections = ipProperties.GetActiveTcpConnections()
-                        .Where(x => x.LocalEndPoint.Equals(this._client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(this._client.Client.RemoteEndPoint)).ToArray();
+                        .Where(x => x.LocalEndPoint.Equals(_client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(_client.Client.RemoteEndPoint)).ToArray();
 
                     var isOk = false;
 
@@ -597,7 +597,7 @@ namespace SampleTcpServer
 
                     if (!isOk)
                     {
-                        await this.DisconnectAsync();
+                        await DisconnectAsync();
                     }
 
                     throw new SocketException();
@@ -661,7 +661,7 @@ namespace SampleTcpServer
                     }
                 }
 
-                await _networkStream.FlushAsync(token).ConfigureAwait(false); 
+                await _networkStream.FlushAsync(token).ConfigureAwait(false);
                 _events.HandleDataSent(this, new DataSentEventArgs(ServerIpPort, contentLength));
             }
             catch (TaskCanceledException)

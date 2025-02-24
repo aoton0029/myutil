@@ -6,7 +6,7 @@ using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTcpServer
+namespace SampleTcpServer.Simples
 {
     /// <summary>
     /// SimpleTcp server settings.
