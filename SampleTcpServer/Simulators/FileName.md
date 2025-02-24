@@ -1,3 +1,216 @@
+IPアドレスでデバイスの種類を識別する TCP サーバー
+
+各クライアントが 接続する IP アドレスに応じて 仮想デバイスの種類を自動で割り当てるように設定できます。
+
+
+---
+
+改良ポイント
+
+1. 接続元の IP アドレスを確認
+
+client.Client.RemoteEndPoint を取得し、IP に応じたデバイスを割り当て
+
+
+
+2. IP アドレスに基づいたデバイスマッピング
+
+127.0.0.2 → 電源 (PSU)
+
+127.0.0.3 → マルチメーター 1 (DMM1)
+
+127.0.0.4 → マルチメーター 2 (DMM2)
+
+127.0.0.5 → マルチメーター 3 (DMM3)
+
+
+
+
+
+---
+
+1. IP に基づくデバイスマッピング
+
+using System;
+using System.Collections.Generic;
+using System.Net;
+
+class DeviceFactory
+{
+    private static readonly Dictionary<string, string> IpToDeviceType = new()
+    {
+        { "127.0.0.2", "PSU" },   // 電源
+        { "127.0.0.3", "DMM1" },  // マルチメーター 1
+        { "127.0.0.4", "DMM2" },  // マルチメーター 2
+        { "127.0.0.5", "DMM3" }   // マルチメーター 3
+    };
+
+    public static VirtualDevice CreateDevice(IPAddress clientIp, string deviceId)
+    {
+        if (IpToDeviceType.TryGetValue(clientIp.ToString(), out var deviceType))
+        {
+            return deviceType.StartsWith("PSU") ? new PowerSupply(deviceId) : new Multimeter(deviceId);
+        }
+        throw new ArgumentException("Invalid client IP address");
+    }
+}
+
+
+---
+
+2. TCP サーバー（IP に基づくデバイス割り当て）
+
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+class TcpDeviceSimulator
+{
+    private readonly TcpListener _server;
+    private readonly ConcurrentDictionary<TcpClient, VirtualDevice> _clientDevices = new();
+    private int _deviceCounter = 0;
+
+    public TcpDeviceSimulator(int port)
+    {
+        _server = new TcpListener(IPAddress.Any, port);
+    }
+
+    public void Start()
+    {
+        _server.Start();
+        Console.WriteLine("TCPサーバーが起動しました...");
+
+        Task.Run(async () =>
+        {
+            while (true)
+            {
+                var client = await _server.AcceptTcpClientAsync();
+                var clientIp = ((IPEndPoint)client.Client.RemoteEndPoint).Address;
+
+                try
+                {
+                    var deviceId = $"Device{++_deviceCounter}";
+                    var device = DeviceFactory.CreateDevice(clientIp, deviceId);
+                    _clientDevices[client] = device;
+
+                    Console.WriteLine($"クライアント接続: {clientIp} -> {deviceId} ({device.Type})");
+
+                    var task = HandleClientAsync(client);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"無効な IP ({clientIp}): {ex.Message}");
+                    client.Close();
+                }
+            }
+        });
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        using (client)
+        using (var stream = client.GetStream())
+        using (var reader = new StreamReader(stream, Encoding.UTF8))
+        using (var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
+        {
+            var device = _clientDevices[client];
+
+            while (true)
+            {
+                try
+                {
+                    var command = await reader.ReadLineAsync();
+                    if (command == null) break;
+
+                    Console.WriteLine($"[{device.Id}] 受信: {command}");
+                    var response = device.ProcessCommand(command);
+                    await writer.WriteLineAsync(response);
+                    Console.WriteLine($"[{device.Id}] 送信: {response}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"クライアント処理エラー: {ex.Message}");
+                    break;
+                }
+            }
+        }
+
+        _clientDevices.TryRemove(client, out _);
+        Console.WriteLine($"クライアント切断: {client.Client.RemoteEndPoint}");
+    }
+
+    public void Stop()
+    {
+        _server.Stop();
+        Console.WriteLine("TCPサーバーを停止しました。");
+    }
+}
+
+
+---
+
+3. サーバーの起動
+
+class Program
+{
+    static void Main()
+    {
+        var server = new TcpDeviceSimulator(5000);
+        server.Start();
+
+        Console.WriteLine("Enterキーで終了...");
+        Console.ReadLine();
+        server.Stop();
+    }
+}
+
+
+---
+
+動作イメージ
+
+クライアントが 127.0.0.2 に接続
+
+クライアント接続: 127.0.0.2 -> Device1 (PSU)
+送信: GET_VOLTAGE
+受信: 12.00V
+
+クライアントが 127.0.0.3 に接続
+
+クライアント接続: 127.0.0.3 -> Device2 (DMM1)
+送信: GET_VOLTAGE
+受信: 13.24V  (ランダム値)
+
+クライアントが 127.0.0.4 に接続
+
+クライアント接続: 127.0.0.4 -> Device3 (DMM2)
+送信: GET_CURRENT
+受信: 0.85A  (ランダム値)
+
+クライアントが 127.0.0.5 に接続
+
+クライアント接続: 127.0.0.5 -> Device4 (DMM3)
+送信: GET_POWER
+受信: 18.23W  (ランダム値)
+
+
+---
+
+まとめ
+
+✅ クライアントの IP アドレスでデバイスの種類を自動判別
+✅ マッピングを Dictionary で管理するため拡張が容易
+✅ クライアントが自動的に正しいデバイスと通信可能
+
+これで、各クライアントが 接続先 IP アドレスに応じて適切な仮想デバイスを取得できる TCP サーバーが完成しました！
+
+
+
+
 ﻿### **外部設定の拡張**
 既存のシナリオやログ機能をさらに強化するため、**外部設定ファイル** を活用して以下の点を管理できるようにします。
 
