@@ -1,3 +1,284 @@
+各デバイスに対して独自の通信プロトコルを実装
+
+異なるデバイスがそれぞれ独自の通信プロトコル（データフォーマット、コマンド形式など）を持つように実装します。
+各デバイスのプロトコルを統一的に処理しながら、デバイスごとに適した応答を返せるようにします。
+
+
+---
+
+設計のポイント
+
+✅ IDeviceProtocol インターフェースを定義（共通の通信フォーマット）
+✅ デバイスごとにプロトコルクラスを作成（PowerSupplyProtocol、MultimeterProtocol、TemperatureSensorProtocol）
+✅ 各デバイスが独自のフォーマットで送受信
+✅ データをバイナリや JSON で処理可能にする拡張性
+
+
+---
+
+1. IDeviceProtocol（共通のインターフェース）
+
+interface IDeviceProtocol
+{
+    string Encode(string command); // 送信データをエンコード
+    string Decode(string response); // 受信データをデコード
+}
+
+
+---
+
+2. PowerSupplyProtocol（パワーサプライ用プロトコル）
+
+コマンドは PS:COMMAND の形式
+
+応答は OK または ERROR
+
+
+class PowerSupplyProtocol : IDeviceProtocol
+{
+    public string Encode(string command)
+    {
+        return $"PS:{command}"; // 例: "PS:SET_VOLTAGE 12.5"
+    }
+
+    public string Decode(string response)
+    {
+        return response.StartsWith("PS:") ? response.Substring(3) : "ERROR: INVALID RESPONSE";
+    }
+}
+
+
+---
+
+3. MultimeterProtocol（マルチメーター用プロトコル）
+
+コマンドは JSON フォーマット
+
+応答も JSON
+
+
+using System.Text.Json;
+
+class MultimeterProtocol : IDeviceProtocol
+{
+    public string Encode(string command)
+    {
+        return JsonSerializer.Serialize(new { cmd = command });
+    }
+
+    public string Decode(string response)
+    {
+        try
+        {
+            var result = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
+            return result != null && result.ContainsKey("result") ? result["result"] : "ERROR: INVALID RESPONSE";
+        }
+        catch
+        {
+            return "ERROR: JSON PARSE FAILED";
+        }
+    }
+}
+
+
+---
+
+4. TemperatureSensorProtocol（温度センサー用プロトコル）
+
+バイナリ形式（最初の1バイトがコマンドタイプ、後続がデータ）
+
+
+class TemperatureSensorProtocol : IDeviceProtocol
+{
+    public string Encode(string command)
+    {
+        return command switch
+        {
+            "GET_TEMPERATURE" => "\x01", // 1バイトでコマンド送信
+            "GET_HUMIDITY" => "\x02",
+            _ => "\xFF" // エラー
+        };
+    }
+
+    public string Decode(string response)
+    {
+        return response switch
+        {
+            "\x01" => "TEMPERATURE 25°C",
+            "\x02" => "HUMIDITY 60%",
+            _ => "ERROR: INVALID RESPONSE"
+        };
+    }
+}
+
+
+---
+
+5. DeviceServer（サーバー側でプロトコルを適用）
+
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+class DeviceServer
+{
+    private readonly string _ipAddress;
+    private readonly int _port;
+    private TcpListener _listener;
+    private IDeviceProtocol _protocol;
+    private IDevice _device;
+    public event Action<string> OnLog;
+    public event Action<string, Exception> OnError;
+
+    public DeviceServer(string ipAddress, int port, IDevice device, IDeviceProtocol protocol)
+    {
+        _ipAddress = ipAddress;
+        _port = port;
+        _listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+        _device = device;
+        _protocol = protocol;
+    }
+
+    public async Task StartAsync()
+    {
+        try
+        {
+            _listener.Start();
+            OnLog?.Invoke($"[{_device.Name}] サーバー起動 {_ipAddress}:{_port}");
+
+            while (true)
+            {
+                TcpClient client = await _listener.AcceptTcpClientAsync();
+                OnLog?.Invoke($"[{_device.Name}] クライアント接続");
+
+                _ = HandleClientAsync(client);
+            }
+        }
+        catch (Exception ex)
+        {
+            OnError?.Invoke($"[{_device.Name}] サーバーエラー", ex);
+        }
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        NetworkStream stream = client.GetStream();
+        byte[] buffer = new byte[1024];
+
+        try
+        {
+            while (client.Connected)
+            {
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                if (bytesRead == 0) break;
+
+                string receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                string decodedCommand = _protocol.Decode(receivedText);
+                OnLog?.Invoke($"[{_device.Name}] 受信: {decodedCommand}");
+
+                string response = _device.ProcessCommand(decodedCommand);
+                string encodedResponse = _protocol.Encode(response);
+
+                byte[] responseBytes = Encoding.UTF8.GetBytes(encodedResponse + "\n");
+                await stream.WriteAsync(responseBytes, 0, responseBytes.Length);
+            }
+        }
+        catch (Exception ex)
+        {
+            OnError?.Invoke($"[{_device.Name}] クライアント処理エラー", ex);
+        }
+        finally
+        {
+            OnLog?.Invoke($"[{_device.Name}] クライアント切断");
+            client.Close();
+        }
+    }
+
+    public void Stop()
+    {
+        _listener.Stop();
+        OnLog?.Invoke($"[{_device.Name}] サーバー停止");
+    }
+}
+
+
+---
+
+6. ServerManager（デバイス・プロトコルの組み合わせを管理）
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+
+class ServerManager
+{
+    private List<DeviceServer> _servers = new();
+    private List<Task> _serverTasks = new();
+    private string _logFilePath = "server_log.txt";
+
+    public ServerManager()
+    {
+        _servers.Add(new DeviceServer("192.168.1.100", 5001, new PowerSupply("PowerSupply_1"), new PowerSupplyProtocol()));
+        _servers.Add(new DeviceServer("192.168.1.101", 5002, new Multimeter("Multimeter_1"), new MultimeterProtocol()));
+        _servers.Add(new DeviceServer("192.168.1.102", 5003, new TemperatureSensor("TemperatureSensor_1"), new TemperatureSensorProtocol()));
+
+        foreach (var server in _servers)
+        {
+            server.OnLog += LogMessage;
+            server.OnError += HandleError;
+        }
+    }
+
+    public async Task StartAllAsync()
+    {
+        foreach (var server in _servers)
+        {
+            _serverTasks.Add(server.StartAsync());
+        }
+        await Task.WhenAll(_serverTasks);
+    }
+
+    public void StopAll()
+    {
+        foreach (var server in _servers)
+        {
+            server.Stop();
+        }
+    }
+
+    private void LogMessage(string message)
+    {
+        Console.WriteLine(message);
+        File.AppendAllText(_logFilePath, $"{DateTime.Now}: {message}\n");
+    }
+
+    private void HandleError(string context, Exception ex)
+    {
+        string errorMessage = $"{context} - {ex.Message}";
+        Console.WriteLine("ERROR: " + errorMessage);
+        File.AppendAllText(_logFilePath, $"{DateTime.Now} ERROR: {errorMessage}\n");
+    }
+}
+
+
+---
+
+まとめ
+
+✅ デバイスごとに異なる通信プロトコルを実装
+✅ JSON、バイナリ、プレーンテキストのプロトコルを処理可能
+✅ クライアントが異なるプロトコルを使っても統一的に管理可能
+
+これで、各デバイスが独自の通信プロトコルを持つ 柔軟な TCP サーバー を構築できます！
+
+
+
+
+
+
 デバイスの種類ごとに異なる動作を実装
 
 複数のデバイス（パワーサプライ、マルチメーター、温度センサーなど）をシミュレートし、デバイスの種類ごとに異なる動作を持たせるように改良します。
