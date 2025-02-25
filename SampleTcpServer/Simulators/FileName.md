@@ -1,3 +1,297 @@
+デバイスの種類ごとに異なる動作を実装
+
+複数のデバイス（パワーサプライ、マルチメーター、温度センサーなど）をシミュレートし、デバイスの種類ごとに異なる動作を持たせるように改良します。
+
+実装のポイント
+
+✅ 共通の IDevice インターフェースを定義（各デバイスが統一的に扱えるようにする）
+✅ PowerSupply、Multimeter、TemperatureSensor の 3 種類のデバイスを作成
+✅ 各デバイスが独自のコマンドを処理（ProcessCommand() の動作をデバイスごとに変更）
+✅ ServerManager でデバイスの種類を指定しながら管理
+
+
+---
+
+1. IDevice（共通インターフェース）
+
+各デバイスで共通の ProcessCommand() を定義。
+
+interface IDevice
+{
+    string Name { get; }
+    string ProcessCommand(string command);
+}
+
+
+---
+
+2. PowerSupply（電源装置）
+
+class PowerSupply : IDevice
+{
+    public string Name { get; }
+    private double _voltage = 0.0;
+    private double _current = 1.0;
+
+    public PowerSupply(string name)
+    {
+        Name = name;
+    }
+
+    public string ProcessCommand(string command)
+    {
+        string[] parts = command.Split(' ');
+        switch (parts[0])
+        {
+            case "GET_VOLTAGE":
+                return $"VOLTAGE {_voltage}V";
+
+            case "SET_VOLTAGE":
+                if (parts.Length > 1 && double.TryParse(parts[1], out double voltage))
+                {
+                    _voltage = voltage;
+                    return $"VOLTAGE SET TO {_voltage}V";
+                }
+                return "INVALID VOLTAGE VALUE";
+
+            case "MEASURE_CURRENT":
+                return $"CURRENT {_current}A";
+
+            case "SET_CURRENT":
+                if (parts.Length > 1 && double.TryParse(parts[1], out double current))
+                {
+                    _current = current;
+                    return $"CURRENT SET TO {_current}A";
+                }
+                return "INVALID CURRENT VALUE";
+
+            case "GET_POWER":
+                return $"POWER {_voltage * _current}W";
+
+            default:
+                return "UNKNOWN COMMAND";
+        }
+    }
+}
+
+
+---
+
+3. Multimeter（マルチメーター）
+
+class Multimeter : IDevice
+{
+    public string Name { get; }
+    private Random _random = new();
+
+    public Multimeter(string name)
+    {
+        Name = name;
+    }
+
+    public string ProcessCommand(string command)
+    {
+        switch (command)
+        {
+            case "MEASURE_VOLTAGE":
+                return $"VOLTAGE {_random.NextDouble() * 20:F2}V"; // 0~20V のランダム値
+
+            case "MEASURE_CURRENT":
+                return $"CURRENT {_random.NextDouble() * 5:F2}A"; // 0~5A のランダム値
+
+            case "MEASURE_RESISTANCE":
+                return $"RESISTANCE {_random.Next(10, 1000)}Ω"; // 10Ω~1000Ω のランダム値
+
+            default:
+                return "UNKNOWN COMMAND";
+        }
+    }
+}
+
+
+---
+
+4. TemperatureSensor（温度センサー）
+
+class TemperatureSensor : IDevice
+{
+    public string Name { get; }
+    private Random _random = new();
+
+    public TemperatureSensor(string name)
+    {
+        Name = name;
+    }
+
+    public string ProcessCommand(string command)
+    {
+        switch (command)
+        {
+            case "GET_TEMPERATURE":
+                return $"TEMPERATURE {_random.Next(15, 35)}°C"; // 15~35°C のランダム温度
+
+            case "GET_HUMIDITY":
+                return $"HUMIDITY {_random.Next(30, 80)}%"; // 30%~80% のランダム湿度
+
+            default:
+                return "UNKNOWN COMMAND";
+        }
+    }
+}
+
+
+---
+
+5. DeviceServer（デバイスごとの TCP サーバー）
+
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+class DeviceServer
+{
+    private readonly string _ipAddress;
+    private readonly int _port;
+    private TcpListener _listener;
+    private IDevice _device;
+    public event Action<string> OnLog;
+    public event Action<string, Exception> OnError;
+
+    public DeviceServer(string ipAddress, int port, IDevice device)
+    {
+        _ipAddress = ipAddress;
+        _port = port;
+        _listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+        _device = device;
+    }
+
+    public async Task StartAsync()
+    {
+        try
+        {
+            _listener.Start();
+            OnLog?.Invoke($"[{_device.Name}] サーバー起動 {_ipAddress}:{_port}");
+
+            while (true)
+            {
+                TcpClient client = await _listener.AcceptTcpClientAsync();
+                OnLog?.Invoke($"[{_device.Name}] クライアント接続");
+
+                _ = HandleClientAsync(client);
+            }
+        }
+        catch (Exception ex)
+        {
+            OnError?.Invoke($"[{_device.Name}] サーバーエラー", ex);
+        }
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        NetworkStream stream = client.GetStream();
+        byte[] buffer = new byte[1024];
+
+        try
+        {
+            while (client.Connected)
+            {
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                if (bytesRead == 0) break;
+
+                string receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                OnLog?.Invoke($"[{_device.Name}] 受信: {receivedText}");
+
+                string response = _device.ProcessCommand(receivedText);
+                byte[] responseBytes = Encoding.UTF8.GetBytes(response + "\n");
+                await stream.WriteAsync(responseBytes, 0, responseBytes.Length);
+            }
+        }
+        catch (Exception ex)
+        {
+            OnError?.Invoke($"[{_device.Name}] クライアント処理エラー", ex);
+        }
+        finally
+        {
+            OnLog?.Invoke($"[{_device.Name}] クライアント切断");
+            client.Close();
+        }
+    }
+
+    public void Stop()
+    {
+        _listener.Stop();
+        OnLog?.Invoke($"[{_device.Name}] サーバー停止");
+    }
+}
+
+
+---
+
+6. ServerManager（サーバーの管理）
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+
+class ServerManager
+{
+    private List<DeviceServer> _servers = new();
+    private List<Task> _serverTasks = new();
+    private string _logFilePath = "server_log.txt";
+
+    public ServerManager()
+    {
+        _servers.Add(new DeviceServer("192.168.1.100", 5001, new PowerSupply("PowerSupply_1")));
+        _servers.Add(new DeviceServer("192.168.1.101", 5002, new Multimeter("Multimeter_1")));
+        _servers.Add(new DeviceServer("192.168.1.102", 5003, new TemperatureSensor("TemperatureSensor_1")));
+
+        foreach (var server in _servers)
+        {
+            server.OnLog += LogMessage;
+            server.OnError += HandleError;
+        }
+    }
+
+    public async Task StartAllAsync()
+    {
+        foreach (var server in _servers)
+        {
+            _serverTasks.Add(server.StartAsync());
+        }
+        await Task.WhenAll(_serverTasks);
+    }
+
+    public void StopAll()
+    {
+        foreach (var server in _servers)
+        {
+            server.Stop();
+        }
+    }
+
+    private void LogMessage(string message)
+    {
+        Console.WriteLine(message);
+        File.AppendAllText(_logFilePath, $"{DateTime.Now}: {message}\n");
+    }
+
+    private void HandleError(string context, Exception ex)
+    {
+        string errorMessage = $"{context} - {ex.Message}";
+        Console.WriteLine("ERROR: " + errorMessage);
+        File.AppendAllText(_logFilePath, $"{DateTime.Now} ERROR: {errorMessage}\n");
+    }
+}
+
+これで デバイスの種類ごとに異なる動作を持つ TCP サーバー が構築できます！
+
+
+
+
+
 マネージャークラスを導入し、サーバー管理を統合
 
 各デバイスの 起動・停止・エラー処理・ログ管理 を ServerManager クラスにまとめます。
