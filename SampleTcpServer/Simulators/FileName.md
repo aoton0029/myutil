@@ -1,4 +1,543 @@
-﻿### **外部設定の拡張**
+﻿### **WinForms で TCP サーバーを再起動できるように改良**
+サーバーの**再起動機能を実装**し、**停止後に再度起動できるように修正**します。
+
+---
+
+## **修正ポイント**
+✅ **サーバーの状態を管理し、再起動時に新しい `ServerManager` インスタンスを作成**  
+✅ **`StartAll()` 実行中はボタンを無効化し、誤操作を防ぐ**  
+✅ **停止後に `ServerManager` を適切に破棄し、新しく作成して再起動できるようにする**
+
+---
+
+## **1. `MainForm.cs`（UI の修正）**
+```csharp
+using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+public partial class MainForm : Form
+{
+    private ServerManager _serverManager;
+    private AsyncLogProcessor _logProcessor;
+    private bool _isServerRunning = false; // サーバー状態管理
+
+    public MainForm()
+    {
+        InitializeComponent();
+        _logProcessor = new AsyncLogProcessor();
+        _serverManager = new ServerManager(_logProcessor);
+    }
+
+    private async void btnStartServer_Click(object sender, EventArgs e)
+    {
+        if (_isServerRunning) return;
+
+        _isServerRunning = true;
+        btnStartServer.Enabled = false;
+        btnStopServer.Enabled = true;
+
+        // サーバーのインスタンスを新規作成（再起動対応）
+        _serverManager = new ServerManager(_logProcessor);
+
+        await Task.Run(() => _serverManager.StartAll());
+        AddLog("サーバーを起動しました");
+    }
+
+    private async void btnStopServer_Click(object sender, EventArgs e)
+    {
+        if (!_isServerRunning) return;
+
+        _isServerRunning = false;
+        btnStartServer.Enabled = true;
+        btnStopServer.Enabled = false;
+
+        await _serverManager.StopAllAsync();
+        AddLog("サーバーを停止しました");
+    }
+
+    private void AddLog(string message)
+    {
+        if (InvokeRequired)
+        {
+            Invoke(new Action<string>(AddLog), message);
+            return;
+        }
+        lstLog.Items.Add($"{DateTime.Now}: {message}");
+    }
+
+    private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        if (_isServerRunning)
+        {
+            await _serverManager.StopAllAsync();
+        }
+        _logProcessor.Dispose();
+    }
+}
+```
+
+---
+
+## **2. `ServerManager.cs`（クリーンな再起動のための修正）**
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+class ServerManager
+{
+    private readonly List<DeviceServer> _servers = new();
+    private readonly List<Task> _serverTasks = new();
+    private readonly CancellationTokenSource _cts = new();
+    private readonly AsyncLogProcessor _logProcessor;
+
+    public ServerManager(AsyncLogProcessor logProcessor)
+    {
+        _logProcessor = logProcessor;
+        _servers.Add(new DeviceServer("192.168.1.100", 5001, new PowerSupply("PowerSupply_1"), new PowerSupplyProtocol(), _logProcessor));
+        _servers.Add(new DeviceServer("192.168.1.101", 5002, new Multimeter("Multimeter_1"), new MultimeterProtocol(), _logProcessor));
+        _servers.Add(new DeviceServer("192.168.1.102", 5003, new TemperatureSensor("TemperatureSensor_1"), new TemperatureSensorProtocol(), _logProcessor));
+    }
+
+    public void StartAll()
+    {
+        _logProcessor.Log("全サーバーを非同期で起動します...");
+        foreach (var server in _servers)
+        {
+            _serverTasks.Add(Task.Run(() => server.StartAsync(), _cts.Token));
+        }
+    }
+
+    public async Task StopAllAsync()
+    {
+        _logProcessor.Log("全サーバーを停止します...");
+        _cts.Cancel();
+        foreach (var server in _servers) server.Stop();
+        await Task.WhenAll(_serverTasks);
+        await _logProcessor.ShutdownAsync();
+    }
+}
+```
+
+---
+
+## **3. `DeviceServer.cs`（クライアント接続処理を強化）**
+```csharp
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+class DeviceServer
+{
+    private readonly string _ipAddress;
+    private readonly int _port;
+    private readonly TcpListener _listener;
+    private readonly IDevice _device;
+    private readonly IDeviceProtocol _protocol;
+    private readonly AsyncLogProcessor _logProcessor;
+    private bool _isRunning = false; // サーバーが動作中かどうか
+
+    public DeviceServer(string ipAddress, int port, IDevice device, IDeviceProtocol protocol, AsyncLogProcessor logProcessor)
+    {
+        _ipAddress = ipAddress;
+        _port = port;
+        _listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+        _device = device;
+        _protocol = protocol;
+        _logProcessor = logProcessor;
+    }
+
+    public async Task StartAsync()
+    {
+        if (_isRunning) return;
+        _isRunning = true;
+
+        try
+        {
+            _listener.Start();
+            _logProcessor.Log($"[{_device.Name}] サーバー起動 {_ipAddress}:{_port}");
+
+            while (_isRunning)
+            {
+                TcpClient client = await _listener.AcceptTcpClientAsync();
+                _logProcessor.Log($"[{_device.Name}] クライアント接続");
+                _ = HandleClientAsync(client);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logProcessor.Log($"[{_device.Name}] サーバーエラー: {ex.Message}");
+        }
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        NetworkStream stream = client.GetStream();
+        byte[] buffer = new byte[1024];
+
+        try
+        {
+            while (_isRunning && client.Connected)
+            {
+                int bytesRead;
+                try
+                {
+                    bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                }
+                catch (IOException ex) when (ex.InnerException is SocketException)
+                {
+                    _logProcessor.Log($"[{_device.Name}] クライアント通信エラー (切断の可能性): {ex.Message}");
+                    break;
+                }
+
+                if (bytesRead == 0) break;
+
+                string receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                string decodedCommand = _protocol.Decode(receivedText);
+                _logProcessor.Log($"[{_device.Name}] 受信: {decodedCommand}");
+
+                string response = _device.ProcessCommand(decodedCommand);
+                string encodedResponse = _protocol.Encode(response);
+
+                try
+                {
+                    byte[] responseBytes = Encoding.UTF8.GetBytes(encodedResponse + "\n");
+                    await stream.WriteAsync(responseBytes, 0, responseBytes.Length);
+                }
+                catch (IOException ex) when (ex.InnerException is SocketException)
+                {
+                    _logProcessor.Log($"[{_device.Name}] クライアント送信エラー (切断の可能性): {ex.Message}");
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logProcessor.Log($"[{_device.Name}] クライアント処理エラー: {ex.Message}");
+        }
+        finally
+        {
+            _logProcessor.Log($"[{_device.Name}] クライアント切断");
+            client.Close();
+        }
+    }
+
+    public void Stop()
+    {
+        if (!_isRunning) return;
+        _isRunning = false;
+        _listener.Stop();
+        _logProcessor.Log($"[{_device.Name}] サーバー停止");
+    }
+}
+```
+
+---
+
+## **修正のポイント**
+✅ **`_isRunning` でサーバーの起動状態を管理し、二重起動を防ぐ**  
+✅ **`Stop()` で `_isRunning = false` にし、クライアント受信ループを終了**  
+✅ **`MainForm` で `ServerManager` を再作成し、完全に新しいインスタンスとして起動可能**  
+✅ **`Task.Run()` でサーバーを非同期起動し、UI がフリーズしないようにする**
+
+---
+
+## **動作例**
+### **1. サーバー起動**
+```
+全サーバーを非同期で起動します...
+[PowerSupply_1] サーバー起動 192.168.1.100:5001
+[Multimeter_1] サーバー起動 192.168.1.101:5002
+[TemperatureSensor_1] サーバー起動 192.168.1.102:5003
+```
+
+### **2. サーバー停止**
+```
+全サーバーを停止します...
+[PowerSupply_1] サーバー停止
+[Multimeter_1] サーバー停止
+[TemperatureSensor_1] サーバー停止
+```
+
+### **3. 再起動**
+```
+全サーバーを非同期で起動します...
+[PowerSupply_1] サーバー起動 192.168.1.100:5001
+...
+```
+
+これで、**ボタンで自由にサーバーの起動・停止・再起動ができる WinForms アプリ** が完成しました！ 🚀
+
+
+
+
+## **非同期ログプロセッサーサービスの導入**
+マルチスレッド環境で安全にログを処理するために、**非同期ログプロセッサー (`AsyncLogProcessor`) を実装** します。  
+これにより、ログ出力の **スレッド競合を防ぎ**、パフォーマンスを向上させます。
+
+---
+
+### **設計のポイント**
+✅ **ログを非同期キュー (`ConcurrentQueue<string>`) に追加し、専用スレッドで処理**  
+✅ **`Task.Run()` によるバックグラウンド処理でログを非同期出力**  
+✅ **サーバーの終了時にログ処理を安全に完了させる (`CancellationTokenSource`)**  
+✅ **`ServerManager` と `DeviceServer` でログ出力を統一**
+
+---
+
+## **1. `AsyncLogProcessor`（非同期ログサービス）**
+```csharp
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+class AsyncLogProcessor : IDisposable
+{
+    private readonly string _logFilePath;
+    private readonly ConcurrentQueue<string> _logQueue = new();
+    private readonly CancellationTokenSource _cts = new();
+    private readonly Task _logTask;
+
+    public AsyncLogProcessor(string logFilePath = "server_log.txt")
+    {
+        _logFilePath = logFilePath;
+        _logTask = Task.Run(ProcessLogQueueAsync);
+    }
+
+    public void Log(string message)
+    {
+        string logMessage = $"{DateTime.Now}: {message}";
+        _logQueue.Enqueue(logMessage);
+    }
+
+    private async Task ProcessLogQueueAsync()
+    {
+        using StreamWriter writer = new(_logFilePath, append: true);
+        while (!_cts.Token.IsCancellationRequested || !_logQueue.IsEmpty)
+        {
+            if (_logQueue.TryDequeue(out string logMessage))
+            {
+                await writer.WriteLineAsync(logMessage);
+                await writer.FlushAsync();
+                Console.WriteLine(logMessage); // コンソールにも出力
+            }
+            else
+            {
+                await Task.Delay(100); // ログがないときは待機
+            }
+        }
+    }
+
+    public async Task ShutdownAsync()
+    {
+        _cts.Cancel();
+        await _logTask; // ログ処理タスクの完了を待つ
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _logTask.Wait();
+    }
+}
+```
+
+---
+
+## **2. `ServerManager` で `AsyncLogProcessor` を適用**
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+class ServerManager
+{
+    private readonly List<DeviceServer> _servers = new();
+    private readonly List<Task> _serverTasks = new();
+    private readonly CancellationTokenSource _cts = new();
+    private readonly AsyncLogProcessor _logProcessor;
+
+    public ServerManager(AsyncLogProcessor logProcessor)
+    {
+        _logProcessor = logProcessor;
+
+        _servers.Add(new DeviceServer("192.168.1.100", 5001, new PowerSupply("PowerSupply_1"), new PowerSupplyProtocol(), _logProcessor));
+        _servers.Add(new DeviceServer("192.168.1.101", 5002, new Multimeter("Multimeter_1"), new MultimeterProtocol(), _logProcessor));
+        _servers.Add(new DeviceServer("192.168.1.102", 5003, new TemperatureSensor("TemperatureSensor_1"), new TemperatureSensorProtocol(), _logProcessor));
+    }
+
+    public void StartAll()
+    {
+        _logProcessor.Log("全サーバーを非同期で起動します...");
+        foreach (var server in _servers)
+        {
+            _serverTasks.Add(Task.Run(() => server.StartAsync(), _cts.Token));
+        }
+    }
+
+    public async Task StopAllAsync()
+    {
+        _logProcessor.Log("全サーバーを停止します...");
+        _cts.Cancel();
+
+        foreach (var server in _servers)
+        {
+            server.Stop();
+        }
+
+        await Task.WhenAll(_serverTasks);
+        await _logProcessor.ShutdownAsync(); // ログ処理の完了を待つ
+    }
+}
+```
+
+---
+
+## **3. `DeviceServer` で `AsyncLogProcessor` を適用**
+```csharp
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+class DeviceServer
+{
+    private readonly string _ipAddress;
+    private readonly int _port;
+    private readonly TcpListener _listener;
+    private readonly IDevice _device;
+    private readonly IDeviceProtocol _protocol;
+    private readonly AsyncLogProcessor _logProcessor;
+
+    public DeviceServer(string ipAddress, int port, IDevice device, IDeviceProtocol protocol, AsyncLogProcessor logProcessor)
+    {
+        _ipAddress = ipAddress;
+        _port = port;
+        _listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+        _device = device;
+        _protocol = protocol;
+        _logProcessor = logProcessor;
+    }
+
+    public async Task StartAsync()
+    {
+        try
+        {
+            _listener.Start();
+            _logProcessor.Log($"[{_device.Name}] サーバー起動 {_ipAddress}:{_port}");
+
+            while (true)
+            {
+                TcpClient client = await _listener.AcceptTcpClientAsync();
+                _logProcessor.Log($"[{_device.Name}] クライアント接続");
+
+                _ = HandleClientAsync(client);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logProcessor.Log($"[{_device.Name}] サーバーエラー: {ex.Message}");
+        }
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        NetworkStream stream = client.GetStream();
+        byte[] buffer = new byte[1024];
+
+        try
+        {
+            while (client.Connected)
+            {
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                if (bytesRead == 0) break;
+
+                string receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                string decodedCommand = _protocol.Decode(receivedText);
+                _logProcessor.Log($"[{_device.Name}] 受信: {decodedCommand}");
+
+                string response = _device.ProcessCommand(decodedCommand);
+                string encodedResponse = _protocol.Encode(response);
+
+                byte[] responseBytes = Encoding.UTF8.GetBytes(encodedResponse + "\n");
+                await stream.WriteAsync(responseBytes, 0, responseBytes.Length);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logProcessor.Log($"[{_device.Name}] クライアント処理エラー: {ex.Message}");
+        }
+        finally
+        {
+            _logProcessor.Log($"[{_device.Name}] クライアント切断");
+            client.Close();
+        }
+    }
+
+    public void Stop()
+    {
+        _listener.Stop();
+        _logProcessor.Log($"[{_device.Name}] サーバー停止");
+    }
+}
+```
+
+---
+
+## **4. `Program.cs` で統合**
+```csharp
+using System;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        using AsyncLogProcessor logProcessor = new();
+        ServerManager manager = new(logProcessor);
+        manager.StartAll();
+
+        Console.WriteLine("サーバーが起動しました。Enterキーで停止します。");
+        Console.ReadLine();
+
+        await manager.StopAllAsync();
+    }
+}
+```
+
+---
+
+## **改善点**
+✅ **非同期ログ処理でスレッド競合を防ぐ**
+- `ConcurrentQueue<string>` を使用し、**非同期的にログを処理**
+- `Task.Run()` をバックグラウンドで実行し、**負荷を最小化**
+
+✅ **`ServerManager` と `DeviceServer` で統一的にログ管理**
+- `AsyncLogProcessor` によって **すべてのログが一元管理**
+- ログの出力順序が **一定** になり、デバッグがしやすい
+
+✅ **ログ処理が遅延してもサーバーの動作に影響しない**
+- 各スレッドからのログ出力が**非同期で処理**されるため、サーバーの動作がスムーズ
+
+---
+
+## **動作例**
+```
+2025-02-25 12:00:00: 全サーバーを非同期で起動します...
+2025-02-25 12:00:01: [PowerSupply_1] サーバー起動 192.168.1.100:5001
+2025-02-25 12:00:01: [Multimeter_1] サーバー起動 192.168.1.101:5002
+2025-02-25 12:00:02: [TemperatureSensor_1] サーバー起動 192.168.1.102:5003
+```
+これで、**非同期でログを処理しつつ、並列実行する TCP サーバーが構築** できます！ 🎉
+
+
+### **外部設定の拡張**
 既存のシナリオやログ機能をさらに強化するため、**外部設定ファイル** を活用して以下の点を管理できるようにします。
 
 ---
