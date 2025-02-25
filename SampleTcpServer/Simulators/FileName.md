@@ -1,3 +1,240 @@
+複数のデバイスが異なる IPアドレス を持つ場合、それぞれのデバイスごとに 別の TCP サーバー を立ち上げる設計にする必要があります。
+
+解決策
+
+各デバイスごとに異なるIPアドレスを指定して TcpListener を作成
+
+複数の TCP サーバーを同時に動作 させる（スレッド or Task を使用）
+
+各サーバーが独立してデバイスの状態を管理
+
+
+
+---
+
+実装
+
+複数の IP アドレスに対応
+
+デバイスごとに異なるポートでも動作可能
+
+各サーバーが独立したデバイス情報を管理
+
+
+1. DeviceServer クラス（1台のデバイスを管理するサーバー）
+
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
+class DeviceServer
+{
+    private readonly string _ipAddress;
+    private readonly int _port;
+    private TcpListener _listener;
+    private Device _device;
+
+    public DeviceServer(string ipAddress, int port, string deviceName)
+    {
+        _ipAddress = ipAddress;
+        _port = port;
+        _listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+        _device = new Device(deviceName);
+    }
+
+    public async Task StartAsync()
+    {
+        _listener.Start();
+        Console.WriteLine($"[{_device.Name}] サーバー起動 {_ipAddress}:{_port}");
+
+        while (true)
+        {
+            TcpClient client = await _listener.AcceptTcpClientAsync();
+            Console.WriteLine($"[{_device.Name}] クライアントが接続しました。");
+
+            _ = HandleClientAsync(client);
+        }
+    }
+
+    private async Task HandleClientAsync(TcpClient client)
+    {
+        NetworkStream stream = client.GetStream();
+        byte[] buffer = new byte[1024];
+
+        try
+        {
+            while (client.Connected)
+            {
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                if (bytesRead == 0) break;
+
+                string receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                Console.WriteLine($"[{_device.Name}] 受信: {receivedText}");
+
+                string response = _device.ProcessCommand(receivedText);
+                byte[] responseBytes = Encoding.UTF8.GetBytes(response + "\n");
+                await stream.WriteAsync(responseBytes, 0, responseBytes.Length);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[{_device.Name}] エラー: {ex.Message}");
+        }
+        finally
+        {
+            Console.WriteLine($"[{_device.Name}] クライアントが切断しました。");
+            client.Close();
+        }
+    }
+
+    public void Stop()
+    {
+        _listener.Stop();
+        Console.WriteLine($"[{_device.Name}] サーバー停止");
+    }
+}
+
+
+---
+
+2. Device クラス（仮想デバイスの状態管理）
+
+class Device
+{
+    public string Name { get; }
+    private double _voltage = 0.0;
+    private double _current = 1.0;
+
+    public Device(string name)
+    {
+        Name = name;
+    }
+
+    public string ProcessCommand(string command)
+    {
+        string[] parts = command.Split(' ');
+        switch (parts[0])
+        {
+            case "GET_VOLTAGE":
+                return $"VOLTAGE {_voltage}V";
+
+            case "SET_VOLTAGE":
+                if (parts.Length > 1 && double.TryParse(parts[1], out double voltage))
+                {
+                    _voltage = voltage;
+                    return $"VOLTAGE SET TO {_voltage}V";
+                }
+                return "INVALID VOLTAGE VALUE";
+
+            case "MEASURE_CURRENT":
+                return $"CURRENT {_current}A";
+
+            case "SET_CURRENT":
+                if (parts.Length > 1 && double.TryParse(parts[1], out double current))
+                {
+                    _current = current;
+                    return $"CURRENT SET TO {_current}A";
+                }
+                return "INVALID CURRENT VALUE";
+
+            case "GET_POWER":
+                return $"POWER {_voltage * _current}W";
+
+            case "STATUS":
+                return $"STATUS: Voltage={_voltage}V, Current={_current}A, Power={_voltage * _current}W";
+
+            default:
+                return "UNKNOWN COMMAND";
+        }
+    }
+}
+
+
+---
+
+3. Program クラス（複数のサーバーを起動）
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        var servers = new List<DeviceServer>
+        {
+            new DeviceServer("192.168.1.100", 5001, "PowerSupply_1"),
+            new DeviceServer("192.168.1.101", 5002, "Multimeter_1"),
+            new DeviceServer("192.168.1.102", 5003, "PowerSupply_2"),
+        };
+
+        var serverTasks = new List<Task>();
+
+        foreach (var server in servers)
+        {
+            serverTasks.Add(server.StartAsync());
+        }
+
+        await Task.WhenAll(serverTasks);
+    }
+}
+
+
+---
+
+動作の流れ
+
+サーバーの起動
+
+[PowerSupply_1] サーバー起動 192.168.1.100:5001
+[Multimeter_1] サーバー起動 192.168.1.101:5002
+[PowerSupply_2] サーバー起動 192.168.1.102:5003
+
+クライアントが PowerSupply_1 に接続し、電圧を設定
+
+[PowerSupply_1] クライアントが接続しました。
+[PowerSupply_1] 受信: SET_VOLTAGE 12.5
+[PowerSupply_1] クライアントが切断しました。
+
+クライアント側のレスポンス
+
+VOLTAGE SET TO 12.5V
+
+
+---
+
+メリット
+
+✅ 異なる IP で複数のサーバーを同時に起動
+✅ 各デバイスが独立して動作し、複数のクライアントと同時通信可能
+✅ スレッドセーフで管理しやすいシンプルな設計
+✅ 拡張が容易（デバイスの種類を増やせる）
+
+
+---
+
+応用
+
+デバイスの種類ごとに異なる動作を定義
+
+各デバイスに対して独自の通信プロトコルを適用
+
+デバイスのデータを定期的にブロードキャスト
+
+ログ保存やデータ解析機能の追加
+
+
+この設計を基に、マルチデバイスのシミュレーション環境を構築できます！
+
+
+
+
+
+
+
 IPアドレスでデバイスの種類を識別する TCP サーバー
 
 各クライアントが 接続する IP アドレスに応じて 仮想デバイスの種類を自動で割り当てるように設定できます。
