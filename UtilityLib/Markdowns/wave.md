@@ -370,6 +370,234 @@ UI強化 (ズーム、カーソル追従)
 
 
 
+C# で電圧波形を生成し、それを繋ぎ合わせるシーケンサを設計する場合、以下のアーキテクチャが考えられます。
+
+
+---
+
+1. システムの概要
+
+このシーケンサは、複数の電圧波形（例: 正弦波、矩形波、三角波、ランダム波形など）を生成し、それらをシーケンスに従って繋ぎ合わせ、最終的な波形を出力するシステムです。
+
+波形生成モジュール: 異なる種類の波形を生成
+
+シーケンサモジュール: 波形を指定された順序で繋ぎ合わせる
+
+出力モジュール: シーケンスされた波形をファイル保存またはハードウェア出力
+
+GUI/設定管理: ユーザーが波形シーケンスを設定
+
+
+
+---
+
+2. アーキテクチャ設計
+
+(1) 全体構成
+
+主要なコンポーネントは以下の通り:
+
+1. IWaveform（インターフェース）
+
+波形の基本的な振る舞いを定義（振幅、周波数、サンプル数など）
+
+
+
+2. WaveformGenerator（波形生成モジュール）
+
+サイン波 (SineWave)、矩形波 (SquareWave)、三角波 (TriangleWave)、ノイズ (NoiseWave) などの実装クラス
+
+
+
+3. WaveformSequence（シーケンサモジュール）
+
+複数の波形を順番に組み合わせ、シーケンス全体を管理
+
+
+
+4. WaveformExporter（出力モジュール）
+
+生成した波形をファイル出力（CSV、WAV、バイナリなど）またはリアルタイム出力
+
+
+
+5. WaveformController（システム制御モジュール）
+
+GUIまたは設定ファイルを介して波形とシーケンスを管理
+
+
+
+
+
+---
+
+3. C# での実装例
+
+(1) IWaveform インターフェース
+
+各波形の共通仕様を定義。
+
+public interface IWaveform
+{
+    double[] Generate(int sampleRate, double duration);  // 波形を生成
+}
+
+(2) 波形生成クラス
+
+サイン波の実装
+
+public class SineWave : IWaveform
+{
+    public double Frequency { get; }
+    public double Amplitude { get; }
+
+    public SineWave(double frequency, double amplitude)
+    {
+        Frequency = frequency;
+        Amplitude = amplitude;
+    }
+
+    public double[] Generate(int sampleRate, double duration)
+    {
+        int sampleCount = (int)(sampleRate * duration);
+        double[] wave = new double[sampleCount];
+        for (int i = 0; i < sampleCount; i++)
+        {
+            wave[i] = Amplitude * Math.Sin(2 * Math.PI * Frequency * i / sampleRate);
+        }
+        return wave;
+    }
+}
+
+矩形波の実装
+
+public class SquareWave : IWaveform
+{
+    public double Frequency { get; }
+    public double Amplitude { get; }
+
+    public SquareWave(double frequency, double amplitude)
+    {
+        Frequency = frequency;
+        Amplitude = amplitude;
+    }
+
+    public double[] Generate(int sampleRate, double duration)
+    {
+        int sampleCount = (int)(sampleRate * duration);
+        double[] wave = new double[sampleCount];
+        for (int i = 0; i < sampleCount; i++)
+        {
+            wave[i] = (Math.Sin(2 * Math.PI * Frequency * i / sampleRate) >= 0) ? Amplitude : -Amplitude;
+        }
+        return wave;
+    }
+}
+
+
+---
+
+(3) WaveformSequence（シーケンサ）
+
+public class WaveformSequence
+{
+    private List<IWaveform> _waveforms = new List<IWaveform>();
+    private List<double> _durations = new List<double>();
+
+    public void AddWaveform(IWaveform waveform, double duration)
+    {
+        _waveforms.Add(waveform);
+        _durations.Add(duration);
+    }
+
+    public double[] Generate(int sampleRate)
+    {
+        List<double> fullSequence = new List<double>();
+
+        for (int i = 0; i < _waveforms.Count; i++)
+        {
+            fullSequence.AddRange(_waveforms[i].Generate(sampleRate, _durations[i]));
+        }
+
+        return fullSequence.ToArray();
+    }
+}
+
+
+---
+
+(4) WaveformExporter（出力モジュール）
+
+public class WaveformExporter
+{
+    public static void ExportToCsv(string filePath, double[] data)
+    {
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            foreach (var value in data)
+            {
+                writer.WriteLine(value);
+            }
+        }
+    }
+}
+
+
+---
+
+(5) WaveformController（統括管理）
+
+public class WaveformController
+{
+    public void Run()
+    {
+        int sampleRate = 10000;  // サンプルレート 10kHz
+
+        // 波形を作成
+        SineWave sine = new SineWave(50, 1.0);
+        SquareWave square = new SquareWave(50, 1.0);
+
+        // シーケンスを作成
+        WaveformSequence sequence = new WaveformSequence();
+        sequence.AddWaveform(sine, 0.1);  // 0.1秒のサイン波
+        sequence.AddWaveform(square, 0.1); // 0.1秒の矩形波
+
+        // 波形を生成
+        double[] waveform = sequence.Generate(sampleRate);
+
+        // CSV に出力
+        WaveformExporter.ExportToCsv("output.csv", waveform);
+    }
+}
+
+
+---
+
+4. 拡張ポイント
+
+このアーキテクチャを発展させると、以下のような機能を追加できます。
+
+GUI 組み込み: WinForms や WPF を利用して波形シーケンスをビジュアル管理
+
+リアルタイム出力: サウンドカードや外部デバイス（USB-DACなど）へリアルタイムに出力
+
+ファイル入力対応: 設定ファイル（JSON, XML）からシーケンスをロード
+
+フィルタ適用: 低周波/高周波フィルタ、ノイズ除去
+
+AI/機械学習と連携: シーケンスの最適化や異常検出
+
+
+
+---
+
+5. まとめ
+
+この設計では、波形の生成、シーケンスの管理、ファイル出力 という役割をモジュール化し、拡張性の高いアーキテクチャを構築しました。
+これにより、将来的に波形の種類を増やす、シーケンスをGUIで管理する、リアルタイム出力する などの発展が容易になります。
+
+このアーキテクチャを元に、より具体的な要件に応じたカスタマイズを行えます。
+
 
 
 
