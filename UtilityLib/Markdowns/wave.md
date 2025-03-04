@@ -365,7 +365,155 @@ UI強化 (ズーム、カーソル追従)
 外部連携 (API、クラウド同期)
 
 
-今後の開発方針を決めるため、優先したい機能を教えて！
+
+
+
+
+
+
+
+
+
+
+設定値を管理するためのクラスを作成します。
+このクラスは、波形の種類、振幅、周波数、サンプルレート、シーケンスの長さなどの設定を一元管理します。
+また、JSON で設定を保存/読み込みできる機能も追加します。
+
+
+---
+
+1. 設計方針
+
+WaveformSettings クラスを作成し、波形の各種パラメータを管理。
+
+JSONで設定を保存・読み込み できるようにする。
+
+拡張しやすい設計（将来的にGUI連携やデバイス設定にも対応）。
+
+
+
+---
+
+2. 実装
+
+(1) 設定値クラス
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+
+public class WaveformSettings
+{
+    public int SampleRate { get; set; } = 10000;  // サンプルレート (Hz)
+    public List<WaveformConfig> Waveforms { get; set; } = new List<WaveformConfig>();
+
+    // 設定をJSONファイルに保存
+    public void SaveToFile(string filePath)
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string json = JsonSerializer.Serialize(this, options);
+        File.WriteAllText(filePath, json);
+    }
+
+    // 設定をJSONファイルから読み込み
+    public static WaveformSettings LoadFromFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("設定ファイルが見つかりません。");
+        }
+
+        string json = File.ReadAllText(filePath);
+        return JsonSerializer.Deserialize<WaveformSettings>(json);
+    }
+}
+
+// 波形の設定情報
+public class WaveformConfig
+{
+    public string Type { get; set; } = "Sine"; // "Sine", "Square", "Triangle", "Noise"
+    public double Frequency { get; set; } = 50.0;  // 周波数 (Hz)
+    public double Amplitude { get; set; } = 1.0;   // 振幅
+    public double Duration { get; set; } = 1.0;    // 継続時間 (秒)
+}
+
+
+---
+
+(2) 設定の保存と読み込み
+
+public class Program
+{
+    static void Main()
+    {
+        // 設定値を作成
+        WaveformSettings settings = new WaveformSettings
+        {
+            SampleRate = 20000, // 20 kHz
+            Waveforms = new List<WaveformConfig>
+            {
+                new WaveformConfig { Type = "Sine", Frequency = 100, Amplitude = 1.0, Duration = 0.5 },
+                new WaveformConfig { Type = "Square", Frequency = 50, Amplitude = 0.8, Duration = 1.0 }
+            }
+        };
+
+        // 設定を保存
+        string filePath = "waveform_settings.json";
+        settings.SaveToFile(filePath);
+
+        // 設定を読み込み
+        WaveformSettings loadedSettings = WaveformSettings.LoadFromFile(filePath);
+
+        // 読み込んだ設定を表示
+        Console.WriteLine($"SampleRate: {loadedSettings.SampleRate} Hz");
+        foreach (var wave in loadedSettings.Waveforms)
+        {
+            Console.WriteLine($"Type: {wave.Type}, Frequency: {wave.Frequency} Hz, Amplitude: {wave.Amplitude}, Duration: {wave.Duration} s");
+        }
+    }
+}
+
+
+---
+
+3. JSON 設定ファイルの例
+
+上記のプログラムを実行すると、以下のようなJSONファイルが作成されます。
+
+{
+  "SampleRate": 20000,
+  "Waveforms": [
+    {
+      "Type": "Sine",
+      "Frequency": 100.0,
+      "Amplitude": 1.0,
+      "Duration": 0.5
+    },
+    {
+      "Type": "Square",
+      "Frequency": 50.0,
+      "Amplitude": 0.8,
+      "Duration": 1.0
+    }
+  ]
+}
+
+
+---
+
+4. まとめ
+
+WaveformSettings クラス はシーケンサの設定を一元管理する。
+
+JSONの保存・読み込み機能 を提供し、柔軟に設定を変更できる。
+
+将来的に GUIと連携 してユーザーが設定を変更できるようにするのも簡単。
+
+
+この設定クラスを WaveformSequence に統合すれば、JSON をロードするだけで波形シーケンスを作れるようになります！
+
+
 
 
 
