@@ -22,16 +22,13 @@ namespace PageNavigationSample
         public void Start<T>() where T : UserControl
         {
             _history.Clear();
-            Navigate(typeof(T));
+            Navigate<T>();
         }
 
-        public void Next(Type nextPageType)
+        public void Next<T>() where T : UserControl
         {
-            if (!typeof(UserControl).IsAssignableFrom(nextPageType))
-                throw new ArgumentException("Next page must be a UserControl.");
-
             _history.Push(_currentPage?.GetType());
-            Navigate(nextPageType);
+            Navigate<T>();
         }
 
         public void Previous()
@@ -39,7 +36,7 @@ namespace PageNavigationSample
             if (_history.Count > 0)
             {
                 Type previousPage = _history.Pop();
-                Navigate(previousPage);
+                //Navigate<>();
             }
         }
 
@@ -49,7 +46,7 @@ namespace PageNavigationSample
             {
                 Type firstPage = _history.ToArray()[^1]; // 履歴の最初のページ
                 _history.Clear();
-                Navigate(firstPage);
+                //Navigate<>(firstPage);
             }
         }
 
@@ -58,21 +55,5 @@ namespace PageNavigationSample
             _onComplete?.Invoke(_formData);
         }
 
-        public void SaveData(string key, object value)
-        {
-            if (_formData is Dictionary<string, object> data)
-            {
-                data[key] = value;
-            }
-        }
-
-        public object GetData(string key)
-        {
-            if (_formData is Dictionary<string, object> data && data.ContainsKey(key))
-            {
-                return data[key];
-            }
-            return null;
-        }
     }
 }

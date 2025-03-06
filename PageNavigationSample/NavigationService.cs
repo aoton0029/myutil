@@ -8,14 +8,14 @@ namespace PageNavigationSample
 {
     public class NavigationService : IDisposable
     {
-        private readonly Panel _container;
+        private readonly Control _container;
         private readonly Dictionary<Type, Func<UserControl>> _pages = new();
         private object _sharedData;
         private object _tempData;
-        private UserControl _currentPage;
+        protected UserControl _currentPage;
         private bool _disposed = false;
 
-        public NavigationService(Panel container, object sharedData)
+        public NavigationService(Control container, object sharedData)
         {
             _container = container;
             _sharedData = sharedData;
