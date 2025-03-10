@@ -1,24 +1,249 @@
-C#‚ÌWinForms‚âWPF‚Åƒƒjƒ…[ƒo[‚Ìuƒtƒ@ƒCƒ‹vƒ^ƒu‚Ì‹@”\‚ğ‚Ü‚Æ‚ß‚é‚½‚ß‚ÉAê—p‚ÌƒNƒ‰ƒX‚ğì¬‚·‚é‚ÆŠÇ—‚µ‚â‚·‚­‚È‚è‚Ü‚·B
+MenuBarManager ã«ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ¢ãƒ‡ãƒ«ã‚¯ãƒ©ã‚¹ã‚’è¿½åŠ ã—ã€å¤‰æ›´ã‚’ç›£è¦–ã—ãªãŒã‚‰ Undo/Redo æ©Ÿèƒ½ã‚’å®Ÿè£…ã—ã¾ã™ã€‚
+
 
 ---
 
-### **\¬**
-1. **`FileMenuHandler` ƒNƒ‰ƒX**  
-   - uƒtƒ@ƒCƒ‹vƒƒjƒ…[‚ÌƒCƒxƒ“ƒg‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-   - V‹Kì¬AŠJ‚­A•Û‘¶AI—¹ ‚È‚Ç‚Ì‹@”\‚ğ’ñ‹ŸB
+å®Ÿè£…ãƒã‚¤ãƒ³ãƒˆ
 
-2. **`IMainForm` ƒCƒ“ƒ^[ƒtƒF[ƒX**  
-   - ƒƒjƒ…[‘€ì‚Å‰e‹¿‚ğó‚¯‚éƒƒCƒ“ƒtƒH[ƒ€‚Ì‘€ì‚ğ“ˆê‚·‚é‚½‚ß‚ÌƒCƒ“ƒ^[ƒtƒF[ƒXB
+1. ProjectModel ã®ä½œæˆ
 
-3. **WinForms‚Å‚Ì—˜—p—á**  
-   - `FileMenuHandler` ‚ğƒtƒH[ƒ€‚É“‡B
+ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®çŠ¶æ…‹ã‚’ä¿æŒã™ã‚‹ã‚¯ãƒ©ã‚¹ã‚’ä½œæˆã—ã€å¤‰æ›´ã‚’ç›£è¦–ã€‚
+
+
+
+2. Undo/Redo ã®å®Ÿè£…
+
+Stack<ProjectModel> ã‚’ä½¿ç”¨ã—ã¦ã€å±¥æ­´ã‚’ç®¡ç†ã— Undo/Redo ã‚’å¯èƒ½ã«ã™ã‚‹ã€‚
+
+
+
+3. MenuBarManager ã«çµ±åˆ
+
+ProjectModel ã®å¤‰æ›´ã‚’æ¤œçŸ¥ã—ã€ãƒ•ã‚¡ã‚¤ãƒ«æ“ä½œã¨é€£æºã€‚
+
+
+
+
 
 ---
 
-### **À‘•**
+1. ProjectModelï¼ˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’ç®¡ç†ï¼‰
 
-#### **1. `IMainForm` ƒCƒ“ƒ^[ƒtƒF[ƒX**
-ƒƒCƒ“ƒtƒH[ƒ€‚Å•K—v‚È‘€ì‚ğ“ˆê‚·‚éB
+using System;
+using System.ComponentModel;
+
+public class ProjectModel : INotifyPropertyChanged, ICloneable
+{
+    private string _content = "";
+
+    public string Content
+    {
+        get => _content;
+        set
+        {
+            if (_content != value)
+            {
+                _content = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Content)));
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public object Clone()
+    {
+        return new ProjectModel { Content = this.Content };
+    }
+}
+
+ãƒã‚¤ãƒ³ãƒˆ
+
+INotifyPropertyChanged ã‚’å®Ÿè£…ã—ã€å¤‰æ›´ã‚’æ¤œçŸ¥ã€‚
+
+Clone() ãƒ¡ã‚½ãƒƒãƒ‰ã§ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¤‡è£½ã‚’ä½œæˆã—ã€Undo/Redo ã«ä½¿ç”¨ã€‚
+
+
+
+---
+
+2. MenuBarManager ã®å®Ÿè£…
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+
+public class MenuBarManager
+{
+    public event EventHandler<ProjectModel>? FileOpened;
+    public event EventHandler<string>? FileSaved;
+    public event EventHandler? NewFileCreated;
+    public event EventHandler? ApplicationExited;
+
+    private string? currentFilePath;
+    private ProjectModel currentProject = new ProjectModel();
+
+    private readonly Stack<ProjectModel> undoStack = new();
+    private readonly Stack<ProjectModel> redoStack = new();
+
+    public MenuBarManager()
+    {
+        currentProject.PropertyChanged += (s, e) => SaveUndoState();
+    }
+
+    public void NewFile()
+    {
+        currentFilePath = null;
+        currentProject = new ProjectModel();
+        SaveUndoState();
+        NewFileCreated?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void OpenFile()
+    {
+        using OpenFileDialog openFileDialog = new OpenFileDialog
+        {
+            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+            Title = "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã"
+        };
+
+        if (openFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            currentFilePath = openFileDialog.FileName;
+            currentProject.Content = File.ReadAllText(currentFilePath);
+            SaveUndoState();
+            FileOpened?.Invoke(this, currentProject);
+        }
+    }
+
+    public void SaveFile()
+    {
+        if (string.IsNullOrEmpty(currentFilePath))
+        {
+            SaveFileAs();
+        }
+        else
+        {
+            File.WriteAllText(currentFilePath, currentProject.Content);
+            FileSaved?.Invoke(this, currentFilePath);
+        }
+    }
+
+    public void SaveFileAs()
+    {
+        using SaveFileDialog saveFileDialog = new SaveFileDialog
+        {
+            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+            Title = "åå‰ã‚’ä»˜ã‘ã¦ä¿å­˜"
+        };
+
+        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            currentFilePath = saveFileDialog.FileName;
+            File.WriteAllText(currentFilePath, currentProject.Content);
+            FileSaved?.Invoke(this, currentFilePath);
+        }
+    }
+
+    private void SaveUndoState()
+    {
+        undoStack.Push((ProjectModel)currentProject.Clone());
+        redoStack.Clear();
+    }
+
+    public void Undo()
+    {
+        if (undoStack.Count > 1)
+        {
+            redoStack.Push(undoStack.Pop());
+            currentProject = (ProjectModel)undoStack.Peek().Clone();
+            FileOpened?.Invoke(this, currentProject);
+        }
+    }
+
+    public void Redo()
+    {
+        if (redoStack.Count > 0)
+        {
+            undoStack.Push(redoStack.Pop());
+            currentProject = (ProjectModel)undoStack.Peek().Clone();
+            FileOpened?.Invoke(this, currentProject);
+        }
+    }
+
+    public void ExitApplication()
+    {
+        ApplicationExited?.Invoke(this, EventArgs.Empty);
+        Application.Exit();
+    }
+}
+
+
+---
+
+æ‹¡å¼µæ¡ˆ
+
+1. è¤‡æ•°ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç®¡ç†
+
+Dictionary<string, ProjectModel> ã‚’ä½¿ç”¨ã—ã€è¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¿ãƒ–ã§ç®¡ç†ã€‚
+
+
+
+2. ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ 
+
+Title, LastModified, CreatedDate ãªã©ã‚’è¿½åŠ ã€‚
+
+
+
+3. å¤‰æ›´ãŒã‚ã‚‹å ´åˆã€ã‚¢ãƒ—ãƒªçµ‚äº†å‰ã«ä¿å­˜ç¢ºèª
+
+MessageBox.Show() ã‚’ä½¿ã£ã¦ä¿å­˜ç¢ºèªã‚’è¡¨ç¤ºã€‚
+
+
+
+4. Undo/Redo ã®ä¸Šé™è¨­å®š
+
+Stack ã®ã‚µã‚¤ã‚ºã‚’åˆ¶é™ã—ã€å¤ã„å±¥æ­´ã‚’å‰Šé™¤ã€‚
+
+
+
+5. JSON ãƒ™ãƒ¼ã‚¹ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä¿å­˜
+
+System.Text.Json ã‚’ä½¿ã£ã¦ä¿å­˜/èª­ã¿è¾¼ã¿ã‚’JSONåŒ–ã€‚
+
+
+
+
+
+---
+
+ã“ã‚Œã§ Undo/Redo ãŒæ©Ÿèƒ½ã™ã‚‹ MenuBarManager ã‚’ä½œæˆã§ãã¾ã—ãŸï¼ UI å´ã¨é€£æºã—ã¦ã€ã‚ˆã‚Šä½¿ã„ã‚„ã™ãã—ã¦ã„ã‘ã¾ã™ã€‚
+
+
+
+
+C#ã®WinFormsã‚„WPFã§ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã®ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã€ã‚¿ãƒ–ã®æ©Ÿèƒ½ã‚’ã¾ã¨ã‚ã‚‹ãŸã‚ã«ã€å°‚ç”¨ã®ã‚¯ãƒ©ã‚¹ã‚’ä½œæˆã™ã‚‹ã¨ç®¡ç†ã—ã‚„ã™ããªã‚Šã¾ã™ã€‚
+
+---
+
+### **æ§‹æˆ**
+1. **`FileMenuHandler` ã‚¯ãƒ©ã‚¹**  
+   - ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+   - æ–°è¦ä½œæˆã€é–‹ãã€ä¿å­˜ã€çµ‚äº† ãªã©ã®æ©Ÿèƒ½ã‚’æä¾›ã€‚
+
+2. **`IMainForm` ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹**  
+   - ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ“ä½œã§å½±éŸ¿ã‚’å—ã‘ã‚‹ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã®æ“ä½œã‚’çµ±ä¸€ã™ã‚‹ãŸã‚ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã€‚
+
+3. **WinFormsã§ã®åˆ©ç”¨ä¾‹**  
+   - `FileMenuHandler` ã‚’ãƒ•ã‚©ãƒ¼ãƒ ã«çµ±åˆã€‚
+
+---
+
+### **å®Ÿè£…**
+
+#### **1. `IMainForm` ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹**
+ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã§å¿…è¦ãªæ“ä½œã‚’çµ±ä¸€ã™ã‚‹ã€‚
 
 ```csharp
 public interface IMainForm
@@ -32,8 +257,8 @@ public interface IMainForm
 
 ---
 
-#### **2. `FileMenuHandler` ƒNƒ‰ƒX**
-ƒƒjƒ…[‚Ì“®ì‚ğƒJƒvƒZƒ‹‰»B
+#### **2. `FileMenuHandler` ã‚¯ãƒ©ã‚¹**
+ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®å‹•ä½œã‚’ã‚«ãƒ—ã‚»ãƒ«åŒ–ã€‚
 
 ```csharp
 using System;
@@ -74,8 +299,8 @@ public class FileMenuHandler
 
 ---
 
-#### **3. ƒƒCƒ“ƒtƒH[ƒ€‚Å‚Ì—˜—p**
-`FileMenuHandler` ‚ğ“‡‚µAƒtƒH[ƒ€‚Ì‹@”\‚ğÀ‘•B
+#### **3. ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã§ã®åˆ©ç”¨**
+`FileMenuHandler` ã‚’çµ±åˆã—ã€ãƒ•ã‚©ãƒ¼ãƒ ã®æ©Ÿèƒ½ã‚’å®Ÿè£…ã€‚
 
 ```csharp
 public partial class MainForm : Form, IMainForm
@@ -87,7 +312,7 @@ public partial class MainForm : Form, IMainForm
         InitializeComponent();
         _fileMenuHandler = new FileMenuHandler(this);
 
-        // ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰‚ğƒZƒbƒg
+        // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ã‚’ã‚»ãƒƒãƒˆ
         newFileMenuItem.Click += _fileMenuHandler.HandleMenuClick;
         openFileMenuItem.Click += _fileMenuHandler.HandleMenuClick;
         saveFileMenuItem.Click += _fileMenuHandler.HandleMenuClick;
@@ -96,7 +321,7 @@ public partial class MainForm : Form, IMainForm
 
     public void CreateNewFile()
     {
-        MessageBox.Show("V‹Kƒtƒ@ƒCƒ‹ì¬");
+        MessageBox.Show("æ–°è¦ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ");
     }
 
     public void OpenFile()
@@ -105,7 +330,7 @@ public partial class MainForm : Form, IMainForm
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show($"ŠJ‚¢‚½ƒtƒ@ƒCƒ‹: {openFileDialog.FileName}");
+                MessageBox.Show($"é–‹ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«: {openFileDialog.FileName}");
             }
         }
     }
@@ -116,7 +341,7 @@ public partial class MainForm : Form, IMainForm
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show($"•Û‘¶‚µ‚½ƒtƒ@ƒCƒ‹: {saveFileDialog.FileName}");
+                MessageBox.Show($"ä¿å­˜ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«: {saveFileDialog.FileName}");
             }
         }
     }
@@ -130,57 +355,57 @@ public partial class MainForm : Form, IMainForm
 
 ---
 
-### **Šg’£ˆÄ**
-1. **Å‹ßŠJ‚¢‚½ƒtƒ@ƒCƒ‹‹@”\**
-   - `Properties.Settings` ‚ğŠˆ—p‚µAÅ‹ßŠJ‚¢‚½ƒtƒ@ƒCƒ‹‚ğ•Û‘¶E•\¦B
+### **æ‹¡å¼µæ¡ˆ**
+1. **æœ€è¿‘é–‹ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«æ©Ÿèƒ½**
+   - `Properties.Settings` ã‚’æ´»ç”¨ã—ã€æœ€è¿‘é–‹ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ãƒ»è¡¨ç¤ºã€‚
 
-2. **ƒVƒ‡[ƒgƒJƒbƒgƒL[‚ÌƒTƒ|[ƒg**
-   - `KeyPreview = true` ‚ğİ’è‚µA`KeyDown` ƒCƒxƒ“ƒg‚Å `Ctrl + S` ‚È‚Ç‚ÌƒVƒ‡[ƒgƒJƒbƒg‚ğˆ—B
+2. **ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚­ãƒ¼ã®ã‚µãƒãƒ¼ãƒˆ**
+   - `KeyPreview = true` ã‚’è¨­å®šã—ã€`KeyDown` ã‚¤ãƒ™ãƒ³ãƒˆã§ `Ctrl + S` ãªã©ã®ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚’å‡¦ç†ã€‚
 
-3. **ƒvƒ‰ƒOƒCƒ“‘Î‰**
-   - ƒƒjƒ…[‚ğ“®“I‚É•ÏX‚Å‚«‚é‚æ‚¤ `Action` ƒfƒŠƒQ[ƒg‚ğg‚¤B
-
----
-
-‚±‚Ì‚æ‚¤‚É `FileMenuHandler` ‚ğì¬‚·‚é‚±‚Æ‚ÅAƒR[ƒh‚ÌŒ©’Ê‚µ‚ª—Ç‚­‚È‚èAŠg’£‚à‚µ‚â‚·‚­‚È‚è‚Ü‚·I
-
-
-
-WinForms ‚Ìƒƒjƒ…[ƒo[‚ğ”Ä—p“I‚ÉİŒv‚µAˆÙ‚È‚éƒtƒH[ƒ€‚âƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÅÄ—˜—p‚Å‚«‚éƒA[ƒLƒeƒNƒ`ƒƒ‚ğ\’z‚·‚é•û–@‚ğl‚¦‚Ü‚·B
-
-## İŒv•ûj
-1. **ƒƒjƒ…[ƒo[‚ğ `UserControl` ‚Æ‚µ‚Äì¬**
-   - ‹¤’Ê‚Ìƒƒjƒ…[\¬‚ğ `UserControl` ‚ÉƒJƒvƒZƒ‹‰»‚·‚éB
-   - Šeƒƒjƒ…[€–Ú‚ğ“®“I‚É•ÏX‰Â”\‚É‚·‚éB
-
-2. **ƒƒjƒ…[€–Ú‚Ìİ’è‚ğŠO•”ƒtƒ@ƒCƒ‹iJSON‚È‚Çj‚ÅŠÇ—**
-   - ƒƒjƒ…[€–Ú‚Ì–¼‘O‚âƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰‚ğİ’èƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚ŞB
-   - _“î‚Éƒƒjƒ…[\¬‚ğ•ÏX‰Â”\‚É‚·‚éB
-
-3. **ƒRƒ}ƒ“ƒhƒpƒ^[ƒ“‚ğg—p‚µ‚Ä“®ì‚ğØ‚è‘Ö‚¦**
-   - `ICommand` ƒCƒ“ƒ^[ƒtƒF[ƒX‚ğ’è‹`‚µAŠeƒƒjƒ…[‚Ì“®ì‚ğÀ‘•‚·‚éB
-   - İ’èƒtƒ@ƒCƒ‹‚Å‚Ç‚ÌƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‚©w’è‚Å‚«‚é‚æ‚¤‚É‚·‚éB
+3. **ãƒ—ãƒ©ã‚°ã‚¤ãƒ³å¯¾å¿œ**
+   - ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å‹•çš„ã«å¤‰æ›´ã§ãã‚‹ã‚ˆã† `Action` ãƒ‡ãƒªã‚²ãƒ¼ãƒˆã‚’ä½¿ã†ã€‚
 
 ---
 
-## À‘•
+ã“ã®ã‚ˆã†ã« `FileMenuHandler` ã‚’ä½œæˆã™ã‚‹ã“ã¨ã§ã€ã‚³ãƒ¼ãƒ‰ã®è¦‹é€šã—ãŒè‰¯ããªã‚Šã€æ‹¡å¼µã‚‚ã—ã‚„ã™ããªã‚Šã¾ã™ï¼
 
-### 1. ƒƒjƒ…[‚Ì’è‹` (`MenuItemConfig.cs`)
-‚Ü‚¸Aƒƒjƒ…[‚Ì\¬‚ğ•\‚·ƒNƒ‰ƒX‚ğì¬‚µ‚Ü‚·B
+
+
+WinForms ã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã‚’æ±ç”¨çš„ã«è¨­è¨ˆã—ã€ç•°ãªã‚‹ãƒ•ã‚©ãƒ¼ãƒ ã‚„ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§å†åˆ©ç”¨ã§ãã‚‹ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã‚’æ§‹ç¯‰ã™ã‚‹æ–¹æ³•ã‚’è€ƒãˆã¾ã™ã€‚
+
+## è¨­è¨ˆæ–¹é‡
+1. **ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã‚’ `UserControl` ã¨ã—ã¦ä½œæˆ**
+   - å…±é€šã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ§‹æˆã‚’ `UserControl` ã«ã‚«ãƒ—ã‚»ãƒ«åŒ–ã™ã‚‹ã€‚
+   - å„ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã‚’å‹•çš„ã«å¤‰æ›´å¯èƒ½ã«ã™ã‚‹ã€‚
+
+2. **ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®è¨­å®šã‚’å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆJSONãªã©ï¼‰ã§ç®¡ç†**
+   - ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®åå‰ã‚„ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ã‚’è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚€ã€‚
+   - æŸ”è»Ÿã«ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ§‹æˆã‚’å¤‰æ›´å¯èƒ½ã«ã™ã‚‹ã€‚
+
+3. **ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ä½¿ç”¨ã—ã¦å‹•ä½œã‚’åˆ‡ã‚Šæ›¿ãˆ**
+   - `ICommand` ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å®šç¾©ã—ã€å„ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®å‹•ä½œã‚’å®Ÿè£…ã™ã‚‹ã€‚
+   - è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã§ã©ã®ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ã‹æŒ‡å®šã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚
+
+---
+
+## å®Ÿè£…
+
+### 1. ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®å®šç¾© (`MenuItemConfig.cs`)
+ã¾ãšã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®æ§‹æˆã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹ã‚’ä½œæˆã—ã¾ã™ã€‚
 
 ```csharp
 public class MenuItemConfig
 {
     public string Name { get; set; }
-    public string Command { get; set; } // Às‚·‚éƒRƒ}ƒ“ƒh‚ÌƒL[
+    public string Command { get; set; } // å®Ÿè¡Œã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®ã‚­ãƒ¼
     public List<MenuItemConfig> SubItems { get; set; } = new List<MenuItemConfig>();
 }
 ```
 
 ---
 
-### 2. ƒRƒ}ƒ“ƒhƒpƒ^[ƒ“ (`ICommand.cs`)
-ƒRƒ}ƒ“ƒh‚ÌÀ‘•‚ğ”Ä—p‰»‚µA“®ì‚ğ_“î‚É•ÏX‰Â”\‚É‚µ‚Ü‚·B
+### 2. ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ (`ICommand.cs`)
+ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè£…ã‚’æ±ç”¨åŒ–ã—ã€å‹•ä½œã‚’æŸ”è»Ÿã«å¤‰æ›´å¯èƒ½ã«ã—ã¾ã™ã€‚
 
 ```csharp
 public interface ICommand
@@ -189,14 +414,14 @@ public interface ICommand
 }
 ```
 
-Šeƒƒjƒ…[‚ÌƒAƒNƒVƒ‡ƒ“‚ğƒRƒ}ƒ“ƒh‚Æ‚µ‚Ä’è‹`‚µ‚Ü‚·B
+å„ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’ã‚³ãƒãƒ³ãƒ‰ã¨ã—ã¦å®šç¾©ã—ã¾ã™ã€‚
 
 ```csharp
 public class OpenFileCommand : ICommand
 {
     public void Execute()
     {
-        MessageBox.Show("ƒtƒ@ƒCƒ‹‚ğŠJ‚­ˆ—");
+        MessageBox.Show("ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãå‡¦ç†");
     }
 }
 
@@ -209,7 +434,7 @@ public class ExitCommand : ICommand
 }
 ```
 
-ƒRƒ}ƒ“ƒh‚ğŠÇ—‚·‚éƒNƒ‰ƒX‚ğ—pˆÓ‚µ‚Ü‚·B
+ã‚³ãƒãƒ³ãƒ‰ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã‚’ç”¨æ„ã—ã¾ã™ã€‚
 
 ```csharp
 public class CommandRegistry
@@ -230,19 +455,19 @@ public class CommandRegistry
 
 ---
 
-### 3. ƒƒjƒ…[‚Ìİ’è‚ğJSON‚ÅŠÇ— (`menu.json`)
+### 3. ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®è¨­å®šã‚’JSONã§ç®¡ç† (`menu.json`)
 
 ```json
 [
     {
-        "Name": "ƒtƒ@ƒCƒ‹",
+        "Name": "ãƒ•ã‚¡ã‚¤ãƒ«",
         "SubItems": [
             {
-                "Name": "ŠJ‚­",
+                "Name": "é–‹ã",
                 "Command": "OpenFile"
             },
             {
-                "Name": "I—¹",
+                "Name": "çµ‚äº†",
                 "Command": "Exit"
             }
         ]
@@ -252,8 +477,8 @@ public class CommandRegistry
 
 ---
 
-### 4. ”Ä—pƒƒjƒ…[ƒo[ƒNƒ‰ƒX (`CustomMenuStrip.cs`)
-‚±‚ÌƒNƒ‰ƒX‚Åƒƒjƒ…[ƒo[‚ğ\’z‚µAİ’è‚ğ“Ç‚İ‚ñ‚ÅƒRƒ}ƒ“ƒh‚ÆŠÖ˜A•t‚¯‚Ü‚·B
+### 4. æ±ç”¨ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã‚¯ãƒ©ã‚¹ (`CustomMenuStrip.cs`)
+ã“ã®ã‚¯ãƒ©ã‚¹ã§ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã‚’æ§‹ç¯‰ã—ã€è¨­å®šã‚’èª­ã¿è¾¼ã‚“ã§ã‚³ãƒãƒ³ãƒ‰ã¨é–¢é€£ä»˜ã‘ã¾ã™ã€‚
 
 ```csharp
 using System;
@@ -276,7 +501,7 @@ public class CustomMenuStrip : MenuStrip
     {
         if (!File.Exists(configPath))
         {
-            MessageBox.Show("ƒƒjƒ…[İ’èƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
+            MessageBox.Show("ãƒ¡ãƒ‹ãƒ¥ãƒ¼è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“");
             return;
         }
 
@@ -314,7 +539,7 @@ public class CustomMenuStrip : MenuStrip
 
 ---
 
-### 5. ƒtƒH[ƒ€‚Å‚Ì—˜—p (`MainForm.cs`)
+### 5. ãƒ•ã‚©ãƒ¼ãƒ ã§ã®åˆ©ç”¨ (`MainForm.cs`)
 
 ```csharp
 public partial class MainForm : Form
@@ -340,16 +565,16 @@ public partial class MainForm : Form
 
 ---
 
-## Šg’£ˆÄ
-1. **“®“Iƒ[ƒh‹@”\**
-   - JSON‚ğ•ÏX‚·‚ê‚Î‘¦À‚Éƒƒjƒ…[‚ğ•ÏX‚Å‚«‚é‹@”\‚ğ’Ç‰ÁB
+## æ‹¡å¼µæ¡ˆ
+1. **å‹•çš„ãƒ­ãƒ¼ãƒ‰æ©Ÿèƒ½**
+   - JSONã‚’å¤‰æ›´ã™ã‚Œã°å³åº§ã«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å¤‰æ›´ã§ãã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ ã€‚
 
-2. **ƒvƒ‰ƒOƒCƒ“ƒVƒXƒeƒ€**
-   - ƒƒjƒ…[‚ÌƒRƒ}ƒ“ƒh‚ğŠO•”‚ÌDLL‚©‚ç“®“I‚Éƒ[ƒh‰Â”\‚É‚·‚éB
+2. **ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ **
+   - ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚³ãƒãƒ³ãƒ‰ã‚’å¤–éƒ¨ã®DLLã‹ã‚‰å‹•çš„ã«ãƒ­ãƒ¼ãƒ‰å¯èƒ½ã«ã™ã‚‹ã€‚
 
-3. **ƒ[ƒ‹ŠÇ—**
-   - ƒ†[ƒU[‚ÌŒ ŒÀ‚É‰‚¶‚ÄA•\¦‚·‚éƒƒjƒ…[‚ğ§ŒäB
+3. **ãƒ­ãƒ¼ãƒ«ç®¡ç†**
+   - ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®æ¨©é™ã«å¿œã˜ã¦ã€è¡¨ç¤ºã™ã‚‹ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’åˆ¶å¾¡ã€‚
 
 ---
 
-‚±‚ÌƒA[ƒLƒeƒNƒ`ƒƒ‚É‚æ‚èAƒƒjƒ…[ƒo[‚Ì\¬‚ğŠO•”‚©‚çİ’è‚Å‚«AƒR[ƒh‚Ì•ÏX‚È‚µ‚ÅƒJƒXƒ^ƒ}ƒCƒY‚ª‰Â”\‚É‚È‚è‚Ü‚·I
+ã“ã®ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã«ã‚ˆã‚Šã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã®æ§‹æˆã‚’å¤–éƒ¨ã‹ã‚‰è¨­å®šã§ãã€ã‚³ãƒ¼ãƒ‰ã®å¤‰æ›´ãªã—ã§ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚ºãŒå¯èƒ½ã«ãªã‚Šã¾ã™ï¼
