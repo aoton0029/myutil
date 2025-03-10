@@ -1,3 +1,143 @@
+WinForms で、ラジオボタン（RadioButton）のチェック時とアンチェック時の描画をカスタマイズするには、RadioButton を継承して OnPaint をオーバーライドするのが一般的です。
+
+カスタム RadioButton コントロール
+
+以下のコードは、カスタム RadioButton を作成し、チェック時とアンチェック時で異なる描画を行うものです。
+
+手順
+
+1. CustomRadioButton クラスを作成し、RadioButton を継承。
+
+
+2. OnPaint をオーバーライドし、チェック時とアンチェック時で異なる描画を行う。
+
+
+3. Invalidate() を使って、CheckedChanged イベントで再描画。
+
+
+
+カスタム RadioButton コード
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class CustomRadioButton : RadioButton
+{
+    public Color CheckedColor { get; set; } = Color.Green;
+    public Color UncheckedColor { get; set; } = Color.Gray;
+    public Color BorderColor { get; set; } = Color.Black;
+    public int CircleSize { get; set; } = 16;
+
+    public CustomRadioButton()
+    {
+        this.AutoSize = false;
+        this.Width = 120;
+        this.Height = 24;
+    }
+
+    protected override void OnCheckedChanged(EventArgs e)
+    {
+        base.OnCheckedChanged(e);
+        this.Invalidate(); // 状態変更時に再描画
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        Graphics g = e.Graphics;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+        int radius = CircleSize;
+        int padding = 4;
+        Rectangle outerRect = new Rectangle(0, (Height - radius) / 2, radius, radius);
+        Rectangle innerRect = new Rectangle(outerRect.X + padding, outerRect.Y + padding, radius - 2 * padding, radius - 2 * padding);
+
+        // 外枠
+        using (Pen borderPen = new Pen(BorderColor, 2))
+        {
+            g.DrawEllipse(borderPen, outerRect);
+        }
+
+        // 塗りつぶし（チェック時）
+        if (Checked)
+        {
+            using (Brush checkBrush = new SolidBrush(CheckedColor))
+            {
+                g.FillEllipse(checkBrush, innerRect);
+            }
+        }
+        else
+        {
+            using (Brush uncheckBrush = new SolidBrush(UncheckedColor))
+            {
+                g.FillEllipse(uncheckBrush, innerRect);
+            }
+        }
+
+        // テキスト描画
+        using (Brush textBrush = new SolidBrush(this.ForeColor))
+        {
+            g.DrawString(this.Text, this.Font, textBrush, radius + 8, (Height - Font.Height) / 2);
+        }
+    }
+}
+
+
+---
+
+使用方法
+
+1. Form1.cs のデザイナから普通の RadioButton を配置。
+
+
+2. Form1.cs のコードで CustomRadioButton を追加。
+
+
+
+public partial class Form1 : Form
+{
+    public Form1()
+    {
+        InitializeComponent();
+        
+        var radio1 = new CustomRadioButton
+        {
+            Text = "Option 1",
+            Location = new Point(20, 20),
+            Checked = true
+        };
+
+        var radio2 = new CustomRadioButton
+        {
+            Text = "Option 2",
+            Location = new Point(20, 50)
+        };
+
+        this.Controls.Add(radio1);
+        this.Controls.Add(radio2);
+    }
+}
+
+
+---
+
+ポイント
+
+OnCheckedChanged で Invalidate() を呼び出し、状態変更時に再描画。
+
+OnPaint で Graphics を使い、外枠と内部の塗りつぶしを変更。
+
+Checked の状態によって塗りつぶし色を変更。
+
+
+このカスタム RadioButton は、チェック時とアンチェック時の描画を自由に変更できます。
+
+
+
+
+
+
 C# でのメッセンジャーアプリ開発の流れは以下のようになります。
 
 1. システム概要
