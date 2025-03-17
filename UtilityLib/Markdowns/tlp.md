@@ -1,3 +1,219 @@
+DDD（ドメイン駆動設計）アーキテクチャにおいて、DI（依存性注入）を使わずに HttpClient を利用する REST API クライアントを実装する方法を考えます。
+
+設計方針
+
+依存性注入を使わない
+
+HttpClient を直接インスタンス化する（適切に管理）
+
+
+DDD を意識したレイヤー分割
+
+Domain（ドメイン層）: ビジネスロジック
+
+Application（アプリケーション層）: REST API クライアントのユースケース
+
+Infrastructure（インフラ層）: REST API へのアクセス処理
+
+
+
+
+---
+
+実装
+
+1. ドメイン層
+
+ドメイン層には、API から取得するデータのモデルを定義します。
+
+namespace Domain.Models
+{
+    public class WeatherInfo
+    {
+        public string City { get; }
+        public float Temperature { get; }
+
+        public WeatherInfo(string city, float temperature)
+        {
+            City = city;
+            Temperature = temperature;
+        }
+    }
+}
+
+
+---
+
+2. インフラ層
+
+HttpClient を直接管理し、API にアクセスするクラスを作成します。
+
+using System;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Domain.Models;
+
+namespace Infrastructure
+{
+    public class WeatherApiClient
+    {
+        private readonly HttpClient _httpClient;
+
+        public WeatherApiClient()
+        {
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://api.weather.com/v1/")
+            };
+        }
+
+        public async Task<WeatherInfo> GetWeatherAsync(string city)
+        {
+            var response = await _httpClient.GetAsync($"weather?city={city}");
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var weatherData = JsonSerializer.Deserialize<WeatherDto>(json);
+
+            return new WeatherInfo(weatherData.City, weatherData.Temperature);
+        }
+
+        private class WeatherDto
+        {
+            public string City { get; set; }
+            public float Temperature { get; set; }
+        }
+    }
+}
+
+
+---
+
+3. アプリケーション層
+
+インフラ層の WeatherApiClient を使って、天気情報を取得するユースケースを定義します。
+
+using System.Threading.Tasks;
+using Domain.Models;
+using Infrastructure;
+
+namespace Application
+{
+    public class WeatherService
+    {
+        private readonly WeatherApiClient _apiClient;
+
+        public WeatherService()
+        {
+            _apiClient = new WeatherApiClient();
+        }
+
+        public async Task<WeatherInfo> GetWeatherForCity(string city)
+        {
+            return await _apiClient.GetWeatherAsync(city);
+        }
+    }
+}
+
+
+---
+
+4. UI 層
+
+コンソールアプリケーションで WeatherService を利用して天気情報を取得します。
+
+using System;
+using System.Threading.Tasks;
+using Application;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var weatherService = new WeatherService();
+
+        Console.Write("都市名を入力してください: ");
+        string city = Console.ReadLine();
+
+        try
+        {
+            var weather = await weatherService.GetWeatherForCity(city);
+            Console.WriteLine($"{weather.City} の現在の気温は {weather.Temperature}°C です。");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"エラーが発生しました: {ex.Message}");
+        }
+    }
+}
+
+
+---
+
+この設計のポイント
+
+1. DI を使わずに HttpClient を直接インスタンス化
+
+WeatherApiClient 内で HttpClient を保持し、API のリクエストを管理。
+
+using を使わないのは、HttpClient を適切に再利用するため（ソケットの再生成を防ぐ）。
+
+
+
+2. DDD の基本構成
+
+ドメイン層 (Domain): WeatherInfo クラスでビジネスロジックを表現。
+
+アプリケーション層 (Application): WeatherService がユースケースを管理。
+
+インフラ層 (Infrastructure): WeatherApiClient が外部 API との通信を担当。
+
+
+
+3. ユースケースの独立性
+
+WeatherService は WeatherApiClient のインスタンスを直接持つが、DI を使わずに管理。
+
+
+
+
+
+---
+
+拡張案
+
+HttpClient のライフサイクル管理
+
+HttpClientFactory を使うことで、適切なライフサイクル管理を行う（ただし DI が必要）。
+
+Singleton パターンを導入して HttpClient をアプリ全体で共通化。
+
+
+エラーハンドリングの強化
+
+API エラー時のリトライ機能（Polly ライブラリを使う）。
+
+try-catch を使って、ネットワークエラーや API 仕様変更に対応。
+
+
+非同期処理の並列化
+
+Task.WhenAll() を使って複数都市の天気を同時取得。
+
+
+
+
+---
+
+この設計はシンプルながらも DDD の基本に沿った構成になっています。
+DI なしで HttpClient を管理しつつ、レイヤーを分けて責務を明確にしました。
+
+
+
+
+
+
 StopAutoSwitching() を実行してもページの自動切り替えが止まらない問題を解決するために、lock を使用したスレッドセーフな実装を追加します。
 
 
