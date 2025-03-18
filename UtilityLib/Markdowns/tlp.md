@@ -1,3 +1,173 @@
+ファイルロックを導入して、複数プロセスやスレッドが同じファイルに同時に書き込むことを防ぐようにします。FileStream の FileShare.None を使用して排他ロックを実装します。
+
+
+---
+
+ファイルロック対応のポイント
+
+1. ロックモード
+
+FileShare.None を指定することで、他のプロセスやスレッドが同時にアクセスできないようにする。
+
+読み取り専用のロックをかけたい場合は FileShare.Read を使用する。
+
+
+
+2. ロック解除
+
+書き込みが完了したら、FileStream.Dispose() によりロックを解除。
+
+
+
+3. ロック競合時のリトライ
+
+既にロックされている場合にリトライする機能を導入。
+
+
+
+
+
+---
+
+修正後の FileManager
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+
+public class FileManager
+{
+    private readonly BackupManager backupManager;
+    private readonly ILogger logger;
+
+    public FileManager(BackupManager backupManager, ILogger logger)
+    {
+        this.backupManager = backupManager;
+        this.logger = logger;
+    }
+
+    public async Task<bool> SaveFileWithLockAsync(string filePath, string content, int retryCount = 3, int retryDelayMs = 1000)
+    {
+        string backupPath = await backupManager.CreateBackupAsync(filePath);
+        if (backupPath != null)
+        {
+            logger.Log($"Backup created: {backupPath}");
+        }
+
+        for (int attempt = 0; attempt < retryCount; attempt++)
+        {
+            try
+            {
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var writer = new StreamWriter(fileStream))
+                {
+                    await writer.WriteAsync(content);
+                }
+
+                logger.Log($"File saved with lock: {filePath}");
+                return true;
+            }
+            catch (IOException ex) when (attempt < retryCount - 1)
+            {
+                logger.Log($"File is locked, retrying... {attempt + 1}/{retryCount}");
+                await Task.Delay(retryDelayMs);
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Error saving file: {ex.Message}");
+                return false;
+            }
+        }
+
+        logger.Log($"Failed to save file after {retryCount} attempts: {filePath}");
+        return false;
+    }
+}
+
+
+---
+
+修正後の Program.cs
+
+using System;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        string filePath = "test.txt";
+        string backupDir = "backups";
+
+        ILogger logger = new ConsoleLogger();
+        BackupManager backupManager = new BackupManager(backupDir);
+        FileManager fileManager = new FileManager(backupManager, logger);
+
+        string content = "File content with lock " + DateTime.Now;
+        await fileManager.SaveFileWithLockAsync(filePath, content);
+    }
+}
+
+
+---
+
+改善点と追加機能
+
+1. ファイルロック競合時のリトライ
+
+すぐに書き込みできない場合、最大 retryCount 回リトライする。
+
+リトライ間隔は retryDelayMs で調整（デフォルト1000ms）。
+
+
+
+2. 書き込み処理を StreamWriter に委譲
+
+FileStream を StreamWriter に渡し、安全にテキストを書き込む。
+
+
+
+3. 例外処理の強化
+
+IOException をキャッチしてリトライ。
+
+その他の例外はログを記録して処理を終了。
+
+
+
+
+
+---
+
+拡張案
+
+1. 非同期排他制御
+
+Mutex または SemaphoreSlim を導入し、ファイル単位で非同期ロックを管理する。
+
+
+
+2. ロック管理システム
+
+ファイルのロック状態をデータベースやメモリ（Dictionary<string, bool>）で管理し、複数プロセスからのアクセスを調整。
+
+
+
+3. ネットワークファイルシステム対応
+
+リモートファイルサーバー上のファイルをロックする場合、分散ロック（例: Redis Lock）を導入。
+
+
+
+
+
+---
+
+これで、ファイルロックを適用しつつ、スムーズな書き込みが可能になります！
+
+
+
+
 ファイル書き込み中のロック対策
 
 ファイルが他のプロセスによってロックされている場合の対策として、以下の実装を行います。
