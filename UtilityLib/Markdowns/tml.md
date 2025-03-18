@@ -1,3 +1,201 @@
+SettingsManager を シングルトン化 して、アプリ全体で共有できるようにします。
+これにより、どこからでも同じ SettingsManager インスタンスにアクセスでき、設定のリアルタイム同期を一元的に管理できます。
+
+
+---
+
+シングルトン化した SettingsManager
+
+実装のポイント
+
+1. スレッドセーフなシングルトン を Lazy<T> で実装。
+
+
+2. グローバルアクセス用の Instance プロパティ を追加。
+
+
+3. コンストラクタを private にしてインスタンスの直接作成を防ぐ。
+
+
+
+
+---
+
+修正後の SettingsManager
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+
+public class SettingsManager
+{
+    private static readonly Lazy<SettingsManager> _instance = new(() => new SettingsManager());
+
+    public static SettingsManager Instance => _instance.Value;
+
+    private readonly Dictionary<Type, ISettings> _settings = new();
+    private readonly Dictionary<Type, FileSystemWatcher> _watchers = new();
+
+    public event Action<Type, ISettings>? SettingsUpdated;
+
+    private SettingsManager() { }
+
+    public T GetSettings<T>() where T : ISettings, new()
+    {
+        var type = typeof(T);
+        if (!_settings.TryGetValue(type, out var settings))
+        {
+            settings = LoadSettings<T>();
+            _settings[type] = settings;
+            WatchFileChanges<T>();
+        }
+        return (T)settings;
+    }
+
+    public void UpdateSettings<T>(T newSettings) where T : ISettings
+    {
+        var type = typeof(T);
+        _settings[type] = newSettings;
+        SaveSettings(newSettings);
+    }
+
+    private T LoadSettings<T>() where T : ISettings, new()
+    {
+        string filePath = GetFilePath<T>();
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<T>(json) ?? new T();
+        }
+        return new T();
+    }
+
+    private void SaveSettings<T>(T settings) where T : ISettings
+    {
+        string filePath = GetFilePath<T>();
+        string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(filePath, json);
+    }
+
+    private void WatchFileChanges<T>() where T : ISettings, new()
+    {
+        string filePath = GetFilePath<T>();
+        string directory = Path.GetDirectoryName(filePath) ?? ".";
+        string fileName = Path.GetFileName(filePath);
+
+        var watcher = new FileSystemWatcher(directory, fileName)
+        {
+            NotifyFilter = NotifyFilters.LastWrite
+        };
+
+        watcher.Changed += (sender, e) =>
+        {
+            System.Threading.Thread.Sleep(100); // 書き込み完了を待つ
+            var newSettings = LoadSettings<T>();
+            _settings[typeof(T)] = newSettings;
+            SettingsUpdated?.Invoke(typeof(T), newSettings);
+            Console.WriteLine($"Settings updated: {typeof(T).Name}");
+        };
+
+        watcher.EnableRaisingEvents = true;
+        _watchers[typeof(T)] = watcher;
+    }
+
+    private string GetFilePath<T>() => $"{typeof(T).Name}.json";
+}
+
+
+---
+
+シングルトン化による使用方法
+
+class Program
+{
+    static void Main()
+    {
+        // シングルトンインスタンスを取得
+        var settingsManager = SettingsManager.Instance;
+
+        // 設定変更時の通知を受け取る
+        settingsManager.SettingsUpdated += (type, settings) =>
+        {
+            Console.WriteLine($"[Notification] {type.Name} settings have been updated!");
+        };
+
+        // 設定を取得
+        var generalSettings = settingsManager.GetSettings<GeneralSettings>();
+        Console.WriteLine($"Language: {generalSettings.Language}");
+
+        var networkSettings = settingsManager.GetSettings<NetworkSettings>();
+        Console.WriteLine($"ServerIP: {networkSettings.ServerIP}, Port: {networkSettings.Port}");
+
+        // 設定を更新（ファイルも変更される）
+        generalSettings.Language = "Japanese";
+        settingsManager.UpdateSettings(generalSettings);
+
+        networkSettings.Port = 9090;
+        settingsManager.UpdateSettings(networkSettings);
+
+        Console.WriteLine("Waiting for file changes...");
+        Console.ReadLine(); // プログラムが終了しないように待機
+    }
+}
+
+
+---
+
+シングルトン化のメリット
+
+1. アプリケーション全体で設定を統一的に管理
+
+どこからでも SettingsManager.Instance を呼び出せる。
+
+
+
+2. リソースの節約
+
+FileSystemWatcher のインスタンスをアプリ内で一元管理できる。
+
+
+
+3. リアルタイム同期が確実に機能
+
+どこから設定を変更しても、すべてのコンポーネントに通知が届く。
+
+
+
+
+
+---
+
+さらなる拡張
+
+設定のリモート同期
+
+WebSocket を使って複数のクライアント間で設定を同期。
+
+
+設定のキャッシュ機能
+
+頻繁にアクセスされる設定をキャッシュし、パフォーマンスを向上。
+
+
+GUIアプリとの連携
+
+設定変更イベントを UI に即反映（例: WPF, WinForms）。
+
+
+
+
+---
+
+この方法で、シングルトンでリアルタイム同期可能な設定管理クラスを実現できます！
+
+
+
+
+
 リアルタイム同期機能を追加するために、FileSystemWatcher を使用して JSON ファイルの変更を監視し、設定の変更を即時反映するように拡張します。
 
 
