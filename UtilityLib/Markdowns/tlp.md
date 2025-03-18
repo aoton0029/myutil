@@ -1,3 +1,245 @@
+ファイル書き込み中のロック対策
+
+ファイルが他のプロセスによってロックされている場合の対策として、以下の実装を行います。
+
+対策方法
+
+1. ファイルストリーム (FileStream) を使って書き込み
+
+FileMode.Create を使用して、既存のファイルを置き換える。
+
+FileAccess.Write と FileShare.None を指定し、他のプロセスが同時にアクセスできないようにする。
+
+
+
+2. リトライ機能
+
+IOException（ファイルロック）発生時に、一定回数リトライ。
+
+一定時間 (Thread.Sleep) 待機しながら再試行。
+
+
+
+3. エラーハンドリング
+
+リトライ回数を超えた場合、適切なメッセージを表示。
+
+
+
+
+
+---
+
+修正後の Project クラス
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Threading;
+using System.Windows.Forms;
+
+public class Project
+{
+    public string Name { get; set; } = "Untitled";
+    public string FilePath { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public List<ProjectSetting> StartupSettings { get; set; } = new List<ProjectSetting>();
+    public List<ProjectSetting> ShutdownSettings { get; set; } = new List<ProjectSetting>();
+
+    private string lastSavedData = string.Empty;
+
+    public Project()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            StartupSettings.Add(new ProjectSetting { Key = $"Startup {i + 1}", Value = "Default" });
+            ShutdownSettings.Add(new ProjectSetting { Key = $"Shutdown {i + 1}", Value = "Default" });
+        }
+    }
+
+    public void Load(string path)
+    {
+        try
+        {
+            if (!File.Exists(path))
+            {
+                MessageBox.Show("指定されたファイルが見つかりません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string json = File.ReadAllText(path);
+            var loadedProject = JsonSerializer.Deserialize<Project>(json);
+            if (loadedProject != null)
+            {
+                Name = loadedProject.Name;
+                FilePath = path;
+                Description = loadedProject.Description;
+                StartupSettings = loadedProject.StartupSettings;
+                ShutdownSettings = loadedProject.ShutdownSettings;
+                lastSavedData = json;
+            }
+        }
+        catch (IOException)
+        {
+            MessageBox.Show("ファイルがロックされています。別のプログラムで開かれていないか確認してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"ファイルの読み込みに失敗しました。\n{ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    public void Save()
+    {
+        if (string.IsNullOrEmpty(FilePath))
+        {
+            MessageBox.Show("ファイルパスが設定されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        // バックアップを作成
+        Backup();
+
+        // ファイル書き込み処理 (ロック対策付き)
+        bool success = TryWriteToFile(FilePath, JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true }));
+
+        if (!success)
+        {
+            MessageBox.Show("ファイルの保存に失敗しました。\nファイルがロックされている可能性があります。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    public void SaveAs(string path)
+    {
+        // バックアップを作成
+        Backup();
+
+        // ファイル書き込み処理 (ロック対策付き)
+        bool success = TryWriteToFile(path, JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true }));
+
+        if (success)
+        {
+            FilePath = path;
+        }
+        else
+        {
+            MessageBox.Show("ファイルの保存に失敗しました。\nファイルがロックされている可能性があります。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private bool TryWriteToFile(string path, string content, int retryCount = 5, int delayMilliseconds = 500)
+    {
+        for (int attempt = 0; attempt < retryCount; attempt++)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (StreamWriter writer = new StreamWriter(fs))
+                {
+                    writer.Write(content);
+                }
+                return true;
+            }
+            catch (IOException)
+            {
+                if (attempt < retryCount - 1)
+                {
+                    Thread.Sleep(delayMilliseconds); // ロックが解除されるのを待つ
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void Backup()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(FilePath) && File.Exists(FilePath))
+            {
+                string backupPath = FilePath + ".bak";
+                File.Copy(FilePath, backupPath, true);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"バックアップの作成に失敗しました。\n{ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    public bool HasUnsavedChanges()
+    {
+        return JsonSerializer.Serialize(this) != lastSavedData;
+    }
+}
+
+
+---
+
+改善点
+
+1. TryWriteToFile() でロック対策
+
+FileStream を使用し、FileMode.Create で新規作成 or 置き換え
+
+FileAccess.Write & FileShare.None で他のプロセスのアクセスをブロック
+
+IOException が発生した場合、最大 5 回リトライ (Thread.Sleep(500ms) 待機)
+
+
+
+2. 保存前にバックアップを作成
+
+.json.bak ファイルを生成し、保存失敗時に復旧可能
+
+
+
+3. エラーハンドリング
+
+IOException 発生時に適切なメッセージを表示
+
+
+
+
+
+---
+
+追加の拡張案
+
+1. ロック解除の試行回数と待機時間を設定から変更可能に
+
+retryCount と delayMilliseconds を設定可能にする
+
+高速な処理を求める場合は待機時間を短縮、確実な保存を求める場合はリトライ回数を増やす
+
+
+
+2. バックグラウンドで非同期保存
+
+Task.Run() を使用して非同期にファイル書き込みを実行し、UI のフリーズを防ぐ
+
+
+
+3. エラーログの保存
+
+log.txt にエラー内容を記録し、後で確認できるようにする
+
+
+
+
+
+---
+
+この実装により、ファイルがロックされている場合でも、リトライ処理で適切に保存を試みることができ、万が一失敗してもバックアップから復元できるようになります！
+
+
+
+
 DDD（ドメイン駆動設計）アーキテクチャにおいて、DI（依存性注入）を使わずに HttpClient を利用する REST API クライアントを実装する方法を考えます。
 
 設計方針
