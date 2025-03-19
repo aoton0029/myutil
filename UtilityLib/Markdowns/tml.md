@@ -1,3 +1,206 @@
+値変更時や行追加時に C1FlexGrid を更新する方法を考慮し、適切に処理を行うように修正します。
+
+
+---
+
+対応方法
+
+1. 値変更時に更新
+
+ObservableCollection<DataItem> の CollectionChanged イベントを利用。
+
+INotifyPropertyChanged の PropertyChanged を監視し、値変更を検知。
+
+
+
+2. 行追加時に更新
+
+ObservableCollection<DataItem> の CollectionChanged イベントで行追加を検知。
+
+
+
+
+
+---
+
+修正後のコード
+
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using C1.Win.C1FlexGrid;
+
+public partial class MainForm : Form
+{
+    private C1FlexGrid flexGrid;
+    private ObservableCollection<DataItem> data;
+
+    public MainForm()
+    {
+        InitializeComponent();
+        InitializeGrid();
+    }
+
+    private void InitializeGrid()
+    {
+        // C1FlexGrid の初期化
+        flexGrid = new C1FlexGrid
+        {
+            Dock = DockStyle.Fill,
+            DrawMode = DrawModeEnum.OwnerDraw,
+            AllowAddNew = true // 行追加を許可
+        };
+        Controls.Add(flexGrid);
+
+        // データソースの作成
+        data = new ObservableCollection<DataItem>
+        {
+            new DataItem { Name = "Item 1", IsEditable = true },
+            new DataItem { Name = "Item 2", IsEditable = false },
+            new DataItem { Name = "Item 3", IsEditable = true },
+        };
+
+        // データ変更時の更新を監視
+        data.CollectionChanged += Data_CollectionChanged;
+        foreach (var item in data)
+        {
+            item.PropertyChanged += DataItem_PropertyChanged;
+        }
+
+        flexGrid.DataSource = data;
+
+        // イベントハンドラ設定
+        flexGrid.OwnerDrawCell += FlexGrid_OwnerDrawCell;
+        flexGrid.StartEdit += FlexGrid_StartEdit;
+    }
+
+    private void Data_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+        {
+            // 新しく追加されたアイテムに PropertyChanged イベントを登録
+            foreach (var newItem in e.NewItems.OfType<DataItem>())
+            {
+                newItem.PropertyChanged += DataItem_PropertyChanged;
+            }
+        }
+        flexGrid.Refresh();
+    }
+
+    private void DataItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(DataItem.IsEditable))
+        {
+            flexGrid.Refresh(); // IsEditable の変更時にセルの描画を更新
+        }
+    }
+
+    private void FlexGrid_OwnerDrawCell(object sender, OwnerDrawCellEventArgs e)
+    {
+        if (e.Row < flexGrid.Rows.Fixed || e.Col < flexGrid.Cols.Fixed) return;
+
+        var item = flexGrid.Rows[e.Row].DataSource as DataItem;
+        if (item == null) return;
+
+        if (!item.IsEditable)
+        {
+            e.Style.BackColor = Color.LightGray;
+            e.Style.ForeColor = Color.DarkGray;
+        }
+    }
+
+    private void FlexGrid_StartEdit(object sender, RowColEventArgs e)
+    {
+        var item = flexGrid.Rows[e.Row].DataSource as DataItem;
+        if (item != null && !item.IsEditable)
+        {
+            e.Cancel = true; // 編集不可
+        }
+    }
+}
+
+
+---
+
+ポイント
+
+1. ObservableCollection<T>.CollectionChanged イベント
+
+行が追加されたときに PropertyChanged を登録し、動的に更新を適用。
+
+
+
+2. INotifyPropertyChanged の監視
+
+IsEditable の変更時に flexGrid.Refresh() を実行し、セルの表示を更新。
+
+
+
+3. 新規行の追加
+
+AllowAddNew = true を設定し、ユーザーが新しい行を追加可能にする。
+
+
+
+
+
+---
+
+拡張案
+
+1. 削除時の処理追加
+
+CollectionChanged 内で Remove の場合、PropertyChanged の登録解除を行う。
+
+
+if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+{
+    foreach (var oldItem in e.OldItems.OfType<DataItem>())
+    {
+        oldItem.PropertyChanged -= DataItem_PropertyChanged;
+    }
+}
+
+
+2. 新規行のデフォルト設定
+
+NewRow にデフォルト値を設定する。
+
+
+flexGrid.AfterRowColChange += (s, e) =>
+{
+    if (flexGrid.Row == flexGrid.Rows.Count - 1) // 最終行（新規行）
+    {
+        var item = flexGrid.Rows[flexGrid.Row].DataSource as DataItem;
+        if (item != null)
+        {
+            item.IsEditable = true; // 追加時はデフォルトで編集可能
+        }
+    }
+};
+
+
+
+
+---
+
+まとめ
+
+ObservableCollection<T> の CollectionChanged を利用し、行追加時にイベントを登録。
+
+PropertyChanged を利用し、値変更時に Refresh() を実行。
+
+OwnerDrawCell でセルのスタイルを変更し、StartEdit で入力制御。
+
+
+この実装で、新しい行の追加や既存データの変更時にも、適切にグリッドを更新できるようになります！
+
+
+
+
 SettingsManager を シングルトン化 して、アプリ全体で共有できるようにします。
 これにより、どこからでも同じ SettingsManager インスタンスにアクセスでき、設定のリアルタイム同期を一元的に管理できます。
 
