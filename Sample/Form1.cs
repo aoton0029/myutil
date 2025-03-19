@@ -1,50 +1,99 @@
-ï»¿using Sample.UserControls;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Management;
+using System.Media;
+using System.Numerics;
 
 namespace Sample
 {
     public partial class Form1 : Form
     {
+        private ManagementEventWatcher watcher;
+        private string removableDrive = "";
 
         public Form1()
         {
             InitializeComponent();
-            NavigationService.Instance.Initialize(panel2);
+            InitializeUSBWatcher();
+            LoadRemovableDriveAudioFiles();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        // USBƒfƒoƒCƒX‚Ì‘}“üEíœ‚ğŠÄ‹
+        private void InitializeUSBWatcher()
         {
-
+            watcher = new ManagementEventWatcher();
+            watcher.EventArrived += new EventArrivedEventHandler(OnUSBChanged);
+            watcher.Query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 OR EventType = 3");
+            watcher.Start();
         }
 
-        private void btnHome_Click(object sender, EventArgs e)
+        // USBƒfƒoƒCƒX‚Ì‘}“üEíœ‚ğŒŸo‚µ‚½‚Æ‚«‚Ìˆ—
+        private void OnUSBChanged(object sender, EventArrivedEventArgs e)
         {
-            NavigationService.Instance.NavigateTo(new UcHome());
+            Invoke((MethodInvoker)LoadRemovableDriveAudioFiles);
         }
 
-        private void btnSeihin_Click(object sender, EventArgs e)
+        // ƒŠƒ€[ƒoƒuƒ‹ƒXƒgƒŒ[ƒW‚Ì‰¹ºƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+        private void LoadRemovableDriveAudioFiles()
         {
-            NavigationService.Instance.NavigateTo(new UcDashboard());
+            listBoxFiles.Items.Clear();
+            removableDrive = "";
+
+            foreach (var drive in DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.Removable && d.IsReady))
+            {
+                removableDrive = drive.RootDirectory.FullName;
+                string[] audioExtensions = { ".mp3", ".wav" };
+                var files = Directory.GetFiles(removableDrive, "*.*", SearchOption.AllDirectories)
+                                     .Where(f => audioExtensions.Contains(Path.GetExtension(f).ToLower()))
+                                     .ToList();
+
+                listBoxFiles.Items.AddRange(files.ToArray());
+            }
+
+            if (string.IsNullOrEmpty(removableDrive))
+            {
+                MessageBox.Show("ƒŠƒ€[ƒoƒuƒ‹ƒXƒgƒŒ[ƒW‚ªÚ‘±‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB", "’Ê’m", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
-        private void btnParts_Click(object sender, EventArgs e)
+        private void btnPlay_Click(object sender, EventArgs e)
         {
-            NavigationService.Instance.NavigateTo(new UcSeihin());
+            if (listBoxFiles.SelectedItem == null)
+            {
+                MessageBox.Show("Ä¶‚·‚éƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B", "ƒGƒ‰[", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string selectedFile = listBoxFiles.SelectedItem.ToString();
+            PlayAudio(selectedFile);
         }
 
-        private void btnOption_Click(object sender, EventArgs e)
+        // ‰¹ºƒtƒ@ƒCƒ‹‚ğÄ¶‚·‚éƒƒ\ƒbƒh
+        private void PlayAudio(string filePath)
         {
-            NavigationService.Instance.NavigateTo(new UcOptions());
+            StopAudio();
+
+            try
+            {
+                axWindowsMediaPlayer1.URL = filePath;
+                axWindowsMediaPlayer1.Ctlcontrols.play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"‰¹ºƒtƒ@ƒCƒ‹‚ÌÄ¶‚É¸”s‚µ‚Ü‚µ‚½: {ex.Message}", "ƒGƒ‰[", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Ä¶‚ğ’â~‚·‚é
+        private void StopAudio()
+        {
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopAudio();
+            watcher.Stop();
+            watcher.Dispose();
+            axWindowsMediaPlayer1.Dispose();
         }
     }
 }

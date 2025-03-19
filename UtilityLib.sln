@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSample", "DbSample\DbSamp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormSample", "FormSample\FormSample.csproj", "{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D7394C-29A4-4D88-ABDB-3B0799B04DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
