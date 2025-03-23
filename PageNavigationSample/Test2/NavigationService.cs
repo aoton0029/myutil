@@ -13,9 +13,7 @@ namespace PageNavigationSample.Test2
         private readonly Stack<UserControl> _history = new();
 
         public NavigationContext CurrentContext { get; private set; } = new();
-
-        public event Action? OnFlowCancelled;
-        public event Action? OnFlowCompleted;
+        private INavigationResultHandler? _resultHandler;
 
         public NavigationFlowService(Control host, ServiceProvider provider)
         {
@@ -23,8 +21,9 @@ namespace PageNavigationSample.Test2
             _provider = provider;
         }
 
-        public void Start<TStartPage>() where TStartPage : UserControl
+        public void Start<TStartPage>(INavigationResultHandler? resultHandler = null) where TStartPage : UserControl
         {
+            _resultHandler = resultHandler;
             _history.Clear();
             NavigateToPage(typeof(TStartPage), null);
         }
@@ -51,7 +50,7 @@ namespace PageNavigationSample.Test2
 
             if (nextPage == null)
             {
-                Complete();
+                Complete(null);
                 return;
             }
 
@@ -73,18 +72,18 @@ namespace PageNavigationSample.Test2
             }
         }
 
-        public void Cancel()
+        public void Cancel(object? reason = null)
         {
             _host.Controls.Clear();
             _history.Clear();
-            OnFlowCancelled?.Invoke();
+            _resultHandler?.OnNavigationResult(NavigationResult.Cancelled(reason));
         }
 
-        public void Complete()
+        public void Complete(object? data = null)
         {
             _host.Controls.Clear();
             _history.Clear();
-            OnFlowCompleted?.Invoke();
+            _resultHandler?.OnNavigationResult(NavigationResult.Completed(data));
         }
 
         private void NavigateToPage(Type type, NavigationContext? context)
@@ -100,5 +99,6 @@ namespace PageNavigationSample.Test2
                 aware.OnShown(CurrentContext);
         }
     }
+
 
 }

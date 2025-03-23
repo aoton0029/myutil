@@ -15,4 +15,9 @@ namespace PageNavigationSample.Test2
     {
         void OnShown(NavigationContext context);
     }
+
+    public interface INavigationResultHandler
+    {
+        void OnNavigationResult(NavigationResult result);
+    }
 }

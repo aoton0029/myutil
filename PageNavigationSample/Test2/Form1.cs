@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace PageNavigationSample.Test2
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form, INavigationResultHandler
     {
         public Form1()
         {
@@ -28,9 +28,19 @@ namespace PageNavigationSample.Test2
             provider.RegisterTransient<UcEnd>();
 
             var flow = provider.Resolve<NavigationFlowService>();
-            flow.OnFlowCompleted += () => MessageBox.Show("完了しました");
-            flow.OnFlowCancelled += () => MessageBox.Show("キャンセルされました");
-            flow.Start<UcStart>();
+            flow.Start<UcStart>(this);
+        }
+
+        public void OnNavigationResult(NavigationResult result)
+        {
+            if (result.IsCompleted)
+            {
+                MessageBox.Show("完了: " + result.Data);
+            }
+            else
+            {
+                MessageBox.Show("キャンセル: " + result.Data);
+            }
         }
     }
 }
