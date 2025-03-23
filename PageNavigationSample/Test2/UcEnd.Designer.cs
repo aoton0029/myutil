@@ -1,16 +1,16 @@
 ﻿namespace PageNavigationSample.Test2
 {
-    partial class UcPage2
+    partial class UcEnd
     {
         /// <summary> 
-        /// Required designer variable.
+        /// 必要なデザイナー変数です。
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Clean up any resources being used.
+        /// 使用中のリソースをすべてクリーンアップします。
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">マネージド リソースを破棄する場合は true を指定し、その他の場合は false を指定します。</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,11 +20,11 @@
             base.Dispose(disposing);
         }
 
-        #region Component Designer generated code
+        #region コンポーネント デザイナーで生成されたコード
 
         /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
+        /// デザイナー サポートに必要なメソッドです。このメソッドの内容を 
+        /// コード エディターで変更しないでください。
         /// </summary>
         private void InitializeComponent()
         {
@@ -37,7 +37,7 @@
             // btnNext
             // 
             btnNext.Font = new Font("Yu Gothic UI", 24F);
-            btnNext.Location = new Point(295, 98);
+            btnNext.Location = new Point(296, 108);
             btnNext.Margin = new Padding(3, 2, 3, 2);
             btnNext.Name = "btnNext";
             btnNext.Size = new Size(131, 57);
@@ -49,7 +49,7 @@
             // btnCancel
             // 
             btnCancel.Font = new Font("Yu Gothic UI", 24F);
-            btnCancel.Location = new Point(158, 98);
+            btnCancel.Location = new Point(160, 108);
             btnCancel.Margin = new Padding(3, 2, 3, 2);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(131, 57);
@@ -61,7 +61,7 @@
             // btnPrev
             // 
             btnPrev.Font = new Font("Yu Gothic UI", 24F);
-            btnPrev.Location = new Point(22, 98);
+            btnPrev.Location = new Point(23, 108);
             btnPrev.Margin = new Padding(3, 2, 3, 2);
             btnPrev.Name = "btnPrev";
             btnPrev.Size = new Size(131, 57);
@@ -74,24 +74,22 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Yu Gothic UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            label1.Location = new Point(22, 13);
+            label1.Location = new Point(23, 22);
             label1.Name = "label1";
-            label1.Size = new Size(37, 45);
+            label1.Size = new Size(73, 45);
             label1.TabIndex = 4;
-            label1.Text = "2";
+            label1.Text = "End";
             // 
-            // UcPage2
+            // UcEnd
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(255, 255, 192);
             Controls.Add(btnNext);
             Controls.Add(btnCancel);
             Controls.Add(btnPrev);
             Controls.Add(label1);
-            Margin = new Padding(3, 2, 3, 2);
-            Name = "UcPage2";
-            Size = new Size(629, 379);
+            Name = "UcEnd";
+            Size = new Size(574, 373);
             ResumeLayout(false);
             PerformLayout();
         }

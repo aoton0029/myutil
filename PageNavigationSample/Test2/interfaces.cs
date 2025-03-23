@@ -8,11 +8,11 @@ namespace PageNavigationSample.Test2
 {
     public interface INextPageDecider
     {
-        Type? DecideNextPage();
+        Type? DecideNextPage(NavigationContext context);
     }
 
     public interface IShown
     {
-        void OnShown();
+        void OnShown(NavigationContext context);
     }
 }

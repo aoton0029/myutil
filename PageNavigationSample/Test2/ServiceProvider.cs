@@ -23,7 +23,7 @@ namespace PageNavigationSample.Test2
 
         public void RegisterTransient<TService>() where TService : class
         {
-            _factories[typeof(TService)] = () => CreateInstance(typeof(TService);
+            _factories[typeof(TService)] = () => CreateInstance(typeof(TService));
         }
 
         public TService Resolve<TService>() => (TService)Resolve(typeof(TService));
