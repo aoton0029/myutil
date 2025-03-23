@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PageNavigationSample
+namespace PageNavigationSample.Test2
 {
-    public interface INavigablePage
+    internal class NavigationService
     {
-        void OnNavigated(object sharedData, object tempData);
     }
 }

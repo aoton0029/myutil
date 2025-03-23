@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PageNavigationSample
+namespace PageNavigationSample.Test1
 {
     public abstract class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
     {

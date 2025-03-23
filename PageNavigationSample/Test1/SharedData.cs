@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PageNavigationSample
+namespace PageNavigationSample.Test1
 {
     class SharedData : ObservableObject
     {

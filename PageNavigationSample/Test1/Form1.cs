@@ -1,3 +1,5 @@
+using PageNavigationSample.Test1;
+
 namespace PageNavigationSample
 {
     public partial class Form1 : Form
