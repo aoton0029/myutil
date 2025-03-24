@@ -1,3 +1,162 @@
+了解です！以下のように仕様を整理し、クラス設計を改善・拡張します。
+
+
+---
+
+改訂仕様
+
+● 全体仕様
+
+入力リストを、設定された数に 明示的に分割（各セグメントのアイテム数を指定）
+
+各セグメントに対して以下を個別に設定：
+
+Count: そのセグメントに含めるアイテム数（＝強制的にその数に分ける）
+
+SortOrder: 昇順 or 降順
+
+Meta: 任意のメタ情報（ラベルなど）
+
+
+
+
+---
+
+設計
+
+PartitionSettings の拡張
+
+public enum SortOrder
+{
+    Ascending,
+    Descending
+}
+
+public class PartitionSettings
+{
+    public int Count { get; set; }  // 分割数（固定）
+    public SortOrder SortOrder { get; set; }
+    public string Meta { get; set; } // 任意のラベルなど
+}
+
+
+---
+
+PartitionResult（結果＋メタ情報）
+
+public class PartitionResult<T>
+{
+    public string Meta { get; set; }
+    public List<T> Items { get; set; }
+}
+
+
+---
+
+ListPartitioner 実装（強制分割＋メタ付き）
+
+public class ListPartitioner<T> where T : IComparable<T>
+{
+    private readonly List<T> _source;
+    private readonly List<PartitionSettings> _settings;
+
+    public ListPartitioner(List<T> source, List<PartitionSettings> settings)
+    {
+        if (settings == null || settings.Count == 0)
+            throw new ArgumentException("Partition settings must not be null or empty.");
+
+        _source = source ?? throw new ArgumentNullException(nameof(source));
+        _settings = settings;
+
+        var totalCount = settings.Sum(s => s.Count);
+        if (totalCount > _source.Count)
+            throw new ArgumentException("Total partition counts exceed source list count.");
+    }
+
+    public List<PartitionResult<T>> Partition()
+    {
+        var result = new List<PartitionResult<T>>();
+        int currentIndex = 0;
+
+        foreach (var setting in _settings)
+        {
+            var segment = _source.Skip(currentIndex).Take(setting.Count).ToList();
+            currentIndex += setting.Count;
+
+            if (setting.SortOrder == SortOrder.Ascending)
+                segment.Sort();
+            else
+                segment.Sort((a, b) => b.CompareTo(a));
+
+            result.Add(new PartitionResult<T>
+            {
+                Meta = setting.Meta,
+                Items = segment
+            });
+        }
+
+        return result;
+    }
+}
+
+
+---
+
+使用例
+
+var source = Enumerable.Range(1, 15).ToList();
+
+var settings = new List<PartitionSettings>
+{
+    new PartitionSettings { Count = 5, SortOrder = SortOrder.Descending, Meta = "Group A" },
+    new PartitionSettings { Count = 5, SortOrder = SortOrder.Ascending, Meta = "Group B" },
+    new PartitionSettings { Count = 5, SortOrder = SortOrder.Descending, Meta = "Group C" },
+};
+
+var partitioner = new ListPartitioner<int>(source, settings);
+var partitions = partitioner.Partition();
+
+foreach (var p in partitions)
+{
+    Console.WriteLine($"{p.Meta}: {string.Join(", ", p.Items)}");
+}
+
+
+---
+
+出力例
+
+Group A: 5, 4, 3, 2, 1
+Group B: 6, 7, 8, 9, 10
+Group C: 15, 14, 13, 12, 11
+
+
+---
+
+拡張案
+
+1. Meta を Dictionary<string, object> にして汎用的なメタ情報を持てるようにする
+
+
+2. ソート条件を Func<T, object> で渡せる柔軟なカスタムソート対応
+
+
+3. 出力形式を Dictionary<string, List<T>> にして Meta をキーにする
+
+
+4. 残りアイテムの自動グルーピング or 補足パーティション作成（Count合計未満の場合）
+
+
+
+
+---
+
+他にも必要な機能があれば教えてください！次に進める案として「カスタムソートキー」や「分割後の変換処理（map）」なども追加可能です。
+
+
+
+
+
 値変更時や行追加時に C1FlexGrid を更新する方法を考慮し、適切に処理を行うように修正します。
 
 
