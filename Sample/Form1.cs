@@ -1,99 +1,20 @@
-using System.Management;
-using System.Media;
-using System.Numerics;
+ï»¿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Sample
 {
-    public partial class Form1 : Form
+    public partial class Form1: Form
     {
-        private ManagementEventWatcher watcher;
-        private string removableDrive = "";
-
         public Form1()
         {
             InitializeComponent();
-            InitializeUSBWatcher();
-            LoadRemovableDriveAudioFiles();
-        }
-
-        // USBƒfƒoƒCƒX‚Ì‘}“üEíœ‚ğŠÄ‹
-        private void InitializeUSBWatcher()
-        {
-            watcher = new ManagementEventWatcher();
-            watcher.EventArrived += new EventArrivedEventHandler(OnUSBChanged);
-            watcher.Query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 OR EventType = 3");
-            watcher.Start();
-        }
-
-        // USBƒfƒoƒCƒX‚Ì‘}“üEíœ‚ğŒŸo‚µ‚½‚Æ‚«‚Ìˆ—
-        private void OnUSBChanged(object sender, EventArrivedEventArgs e)
-        {
-            Invoke((MethodInvoker)LoadRemovableDriveAudioFiles);
-        }
-
-        // ƒŠƒ€[ƒoƒuƒ‹ƒXƒgƒŒ[ƒW‚Ì‰¹ºƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
-        private void LoadRemovableDriveAudioFiles()
-        {
-            listBoxFiles.Items.Clear();
-            removableDrive = "";
-
-            foreach (var drive in DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.Removable && d.IsReady))
-            {
-                removableDrive = drive.RootDirectory.FullName;
-                string[] audioExtensions = { ".mp3", ".wav" };
-                var files = Directory.GetFiles(removableDrive, "*.*", SearchOption.AllDirectories)
-                                     .Where(f => audioExtensions.Contains(Path.GetExtension(f).ToLower()))
-                                     .ToList();
-
-                listBoxFiles.Items.AddRange(files.ToArray());
-            }
-
-            if (string.IsNullOrEmpty(removableDrive))
-            {
-                MessageBox.Show("ƒŠƒ€[ƒoƒuƒ‹ƒXƒgƒŒ[ƒW‚ªÚ‘±‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB", "’Ê’m", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnPlay_Click(object sender, EventArgs e)
-        {
-            if (listBoxFiles.SelectedItem == null)
-            {
-                MessageBox.Show("Ä¶‚·‚éƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B", "ƒGƒ‰[", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string selectedFile = listBoxFiles.SelectedItem.ToString();
-            PlayAudio(selectedFile);
-        }
-
-        // ‰¹ºƒtƒ@ƒCƒ‹‚ğÄ¶‚·‚éƒƒ\ƒbƒh
-        private void PlayAudio(string filePath)
-        {
-            StopAudio();
-
-            try
-            {
-                axWindowsMediaPlayer1.URL = filePath;
-                axWindowsMediaPlayer1.Ctlcontrols.play();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"‰¹ºƒtƒ@ƒCƒ‹‚ÌÄ¶‚É¸”s‚µ‚Ü‚µ‚½: {ex.Message}", "ƒGƒ‰[", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // Ä¶‚ğ’â~‚·‚é
-        private void StopAudio()
-        {
-            axWindowsMediaPlayer1.Ctlcontrols.stop();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            StopAudio();
-            watcher.Stop();
-            watcher.Dispose();
-            axWindowsMediaPlayer1.Dispose();
         }
     }
 }
