@@ -1,3 +1,93 @@
+HttpClient のレスポンスを共通クラスとして扱うために、ステータスコード（int）、レスポンスボディ（string）、およびエンドポイントごとの JSON を任意のクラス型として扱えるようにジェネリッククラスを定義するのが効果的です。
+
+以下に C# の実装例を示します。
+
+
+---
+
+共通レスポンスクラスの定義
+
+public class ApiResponse<T>
+{
+    public int StatusCode { get; set; }
+    public string RawBody { get; set; }
+    public T? Body { get; set; }
+}
+
+
+---
+
+使用例：HttpClientの呼び出しメソッド
+
+public static async Task<ApiResponse<T>> SendRequestAsync<T>(HttpClient client, HttpRequestMessage request)
+{
+    var response = await client.SendAsync(request);
+    var rawBody = await response.Content.ReadAsStringAsync();
+
+    T? body = default;
+
+    try
+    {
+        body = JsonSerializer.Deserialize<T>(rawBody, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+    }
+    catch (JsonException)
+    {
+        // ログやエラーハンドリングが必要ならここに
+    }
+
+    return new ApiResponse<T>
+    {
+        StatusCode = (int)response.StatusCode,
+        RawBody = rawBody,
+        Body = body
+    };
+}
+
+
+---
+
+利用例：任意のエンドポイント用DTO
+
+public class UserResponse
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+}
+
+// 呼び出し例
+var client = new HttpClient();
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.example.com/users/1");
+
+var response = await SendRequestAsync<UserResponse>(client, request);
+
+Console.WriteLine($"Status: {response.StatusCode}");
+Console.WriteLine($"User Name: {response.Body?.Name}");
+
+
+---
+
+拡張案：
+
+エラーメッセージやヘッダーを含める
+
+public Dictionary<string, IEnumerable<string>> Headers { get; set; }
+public string? ErrorMessage { get; set; }
+
+成功／失敗を簡単に判定
+
+public bool IsSuccess => StatusCode >= 200 && StatusCode < 300;
+
+ログ出力やAPI呼び出し履歴を記録する機能との連携
+
+
+他にも欲しい構造や例があれば教えてください、それに合わせて拡張します！
+
+
+
+
 了解です！**「1. 文字列パース機能」と「4. IComparable 実装」**を追加した SerialNumber クラスの完全版を以下に示します。
 
 
