@@ -1,3 +1,165 @@
+了解です！
+以下は ネストされたプロパティに加えて、コレクションや配列にも対応した C# のプロパティ列挙コードです。
+
+
+---
+
+対応内容:
+
+プリミティブ型や文字列は直接表示
+
+ネストされたクラスは再帰処理
+
+IEnumerable（List, Arrayなど）はループして要素も再帰処理
+
+
+
+---
+
+コード
+
+using System;
+using System.Collections;
+using System.Reflection;
+
+public class PropertyLister
+{
+    public static void ListProperties(object obj, string prefix = "")
+    {
+        if (obj == null) return;
+
+        Type type = obj.GetType();
+
+        // IEnumerable だが string は除外
+        if (obj is IEnumerable enumerable && type != typeof(string))
+        {
+            int index = 0;
+            foreach (var item in enumerable)
+            {
+                string itemPrefix = $"{prefix}[{index}]";
+                ListProperties(item, itemPrefix);
+                index++;
+            }
+            return;
+        }
+
+        // プリミティブ型 or string の場合
+        if (type.IsPrimitive || obj is string || obj is decimal)
+        {
+            Console.WriteLine($"{prefix} = {obj}");
+            return;
+        }
+
+        // 通常のクラスのプロパティ処理
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (var prop in properties)
+        {
+            object value = prop.GetValue(obj);
+            string propName = string.IsNullOrEmpty(prefix) ? prop.Name : $"{prefix}.{prop.Name}";
+            ListProperties(value, propName);
+        }
+    }
+}
+
+
+---
+
+テストクラス
+
+public class Address
+{
+    public string City { get; set; }
+    public string Zip { get; set; }
+}
+
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Address HomeAddress { get; set; }
+    public string[] Tags { get; set; }
+}
+
+public class Group
+{
+    public string GroupName { get; set; }
+    public List<Person> Members { get; set; }
+}
+
+
+---
+
+使用例
+
+var group = new Group
+{
+    GroupName = "Developers",
+    Members = new List<Person>
+    {
+        new Person
+        {
+            Name = "Alice",
+            Age = 25,
+            HomeAddress = new Address { City = "Tokyo", Zip = "100-0001" },
+            Tags = new[] { "Frontend", "Vue" }
+        },
+        new Person
+        {
+            Name = "Bob",
+            Age = 30,
+            HomeAddress = new Address { City = "Osaka", Zip = "530-0001" },
+            Tags = new[] { "Backend", "Rust" }
+        }
+    }
+};
+
+PropertyLister.ListProperties(group);
+
+
+---
+
+出力例
+
+GroupName = Developers
+Members[0].Name = Alice
+Members[0].Age = 25
+Members[0].HomeAddress.City = Tokyo
+Members[0].HomeAddress.Zip = 100-0001
+Members[0].Tags[0] = Frontend
+Members[0].Tags[1] = Vue
+Members[1].Name = Bob
+Members[1].Age = 30
+Members[1].HomeAddress.City = Osaka
+Members[1].HomeAddress.Zip = 530-0001
+Members[1].Tags[0] = Backend
+Members[1].Tags[1] = Rust
+
+
+---
+
+拡張案
+
+1. 循環参照対策（一度出たオブジェクトはスキップ）
+
+
+2. 最大深さ指定（深すぎるネストを制限）
+
+
+3. プロパティフィルタ（特定の属性がついたものだけ表示）
+
+
+4. JSON 形式出力対応
+
+
+5. 非公開プロパティやフィールドへの対応
+
+
+
+必要な機能があればどんどん追加できます。どうしましょうか？
+
+
+
+
 HttpClient のレスポンスを共通クラスとして扱うために、ステータスコード（int）、レスポンスボディ（string）、およびエンドポイントごとの JSON を任意のクラス型として扱えるようにジェネリッククラスを定義するのが効果的です。
 
 以下に C# の実装例を示します。
