@@ -1,3 +1,82 @@
+できます！Windowsの「ファイルのプロパティ > 詳細タブ」に表示されるような、MP3のメタデータ（再生時間、ビットレート、アーティスト名など）は、Shell32.dll を使うことでライブラリなしでも取得可能です。
+
+
+---
+
+方法：Shell32 を使ってファイルの詳細情報を取得する
+
+1. 参照設定
+
+まず、プロジェクトに以下のCOM参照を追加してください：
+
+Shell32（Microsoft Shell Controls And Automation）
+
+
+または、using Shell32; を使うために COM 参照を手動で追加する必要があります（Visual Studio の場合：プロジェクト → 参照の追加 → COM → Shell32）。
+
+
+---
+
+2. サンプルコード（再生時間などの取得）
+
+using System;
+using Shell32;
+
+class Mp3PropertyReader
+{
+    public static void PrintMp3Properties(string filePath)
+    {
+        Shell shell = new Shell();
+        string folderPath = System.IO.Path.GetDirectoryName(filePath);
+        string fileName = System.IO.Path.GetFileName(filePath);
+        Folder folder = shell.NameSpace(folderPath);
+        FolderItem item = folder.ParseName(fileName);
+
+        Console.WriteLine($"ファイル: {fileName}");
+        for (int i = 0; i < 300; i++)
+        {
+            string key = folder.GetDetailsOf(null, i);
+            string value = folder.GetDetailsOf(item, i);
+
+            if (!string.IsNullOrEmpty(value))
+                Console.WriteLine($"{i}: {key} = {value}");
+        }
+    }
+}
+
+
+---
+
+出力例（一部抜粋）
+
+0: 名前 = sample.mp3
+1: サイズ = 4.56 MB
+...
+27: 再生時間 = 00:03:15
+28: ビットレート = 128kbps
+...
+33: アーティスト = Sample Artist
+...
+
+
+---
+
+注意点
+
+インデックス番号（例：27 = 再生時間）は環境やWindowsのバージョンによって異なる可能性があります。forループで一覧出力して確認するのがおすすめです。
+
+この方法は Windows に依存します（.NET Core/6+ では Windows 限定で動作）。
+
+ファイルが壊れていたり、プロパティが存在しない場合は空になることがあります。
+
+
+
+---
+
+必要であれば、特定のプロパティだけ抽出するコードにしてもいいですよ。どうします？
+
+
+
 了解です！
 以下は ネストされたプロパティに加えて、コレクションや配列にも対応した C# のプロパティ列挙コードです。
 
