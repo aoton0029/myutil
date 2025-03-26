@@ -1,3 +1,109 @@
+了解です！
+以下は UIバインディングに対応 しつつ、Save/Load メソッドを持たずに JSON に保存できる形 にした MruList<T> の実装です。
+
+特徴
+
+ObservableCollection<T> に基づいた実装で WPF や WinForms のバインディングにそのまま使えます。
+
+System.Text.Json を使って直列化・保存・読み込み可能。
+
+保存やロードは外部から JsonSerializer を用いて行う想定。
+
+
+
+---
+
+実装例
+
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.Json.Serialization;
+
+public class MruList<T> : ObservableCollection<T>
+{
+    private int _capacity;
+
+    public MruList(int capacity = 10)
+    {
+        if (capacity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(capacity));
+        _capacity = capacity;
+    }
+
+    [JsonInclude]
+    public int Capacity
+    {
+        get => _capacity;
+        private set => _capacity = value;
+    }
+
+    public void Use(T item)
+    {
+        if (this.Contains(item))
+        {
+            this.Remove(item);
+        }
+        this.Insert(0, item);
+
+        while (this.Count > Capacity)
+        {
+            this.RemoveAt(this.Count - 1);
+        }
+    }
+
+    public bool TryGetRecent(out T? item)
+    {
+        if (this.Count > 0)
+        {
+            item = this[0];
+            return true;
+        }
+        item = default;
+        return false;
+    }
+}
+
+
+---
+
+使用例：保存・読み込み（WPF/WinForms）
+
+using System.Text.Json;
+
+// 保存
+var recent = new MruList<string>(5);
+recent.Use("file1.txt");
+recent.Use("file2.txt");
+
+string json = JsonSerializer.Serialize(recent);
+
+// 読み込み
+var loaded = JsonSerializer.Deserialize<MruList<string>>(json);
+
+
+---
+
+拡張案
+
+1. INotifyPropertyChanged のサポート（SelectedItemなどを追加してUIとの双方向連携強化）
+
+
+2. 重複判定に IEqualityComparer<T> をサポート
+
+
+3. 項目にタイムスタンプを含めるオプション
+
+
+4. バインディング専用ラッパーの作成（BindingListAdapter<T>のような形で）
+
+
+
+これを使いたいUI（WPF、WinForms、Blazorなど）に合わせた具体例も出せますので、必要であれば教えてください。
+
+
+
+
 WinForms の ComboBox の オートコンプリート 機能と連携させるために、さきほどの MruList<T> をベースにした 文字列用のMRUクラス を ComboBox にバインドする方法を紹介します。
 
 
