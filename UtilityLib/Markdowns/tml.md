@@ -1,3 +1,90 @@
+WinForms の ComboBox の オートコンプリート 機能と連携させるために、さきほどの MruList<T> をベースにした 文字列用のMRUクラス を ComboBox にバインドする方法を紹介します。
+
+
+---
+
+【1】MruList<string> クラス（前のままでOK）
+
+（前述の MruList<T> を string で使うだけ）
+
+
+---
+
+【2】WinForms ComboBox と連携するコード例
+
+public partial class MainForm : Form
+{
+    private MruList<string> _recentItems;
+
+    public MainForm()
+    {
+        InitializeComponent();
+        InitializeComboBox();
+    }
+
+    private void InitializeComboBox()
+    {
+        _recentItems = new MruList<string>(10);
+
+        comboBox1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+        comboBox1.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        comboBox1.DataSource = _recentItems;
+    }
+
+    private void buttonUse_Click(object sender, EventArgs e)
+    {
+        var text = comboBox1.Text?.Trim();
+        if (!string.IsNullOrEmpty(text))
+        {
+            _recentItems.Use(text);
+            UpdateAutoCompleteSource();
+        }
+    }
+
+    private void UpdateAutoCompleteSource()
+    {
+        var ac = new AutoCompleteStringCollection();
+        ac.AddRange(_recentItems.ToArray());
+        comboBox1.AutoCompleteCustomSource = ac;
+    }
+}
+
+
+---
+
+【ポイント】
+
+ComboBox.DataSource に MruList<string> を直接設定し、表示と選択をバインド。
+
+AutoCompleteCustomSource は AutoCompleteStringCollection を使って更新。
+
+Use() で履歴が更新されたら AutoCompleteCustomSource も更新。
+
+
+
+---
+
+拡張案
+
+1. 履歴を JSON に保存：終了時に JsonSerializer.Serialize(_recentItems) で保存し、起動時に Deserialize して復元。
+
+
+2. 入力確定イベントで自動登録：Enter キーで履歴追加。
+
+
+3. 最近使用した順に並べてドロップダウン表示：DataSource がそれに対応済み。
+
+
+
+
+---
+
+他にも、UI に履歴削除ボタンや上限数の変更機能などを付けたい場合も対応できます。必要であれば教えてください。
+
+
+
+
+
 できます！Windowsの「ファイルのプロパティ > 詳細タブ」に表示されるような、MP3のメタデータ（再生時間、ビットレート、アーティスト名など）は、Shell32.dll を使うことでライブラリなしでも取得可能です。
 
 
