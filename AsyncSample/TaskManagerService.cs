@@ -84,86 +84,47 @@ namespace AsyncSample
 
     public class TaskManagerService
     {
-        private readonly SortedDictionary<int, Queue<TaskBase>> _taskQueue = new();
-        private readonly SemaphoreSlim _semaphore = new(1);
+        private readonly SemaphoreSlim _concurrentLimiter;
         private readonly CancellationTokenSource _cts = new();
         private readonly ConcurrentBag<TaskBase> _allTasks = new();
-        private bool _isProcessing = false;
 
         public event EventHandler<TaskBase>? TaskStarted;
         public event EventHandler<TaskBase>? TaskCompleted;
         public event EventHandler<(TaskBase Task, Exception Exception)>? TaskFailed;
 
-        public void Enqueue(TaskBase task, int priority)
+        public TaskManagerService(int maxConcurrency = 1)
+        {
+            _concurrentLimiter = new SemaphoreSlim(maxConcurrency);
+        }
+
+        public void Enqueue(TaskBase task)
         {
             _allTasks.Add(task);
 
-            lock (_taskQueue)
+            _ = Task.Run(async () =>
             {
-                if (!_taskQueue.ContainsKey(priority))
-                    _taskQueue[priority] = new Queue<TaskBase>();
+                await _concurrentLimiter.WaitAsync();
 
-                _taskQueue[priority].Enqueue(task);
-            }
-
-            StartProcessingIfNeeded();
-        }
-
-        private void StartProcessingIfNeeded()
-        {
-            if (_isProcessing) return;
-
-            _isProcessing = true;
-            _ = Task.Run(ProcessQueueAsync);
-        }
-
-        private async Task ProcessQueueAsync()
-        {
-            while (true)
-            {
-                TaskBase? task = null;
-
-                lock (_taskQueue)
+                try
                 {
-                    var next = _taskQueue
-                        .OrderBy(q => q.Key)
-                        .FirstOrDefault(q => q.Value.Count > 0);
-
-                    if (next.Value != null && next.Value.Count > 0)
-                    {
-                        task = next.Value.Dequeue();
-                    }
+                    TaskStarted?.Invoke(this, task);
+                    await task.RunAsync(_cts.Token);
+                    TaskCompleted?.Invoke(this, task);
                 }
-
-                if (task == null)
+                catch (Exception ex)
                 {
-                    _isProcessing = false;
-                    return;
+                    TaskFailed?.Invoke(this, (task, ex));
                 }
-
-                await _semaphore.WaitAsync();
-
-                _ = Task.Run(async () =>
+                finally
                 {
-                    try
-                    {
-                        TaskStarted?.Invoke(this, task);
-                        await task.RunAsync(_cts.Token);
-                        TaskCompleted?.Invoke(this, task);
-                    }
-                    catch (Exception ex)
-                    {
-                        TaskFailed?.Invoke(this, (task, ex));
-                    }
-                    finally
-                    {
-                        _semaphore.Release();
-                    }
-                });
-            }
+                    _concurrentLimiter.Release();
+                }
+            });
         }
 
         public void CancelAll() => _cts.Cancel();
+
+        public IEnumerable<TaskBase> GetAllTasks() => _allTasks.ToList();
 
         public IEnumerable<(string TaskName, Exception Error)> GetFailedErrors()
         {
