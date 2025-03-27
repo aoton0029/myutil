@@ -1,3 +1,118 @@
+了解です！角丸モードを追加するには、カスタムパネルに「通常の矩形枠」と「角丸枠」を切り替えられるプロパティを用意して、描画処理を分岐させればOKです。
+
+
+---
+
+角丸枠対応のカスタムパネル例（C#）
+
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+public class BorderedPanel : Panel
+{
+    public Color BorderColor { get; set; } = Color.Black;
+    public int BorderWidth { get; set; } = 2;
+    public bool RoundedCorners { get; set; } = false;
+    public int CornerRadius { get; set; } = 10;
+
+    public BorderedPanel()
+    {
+        this.DoubleBuffered = true;
+        this.ResizeRedraw = true;
+        this.BackColor = Color.White;
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+
+        using (Pen pen = new Pen(BorderColor, BorderWidth))
+        {
+            pen.Alignment = PenAlignment.Inset;
+
+            Rectangle rect = new Rectangle(
+                0,
+                0,
+                this.ClientSize.Width - 1,
+                this.ClientSize.Height - 1
+            );
+
+            if (RoundedCorners)
+            {
+                using (GraphicsPath path = GetRoundedRectPath(rect, CornerRadius))
+                {
+                    e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    e.Graphics.DrawPath(pen, path);
+                }
+            }
+            else
+            {
+                e.Graphics.DrawRectangle(pen, rect);
+            }
+        }
+    }
+
+    private GraphicsPath GetRoundedRectPath(Rectangle rect, int radius)
+    {
+        GraphicsPath path = new GraphicsPath();
+
+        int diameter = radius * 2;
+        Rectangle arc = new Rectangle(rect.Location, new Size(diameter, diameter));
+
+        // 左上
+        path.AddArc(arc, 180, 90);
+
+        // 右上
+        arc.X = rect.Right - diameter;
+        path.AddArc(arc, 270, 90);
+
+        // 右下
+        arc.Y = rect.Bottom - diameter;
+        path.AddArc(arc, 0, 90);
+
+        // 左下
+        arc.X = rect.Left;
+        path.AddArc(arc, 90, 90);
+
+        path.CloseFigure();
+        return path;
+    }
+}
+
+
+---
+
+使い方
+
+var panel = new BorderedPanel
+{
+    BorderColor = Color.Blue,
+    BorderWidth = 3,
+    RoundedCorners = true,
+    CornerRadius = 12,
+    Size = new Size(200, 100),
+    Location = new Point(10, 10)
+};
+
+
+---
+
+拡張案
+
+RoundedCornersMode のように「上だけ角丸」なども実装可能。
+
+ホバー時に色が変わるなどのインタラクション効果。
+
+枠だけでなく背景もグラデーションやパターン描画。
+
+
+さらに拡張したい方向性があれば、それに合わせた提案もできます！
+
+
+
+
 了解です！
 それでは、定期実行の動作制御を柔軟に切り替えるために、OverrunStrategy を導入した形で ScheduledTaskBase を拡張します。
 
