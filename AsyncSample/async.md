@@ -1,3 +1,143 @@
+素晴らしい選択です！
+ここでは、以下の2種類のタスクを TaskBase を使って実装します：
+
+
+---
+
+✅ 実装する2種類のタスク
+
+
+---
+
+1. 🔧 LargeFileCopyTask
+
+public class LargeFileCopyTask : TaskBase
+{
+    private readonly string _sourcePath;
+    private readonly string _destinationPath;
+    private const int BufferSize = 81920;
+
+    public LargeFileCopyTask(string name, string source, string destination)
+        : base(name)
+    {
+        _sourcePath = source;
+        _destinationPath = destination;
+    }
+
+    protected override async Task ExecuteAsync()
+    {
+        if (!File.Exists(_sourcePath))
+            throw new FileNotFoundException("Source file not found", _sourcePath);
+
+        var fileInfo = new FileInfo(_sourcePath);
+        long totalSize = fileInfo.Length;
+        long copied = 0;
+
+        ReportProgress($"[{Name}] コピー開始: {fileInfo.Name} ({totalSize / 1024 / 1024} MB)");
+
+        using var source = new FileStream(_sourcePath, FileMode.Open, FileAccess.Read);
+        using var dest = new FileStream(_destinationPath, FileMode.Create, FileAccess.Write);
+
+        byte[] buffer = new byte[BufferSize];
+        int read;
+
+        while ((read = await source.ReadAsync(buffer, 0, buffer.Length, CancellationToken)) > 0)
+        {
+            await dest.WriteAsync(buffer, 0, read, CancellationToken);
+            copied += read;
+
+            double percent = (double)copied / totalSize * 100;
+            ReportProgress($"[{Name}] 進捗: {percent:F2}% ({copied}/{totalSize} bytes)");
+            await Task.Yield(); // 他の処理をブロックしない
+        }
+
+        ReportProgress($"[{Name}] コピー完了: {Path.GetFileName(_destinationPath)}");
+    }
+}
+
+
+---
+
+2. 🔧 LargeAmountFileCopyTask
+
+public class LargeAmountFileCopyTask : TaskBase
+{
+    private readonly string _sourceDir;
+    private readonly string _destinationDir;
+
+    public LargeAmountFileCopyTask(string name, string sourceDir, string destinationDir)
+        : base(name)
+    {
+        _sourceDir = sourceDir;
+        _destinationDir = destinationDir;
+    }
+
+    protected override async Task ExecuteAsync()
+    {
+        if (!Directory.Exists(_sourceDir))
+            throw new DirectoryNotFoundException("Source directory not found: " + _sourceDir);
+
+        Directory.CreateDirectory(_destinationDir);
+
+        var files = Directory.GetFiles(_sourceDir, "*.*", SearchOption.TopDirectoryOnly);
+        int total = files.Length;
+        int copied = 0;
+
+        ReportProgress($"[{Name}] ファイルコピー開始（{total}件）");
+
+        foreach (var sourceFile in files)
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+
+            string destFile = Path.Combine(_destinationDir, Path.GetFileName(sourceFile));
+            File.Copy(sourceFile, destFile, true);
+
+            copied++;
+            double percent = (double)copied / total * 100;
+            ReportProgress($"[{Name}] コピー中: {percent:F1}% ({copied}/{total})");
+            await Task.Yield();
+        }
+
+        ReportProgress($"[{Name}] 全ファイルコピー完了（{copied}件）");
+    }
+}
+
+
+---
+
+✅ 使用例（TaskManagerService に登録）
+
+var manager = new TaskManagerService();
+
+manager.TaskStarted += (s, t) => Console.WriteLine($"開始: {t.Name}");
+manager.TaskCompleted += (s, t) => Console.WriteLine($"完了: {t.Name}");
+
+var largeFileTask = new LargeFileCopyTask("大容量ファイルコピー", @"C:\BigData.iso", @"D:\Backup\BigData.iso");
+manager.Enqueue(largeFileTask);
+
+var multiCopyTask = new LargeAmountFileCopyTask("フォルダ全コピー", @"C:\Images", @"D:\Backup\Images");
+manager.Enqueue(multiCopyTask);
+
+
+---
+
+✅ 特徴
+
+
+---
+
+🧩 拡張案
+
+
+---
+
+必要であれば、WinForms UI と連携した進捗バー付きコピー画面 や、コピー条件設定ダイアログなども作れます。
+組み込み先や目的に合わせて、さらに具体化しましょうか？
+
+
+
+
+
 了解です！
 ここでは、長期間継続的に実行される ScheduledTaskBase の実例をご紹介します。
 対象は数時間〜数日スパンで動作するような 監視・記録・収集系のタスク です。
