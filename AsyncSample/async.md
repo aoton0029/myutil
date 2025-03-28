@@ -1,3 +1,134 @@
+非常に重要な視点です！
+TaskManagerService（TaskManager）と TimerService（TimerManager）をアプリ終了時や再起動時に安全に破棄（Dispose）する処理は、リソースリークやタスク暴走を防ぐために不可欠です。
+
+
+---
+
+✅ ゴール
+
+
+---
+
+✅ TaskManagerService の終了処理・破棄処理
+
+実装に追加：
+
+public class TaskManagerService : IDisposable
+{
+    private readonly CancellationTokenSource _cts = new();
+    private readonly SemaphoreSlim _concurrentLimiter;
+    private bool _disposed = false;
+
+    public TaskManagerService(int maxConcurrency = 1)
+    {
+        _concurrentLimiter = new SemaphoreSlim(maxConcurrency);
+    }
+
+    public void CancelAll() => _cts.Cancel();
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+
+        _cts.Cancel();
+        _cts.Dispose();
+        _concurrentLimiter.Dispose();
+    }
+}
+
+呼び出し側（例：FormClosing）
+
+protected override void OnFormClosing(FormClosingEventArgs e)
+{
+    taskManager.Dispose();
+    base.OnFormClosing(e);
+}
+
+
+---
+
+✅ TimerService の終了処理・破棄処理
+
+1. 保持中の全 ScheduledTask を停止
+
+2. CancellationTokenSource をすべて Cancel + Dispose
+
+3. モニタータスク（ヘルスチェック）も終了
+
+public class TimerService : IDisposable
+{
+    private readonly Dictionary<string, TaskHandle> _tasks = new();
+    private readonly CancellationTokenSource _healthMonitorCts = new();
+    private bool _disposed = false;
+
+    public void StopAll()
+    {
+        lock (_tasks)
+        {
+            foreach (var handle in _tasks.Values)
+            {
+                handle.CancellationTokenSource.Cancel();
+                handle.CancellationTokenSource.Dispose();
+            }
+
+            _tasks.Clear();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+
+        StopAll();
+        _healthMonitorCts.Cancel();
+        _healthMonitorCts.Dispose();
+    }
+}
+
+
+---
+
+✅ 呼び出し例（フォーム/サービス終了時）
+
+protected override void OnFormClosing(FormClosingEventArgs e)
+{
+    timerService.Dispose();
+    base.OnFormClosing(e);
+}
+
+
+---
+
+✅ 拡張：安全な Dispose 呼び出しのための型
+
+
+---
+
+✅ まとめ
+
+
+---
+
+✅ おまけ：WinForms アプリで一括終了処理する方法
+
+Application.ApplicationExit += (s, e) =>
+{
+    taskManager.Dispose();
+    timerService.Dispose();
+};
+
+
+---
+
+必要なら、Dispose 呼び出し時にすべてのタスクの状態をログ保存してから終了するような「終了時永続保存」も組み込めます。
+追加してみますか？
+
+
+
+
+
 了解です！
 TaskSnapshot 構造体は、TaskBase（または ScheduledTaskBase）の状態を一時的に記録・転送・保存するためのスナップショットデータ構造です。
 ログ記録、UI表示、永続化（JSONなど）に非常に便利です。
