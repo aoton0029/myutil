@@ -1,4 +1,129 @@
 了解です！
+ScenarioTaskManager / ScenarioTaskBase 実行時に、コマンド送信・応答・結果・時刻などを記録する 実行ログ（ExecutionLog）機能を導入しましょう。
+
+
+---
+
+✅ ゴール：実行ログに記録する内容
+
+
+---
+
+✅ 1. 実行ログモデル ExecutionLogEntry
+
+public class ExecutionLogEntry
+{
+    public DateTime Timestamp { get; set; }
+    public string TemplateName { get; set; } = "";
+    public string CommandName { get; set; } = "";
+    public string CommandText { get; set; } = "";
+    public string Response { get; set; } = "";
+    public bool Success { get; set; }
+}
+
+
+---
+
+✅ 2. ログ記録サービス ExecutionLogger
+
+public class ExecutionLogger
+{
+    private readonly List<ExecutionLogEntry> _entries = new();
+
+    public void Log(ExecutionLogEntry entry)
+    {
+        _entries.Add(entry);
+        Console.WriteLine($"[{entry.Timestamp:HH:mm:ss}] {entry.TemplateName} - {entry.CommandName}: {(entry.Success ? "OK" : "NG")}");
+    }
+
+    public IEnumerable<ExecutionLogEntry> GetEntries() => _entries;
+
+    public void ExportJson(string path)
+    {
+        var json = JsonSerializer.Serialize(_entries, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(path, json);
+    }
+
+    public void Clear() => _entries.Clear();
+}
+
+
+---
+
+✅ 3. ScenarioTaskBase にログ機能を追加
+
+public abstract class ScenarioTaskBase
+{
+    protected ScenarioTemplate Template { get; }
+    protected IDevice Device { get; }
+    protected ExecutionLogger Logger { get; }
+
+    public ScenarioTaskBase(ScenarioTemplate template, IDevice device, ExecutionLogger logger)
+    {
+        Template = template;
+        Device = device;
+        Logger = logger;
+    }
+
+    public async Task<ScenarioResult> RunAsync(CancellationToken cancellationToken)
+    {
+        var result = new ScenarioResult { TemplateName = Template.Name };
+
+        foreach (var command in Template.Commands)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var commandResult = await command.ExecuteAsync(Device, cancellationToken);
+
+            result.Results.Add(commandResult);
+
+            Logger.Log(new ExecutionLogEntry
+            {
+                Timestamp = DateTime.Now,
+                TemplateName = Template.Name,
+                CommandName = command.Name,
+                CommandText = (command as ITextCommand)?.Text ?? "N/A",
+                Response = commandResult.Response,
+                Success = commandResult.Success
+            });
+
+            if (!commandResult.Success)
+                break;
+        }
+
+        return result;
+    }
+}
+
+※ ITextCommand はオプション。コマンド文字列がわかるものに適用。
+
+
+---
+
+✅ 使用例
+
+var logger = new ExecutionLogger();
+var manager = new ScenarioTaskManager(device, logger);
+
+await manager.RunAsync(CancellationToken.None);
+
+// ログを保存
+logger.ExportJson("run_log.json");
+
+
+---
+
+✅ 拡張案
+
+
+---
+
+実行ログを UI や CSV にも出したい、という場合はすぐ対応できます。
+次は UI連携 or CSVログ出力 を作成しましょうか？
+
+
+
+了解です！
 ScenarioTaskManager のシナリオ進行状況（プログレス）を WinForms の UI にリアルタイム表示する構成を作りましょう。
 
 
