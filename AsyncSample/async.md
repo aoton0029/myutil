@@ -1,3 +1,135 @@
+了解です！
+ScenarioTaskManager のシナリオ進行状況（プログレス）を WinForms の UI にリアルタイム表示する構成を作りましょう。
+
+
+---
+
+✅ ゴール：UIでのプログレス表示
+
+
+---
+
+✅ 構成概要
+
+[ScenarioTaskManager]
+ └→ プログレスイベント発行（OnProgress）
+[Form]
+ └→ UI更新（Invokeでコントロール更新）
+
+
+---
+
+✅ 1. プログレスイベント用モデル
+
+public class ScenarioProgress
+{
+    public string TemplateName { get; set; } = "";
+    public string CommandName { get; set; } = "";
+    public int CommandIndex { get; set; }
+    public int TotalCommands { get; set; }
+    public bool? Success { get; set; }
+    public string Message { get; set; } = "";
+}
+
+
+---
+
+✅ 2. ScenarioTaskBase にイベント追加
+
+public event EventHandler<ScenarioProgress>? ProgressChanged;
+
+protected void ReportProgress(ScenarioProgress progress)
+{
+    ProgressChanged?.Invoke(this, progress);
+}
+
+
+---
+
+✅ 3. プログレス発行の追加（コマンド実行中）
+
+for (int i = 0; i < Template.Commands.Count; i++)
+{
+    var command = Template.Commands[i];
+    cancellationToken.ThrowIfCancellationRequested();
+
+    var result = await command.ExecuteAsync(Device, cancellationToken);
+
+    resultList.Add(result);
+
+    ReportProgress(new ScenarioProgress
+    {
+        TemplateName = Template.Name,
+        CommandName = command.Name,
+        CommandIndex = i + 1,
+        TotalCommands = Template.Commands.Count,
+        Success = result.Success,
+        Message = result.Response
+    });
+
+    if (!result.Success) break;
+}
+
+
+---
+
+✅ 4. UI側でバインディング
+
+フォームメンバ：
+
+private ScenarioTaskManager _manager;
+private Label lblTemplate;
+private Label lblCommand;
+private ProgressBar progressBar;
+private TextBox txtLog;
+
+初期化時のハンドラ登録：
+
+task.ProgressChanged += (s, p) =>
+{
+    Invoke(() =>
+    {
+        lblTemplate.Text = $"テンプレート: {p.TemplateName}";
+        lblCommand.Text = $"コマンド: {p.CommandName}";
+        progressBar.Maximum = p.TotalCommands;
+        progressBar.Value = p.CommandIndex;
+
+        txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {p.CommandName}: {p.Message}\r\n");
+    });
+};
+
+
+---
+
+✅ 拡張：DataGridViewでログ表示する場合
+
+BindingList<ScenarioProgress> _progressLog = new();
+dataGridView1.DataSource = _progressLog;
+
+task.ProgressChanged += (s, p) =>
+{
+    Invoke(() => _progressLog.Add(p));
+};
+
+
+---
+
+✅ まとめ
+
+
+---
+
+✅ 次の拡張案
+
+
+---
+
+この構成で、リアルタイムでシナリオ進行を見える化するUIが作れます。
+ご希望があれば、フォームテンプレート or Designer付きの完全サンプルも作成します！続けますか？
+
+
+
+
 素晴らしい選択です！
 ここでは、以下の2種類のタスクを TaskBase を使って実装します：
 
