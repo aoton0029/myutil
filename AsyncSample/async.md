@@ -1,3 +1,181 @@
+完璧な構成案ですね！
+ここではテンプレートパターンとコマンドパターンを組み合わせ、「デバイスに対してシナリオを実行するタスク管理システム」 を構築します。
+
+
+---
+
+✅ 構成概要（目的）
+
+
+---
+
+✅ 1. ICommand（コマンドパターン）
+
+public interface ICommand
+{
+    string Name { get; }
+    Task<CommandResult> ExecuteAsync(IDevice device, CancellationToken cancellationToken);
+}
+
+public class CommandResult
+{
+    public bool Success { get; set; }
+    public string Response { get; set; }
+}
+
+
+---
+
+✅ 2. IDevice / IConnection
+
+public interface IConnection
+{
+    Task SendAsync(string command, CancellationToken cancellationToken);
+    Task<string> ReceiveAsync(CancellationToken cancellationToken);
+}
+
+public interface IDevice
+{
+    string Name { get; }
+    IConnection Connection { get; }
+
+    Task<CommandResult> SendCommandAsync(string command, CancellationToken cancellationToken);
+}
+
+
+---
+
+✅ 3. ScenarioTemplate（テンプレートパターン）
+
+public class ScenarioTemplate
+{
+    public string Name { get; set; }
+    public List<ICommand> Commands { get; } = new();
+    public Func<ScenarioResult, ScenarioTemplate?>? NextSelector { get; set; }  // 条件分岐可
+}
+
+
+---
+
+✅ 4. ScenarioResult
+
+public class ScenarioResult
+{
+    public string TemplateName { get; set; }
+    public List<CommandResult> Results { get; set; } = new();
+    public bool Success => Results.All(r => r.Success);
+}
+
+
+---
+
+✅ 5. ScenarioTaskBase
+
+public abstract class ScenarioTaskBase
+{
+    protected ScenarioTemplate Template { get; }
+    protected IDevice Device { get; }
+
+    public ScenarioTaskBase(ScenarioTemplate template, IDevice device)
+    {
+        Template = template;
+        Device = device;
+    }
+
+    public async Task<ScenarioResult> RunAsync(CancellationToken cancellationToken)
+    {
+        var result = new ScenarioResult { TemplateName = Template.Name };
+
+        foreach (var command in Template.Commands)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var r = await command.ExecuteAsync(Device, cancellationToken);
+            result.Results.Add(r);
+
+            if (!r.Success)
+                break;
+        }
+
+        return result;
+    }
+}
+
+
+---
+
+✅ 6. ScenarioTaskManager
+
+public class ScenarioTaskManager
+{
+    private readonly List<ScenarioTemplate> _templates = new();
+    private readonly IDevice _device;
+
+    public ScenarioTaskManager(IDevice device)
+    {
+        _device = device;
+    }
+
+    public void AddTemplate(ScenarioTemplate template)
+    {
+        _templates.Add(template);
+    }
+
+    public async Task RunAsync(CancellationToken cancellationToken)
+    {
+        ScenarioTemplate? current = _templates.FirstOrDefault();
+
+        while (current != null && !cancellationToken.IsCancellationRequested)
+        {
+            var task = new ConcreteScenarioTask(current, _device);
+            var result = await task.RunAsync(cancellationToken);
+
+            current = current.NextSelector?.Invoke(result);
+        }
+    }
+}
+
+
+---
+
+✅ 7. ConcreteScenarioTask（必要なら）
+
+public class ConcreteScenarioTask : ScenarioTaskBase
+{
+    public ConcreteScenarioTask(ScenarioTemplate template, IDevice device)
+        : base(template, device) { }
+
+    // 必要に応じてフックやログをここに追加可能
+}
+
+
+---
+
+✅ 特徴と拡張性
+
+
+---
+
+✅ 次にできること
+
+ICommand の具体例（SetVoltageCommand, ReadValueCommand など）
+
+ScenarioTemplate を JSON や YAML で定義・読み込み
+
+実行ログ（時刻、コマンド、レスポンス）保存機能
+
+UI 上でシナリオの編集・再生・中断など操作
+
+
+
+---
+
+この構成で、高度な自動テスト・シナリオベース制御ができます！
+必要ならこのまま UI とつないだサンプルや、テンプレート定義ファイル構文を作成しますか？
+
+
+
+
+
 了解です！
 ScenarioTaskManager / ScenarioTaskBase 実行時に、コマンド送信・応答・結果・時刻などを記録する 実行ログ（ExecutionLog）機能を導入しましょう。
 
