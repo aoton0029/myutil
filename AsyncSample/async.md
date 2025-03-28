@@ -1,3 +1,125 @@
+非常に重要なポイントです！
+ここでは、TaskBase / ScheduledTaskBase を使ったときに例外が発生した場合のハンドリングを、TaskManagerService と TimerService のそれぞれでどう扱うべきかを整理し、具体的な実装例も提示します。
+
+
+---
+
+✅ 1. 共通設計ポリシー：例外発生時の分類
+
+
+---
+
+✅ 2. TaskBase / ScheduledTaskBase の内部構造（既定）
+
+両者とも RunAsync 内部で try/catch を持ち、失敗時は TaskState.Failed にセットされ、
+例外は上位に再スロー or 記録されるように設計されています。
+
+try
+{
+    await ExecuteAsync();
+    State = TaskState.Completed;
+}
+catch (Exception ex)
+{
+    LastError = ex;
+    State = TaskState.Failed;
+    throw;
+}
+
+
+---
+
+✅ 3. TaskManagerService 側の例外ハンドリング
+
+manager.TaskFailed += (s, result) =>
+{
+    var task = result.Task;
+    var error = result.Exception;
+    Console.WriteLine($"[Task Failed] {task.Name} - {error.Message}");
+
+    // 例：ログ保存、再試行、UI通知など
+    LogFailure(task, error);
+    // Retry(task); ← オプションで再試行
+};
+
+実装アイデア：
+
+即時再試行：リトライ回数付きで manager.Enqueue() 再投入
+
+ログ記録：ファイル or DB に task.Name, error.Message 記録
+
+エラーカウント：task.ErrorCount++ によって閾値超過検出
+
+
+
+---
+
+✅ 4. TimerService 側の例外ハンドリング（長期間動作）
+
+timerService.TaskFailed += (s, e) =>
+{
+    Console.WriteLine($"[Scheduled Failed] {e.Name}: {e.Exception.Message}");
+
+    if (autoRestartEnabled)
+    {
+        Console.WriteLine($"→ 自動再起動対象: {e.Name}");
+        timerService.StartTask(GetTaskByName(e.Name));
+    }
+};
+
+実装ポイント：
+
+自動復旧：autoRestartEnabled == true で再登録（済）
+
+スキップ上限対応：MaxSkipCount 超過時に通知＋再起動可否判断
+
+失敗の可視化：モニターUIで「停止中」「失敗」の状態を表示
+
+
+
+---
+
+✅ 5. 失敗通知の共通イベント構造
+
+どちらも TaskFailed イベントを持ち、内容は次のような型で定義されています：
+
+public EventHandler<(TaskBase Task, Exception Exception)>? TaskFailed;
+
+または ScheduledTask 用：
+
+public EventHandler<(string Name, Exception Exception)>? TaskFailed;
+
+推奨共通ハンドラ例：
+
+void OnTaskFailed(object? sender, (string Name, Exception Exception) e)
+{
+    string name = e.Name;
+    var ex = e.Exception;
+
+    ShowErrorDialog(name, ex.Message);  // UI通知
+    WriteLog(name, ex);                 // 永続ログ
+}
+
+
+---
+
+✅ 6. 拡張案（おすすめ）
+
+
+---
+
+✅ まとめ
+
+
+---
+
+ご希望であれば、RetryPolicy を TaskBase に組み込んだバージョンや、エラー監視サービスの作成も可能です。
+次に「再試行戦略」か「UI通知付きのエラーハンドラ」どちらか作ってみますか？
+
+
+
+
+
 非常に重要な視点です！
 TaskManagerService（TaskManager）と TimerService（TimerManager）をアプリ終了時や再起動時に安全に破棄（Dispose）する処理は、リソースリークやタスク暴走を防ぐために不可欠です。
 
