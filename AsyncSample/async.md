@@ -1,3 +1,104 @@
+良い質問です！
+TaskSnapshot を「どこで持つか」は、その目的（表示、ログ、永続化、監視など）に応じて以下のように整理できます：
+
+
+---
+
+✅ 目的別：TaskSnapshot を持つ場所
+
+
+---
+
+✅ パターン1：UIやログ用に TaskManagerService 側で保持
+
+public class TaskManagerService
+{
+    private readonly ConcurrentBag<TaskBase> _allTasks = new();
+    private readonly List<TaskSnapshot> _snapshotHistory = new();
+
+    public IEnumerable<TaskSnapshot> SnapshotHistory => _snapshotHistory.ToList();
+
+    public event EventHandler<TaskSnapshot>? TaskSnapshotCreated;
+
+    private void RecordSnapshot(TaskBase task)
+    {
+        var snap = task.ToSnapshot();
+        _snapshotHistory.Add(snap);
+        TaskSnapshotCreated?.Invoke(this, snap);
+    }
+
+    public void Enqueue(TaskBase task)
+    {
+        _allTasks.Add(task);
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await task.RunAsync(_cts.Token);
+            }
+            catch { }
+            finally
+            {
+                RecordSnapshot(task);
+            }
+        });
+    }
+}
+
+
+---
+
+✅ パターン2：Form 側で BindingList<TaskSnapshot> を保持
+
+private BindingList<TaskSnapshot> _snapshots = new();
+
+private void InitializeSnapshotBinding()
+{
+    taskManager.TaskSnapshotCreated += (s, snap) =>
+    {
+        Invoke(() =>
+        {
+            _snapshots.Add(snap);
+        });
+    };
+
+    dataGridView1.DataSource = _snapshots;
+}
+
+
+---
+
+✅ パターン3：専用サービス TaskSnapshotStore を作る（分離設計）
+
+public class TaskSnapshotStore
+{
+    private readonly List<TaskSnapshot> _snapshots = new();
+
+    public void Add(TaskBase task) => _snapshots.Add(task.ToSnapshot());
+    public IEnumerable<TaskSnapshot> All => _snapshots;
+    public IEnumerable<TaskSnapshot> ByState(TaskState state) => _snapshots.Where(s => s.State == state);
+}
+
+→ TaskManagerService / TimerService は TaskSnapshotStore に依存注入して記録を委譲する構成も可能です。
+
+
+---
+
+✅ まとめ：どこで持つかの選び方
+
+
+---
+
+次に、どこで保持して何に使いたいか（UI表示・ログ・復元など）を教えてくれれば、それに合った構造をコードで出します！
+たとえば「UIとログ両方に使いたい」なら ViewModel＋Store パターンも作れます。
+
+
+
+
+
+
+
 完璧な構成案ですね！
 ここではテンプレートパターンとコマンドパターンを組み合わせ、「デバイスに対してシナリオを実行するタスク管理システム」 を構築します。
 
