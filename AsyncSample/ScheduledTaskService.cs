@@ -7,102 +7,7 @@ using System.Threading.Tasks;
 
 namespace AsyncSample
 {
-    public enum OverrunStrategy
-    {
-        FixedInterval,    // 固定間隔（前回終了から一定間隔）
-        CatchUp,          // スケジュール基準で即時実行
-        Skip              // スケジュール基準、次の時刻までスキップ
-    }
-
-    public class TaskMonitorInfo
-    {
-        public string Name { get; set; }
-        public bool IsRunning { get; set; }
-        public DateTime? LastRunTime { get; set; }
-        public string LastStatus { get; set; }
-    }
-
-    public abstract class ScheduledTaskBase : TaskBase
-    {
-        public TimeSpan Interval { get; }
-        public OverrunStrategy OverrunStrategy { get; }
-        public int? MaxSkipCount { get; }
-        public int RunCount { get; set; }
-        public DateTime? LastRun { get; set; }
-
-        private int _skipCount = 0;
-
-        protected ScheduledTaskBase(
-            string name,
-            TimeSpan interval,
-            OverrunStrategy overrunStrategy = OverrunStrategy.FixedInterval,
-            int? maxSkipCount = null)
-            : base(name)
-        {
-            Interval = interval;
-            OverrunStrategy = overrunStrategy;
-            MaxSkipCount = maxSkipCount;
-        }
-
-        protected abstract Task ExecuteOnceAsync();
-
-        protected override async Task ExecuteAsync()
-        {
-            var nextRunTime = DateTime.Now;
-
-            while (!CancellationToken.IsCancellationRequested)
-            {
-                var now = DateTime.Now;
-
-                if (OverrunStrategy == OverrunStrategy.Skip && now < nextRunTime)
-                {
-                    await Task.Delay(nextRunTime - now, CancellationToken);
-                }
-
-                var actualStart = DateTime.Now;
-                await ExecuteOnceAsync();
-                var actualEnd = DateTime.Now;
-
-                switch (OverrunStrategy)
-                {
-                    case OverrunStrategy.FixedInterval:
-                        var waitTime = Interval - (actualEnd - actualStart);
-                        if (waitTime > TimeSpan.Zero)
-                            await Task.Delay(waitTime, CancellationToken);
-                        break;
-
-                    case OverrunStrategy.CatchUp:
-                        nextRunTime += Interval;
-                        break;
-
-                    case OverrunStrategy.Skip:
-                        nextRunTime += Interval;
-
-                        if (nextRunTime < DateTime.Now)
-                        {
-                            _skipCount++;
-                            ReportProgress($"スケジュール遅延によりスキップ {_skipCount} 回");
-
-                            if (MaxSkipCount.HasValue && _skipCount > MaxSkipCount.Value)
-                            {
-                                ReportProgress($"スキップ回数上限超過: {_skipCount} 回");
-                                throw new Exception($"スキップ回数が上限 {MaxSkipCount} を超えました");
-                            }
-
-                            nextRunTime = DateTime.Now + Interval;
-                        }
-                        else
-                        {
-                            _skipCount = 0; // 実行できたのでリセット
-                        }
-                        break;
-                }
-            }
-        }
-    }
-
-
-    public class TimerService
+    public class ScheduledTaskService : IDisposable
     {
         private class TaskHandle
         {
@@ -116,12 +21,14 @@ namespace AsyncSample
         private readonly object _lock = new();
         private readonly TimeSpan _healthCheckInterval = TimeSpan.FromSeconds(10);
         private readonly bool _autoRestartFailed;
+        private readonly IProgress<TaskSnapshot>? _snapshotProgress;
+        private bool _disposed = false;
 
         public event EventHandler<string>? TaskStarted;
         public event EventHandler<string>? TaskCompleted;
         public event EventHandler<(string Name, Exception Exception)>? TaskFailed;
 
-        public TimerService(bool autoRestartFailed = true)
+        public ScheduledTaskService(bool autoRestartFailed = true)
         {
             _autoRestartFailed = autoRestartFailed;
             StartHealthMonitor();
@@ -150,7 +57,7 @@ namespace AsyncSample
                     try
                     {
                         TaskStarted?.Invoke(this, task.Name);
-                        await task.RunAsync(cts.Token);
+                        await task.RunAsync(cts.Token, _snapshotProgress);
                         TaskCompleted?.Invoke(this, task.Name);
                     }
                     catch (Exception ex)
@@ -184,7 +91,10 @@ namespace AsyncSample
             lock (_lock)
             {
                 foreach (var handle in _tasks.Values)
+                {
                     handle.CancellationTokenSource.Cancel();
+                    handle.CancellationTokenSource.Dispose();
+                }
 
                 _tasks.Clear();
             }
@@ -233,25 +143,27 @@ namespace AsyncSample
             });
         }
 
-        public List<TaskMonitorInfo> GetMonitorInfoList()
+        public List<TaskSnapshot> GetMonitorInfoList()
         {
             lock (_lock)
             {
                 return _tasks.Select(kv =>
                 {
                     var t = kv.Value;
-                    return new TaskMonitorInfo
-                    {
-                        Name = kv.Key,
-                        IsRunning = t.IsRunning,
-                        LastRunTime = t.LastRunTime,
-                        LastStatus = t.IsRunning ? "Running" :
-                                      t.LastRunTime == DateTime.MinValue ? "Never Started" : "Stopped"
-                    };
+                    return new TaskSnapshot();
                 }).ToList();
             }
         }
 
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            StopAll();
+            _healthMonitorCts.Cancel();
+            _healthMonitorCts.Dispose();
+        }
     }
 
 }

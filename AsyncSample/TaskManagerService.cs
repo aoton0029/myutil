@@ -5,95 +5,27 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Channels;
 
 namespace AsyncSample
 {
-    public enum TaskState
-    {
-        Pending,
-        Running,
-        Completed,
-        Cancelled,
-        Failed
-    }
 
-    public abstract class TaskBase
-    {
-        public string Name { get; protected set; }
-        public TaskState State { get; private set; } = TaskState.Pending;
 
-        public Exception? LastError { get; protected set; }
-
-        public DateTime? LastProgressTime { get; protected set; }
-        public DateTime? StartTime { get; protected set; }
-        public DateTime? EndTime { get; protected set; }
-        public TimeSpan? Duration => StartTime.HasValue && EndTime.HasValue
-            ? EndTime - StartTime
-            : null;
-
-        protected CancellationToken CancellationToken { get; private set; }
-        protected IProgress<string>? ProgressReporter { get; private set; }
-
-        protected TaskBase(string name)
-        {
-            Name = name;
-        }
-
-        public async Task RunAsync(CancellationToken cancellationToken, IProgress<string>? progress = null)
-        {
-            State = TaskState.Running;
-            CancellationToken = cancellationToken;
-            ProgressReporter = progress;
-            StartTime = DateTime.Now;
-
-            try
-            {
-                await ExecuteAsync();
-
-                EndTime = DateTime.Now;
-
-                State = cancellationToken.IsCancellationRequested
-                    ? TaskState.Cancelled
-                    : TaskState.Completed;
-            }
-            catch (OperationCanceledException)
-            {
-                EndTime = DateTime.Now;
-                State = TaskState.Cancelled;
-            }
-            catch (Exception ex)
-            {
-                EndTime = DateTime.Now;
-                LastError = ex;
-                State = TaskState.Failed;
-                throw;
-            }
-        }
-
-        protected void ReportProgress(string message)
-        {
-            LastProgressTime = DateTime.Now;
-            OnProgressChanged(message);
-            ProgressReporter?.Report(message);
-        }
-
-        protected virtual void OnProgressChanged(string message) { }
-
-        protected abstract Task ExecuteAsync();
-    }
-
-    public class TaskManagerService
+    public class TaskManagerService : IDisposable
     {
         private readonly SemaphoreSlim _concurrentLimiter;
         private readonly CancellationTokenSource _cts = new();
         private readonly ConcurrentBag<TaskBase> _allTasks = new();
+        private readonly IProgress<TaskSnapshot>? _snapshotProgress;
+        private bool _disposed = false;
 
         public event EventHandler<TaskBase>? TaskStarted;
         public event EventHandler<TaskBase>? TaskCompleted;
         public event EventHandler<(TaskBase Task, Exception Exception)>? TaskFailed;
 
-        public TaskManagerService(int maxConcurrency = 1)
+        public TaskManagerService(int maxConcurrency = 1, IProgress<TaskSnapshot>? sharedProgress = null)
         {
+            _snapshotProgress = sharedProgress;
             _concurrentLimiter = new SemaphoreSlim(maxConcurrency);
         }
 
@@ -108,7 +40,7 @@ namespace AsyncSample
                 try
                 {
                     TaskStarted?.Invoke(this, task);
-                    await task.RunAsync(_cts.Token);
+                    await task.RunAsync(_cts.Token, _snapshotProgress);
                     TaskCompleted?.Invoke(this, task);
                 }
                 catch (Exception ex)
@@ -142,9 +74,14 @@ namespace AsyncSample
             }
         }
 
-        public IEnumerable<(string Name, TimeSpan? Duration)> GetAllDurations()
+        public void Dispose()
         {
-            return _allTasks.Select(t => (t.Name, t.Duration));
+            if (_disposed) return;
+            _disposed = true;
+
+            _cts.Cancel();
+            _cts.Dispose();
+            _concurrentLimiter.Dispose();
         }
     }
 
