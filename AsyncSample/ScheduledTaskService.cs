@@ -1,9 +1,12 @@
 ﻿using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static AsyncSample.Form2;
 
 namespace AsyncSample
 {
@@ -15,23 +18,26 @@ namespace AsyncSample
             public CancellationTokenSource CancellationTokenSource { get; set; }
             public DateTime LastRunTime { get; set; }
             public bool IsRunning { get; set; }
+            public Task? RunningTask { get; set; }  // ← 追加
         }
 
         private readonly Dictionary<string, TaskHandle> _tasks = new();
         private readonly object _lock = new();
-        private readonly TimeSpan _healthCheckInterval = TimeSpan.FromSeconds(10);
         private readonly bool _autoRestartFailed;
         private readonly IProgress<TaskSnapshot>? _snapshotProgress;
+        private readonly ScheduledTaskMonitor _monitor;
         private bool _disposed = false;
 
         public event EventHandler<string>? TaskStarted;
         public event EventHandler<string>? TaskCompleted;
         public event EventHandler<(string Name, Exception Exception)>? TaskFailed;
 
-        public ScheduledTaskService(bool autoRestartFailed = true)
+        public ScheduledTaskService(bool autoRestartFailed = true, IProgress<TaskSnapshot>? snapshotProgress = null)
         {
+            _snapshotProgress = snapshotProgress;
             _autoRestartFailed = autoRestartFailed;
-            StartHealthMonitor();
+            _monitor = new ScheduledTaskMonitor(this, TimeSpan.FromSeconds(10));
+            _monitor.Start();
         }
 
         public void StartTask(ScheduledTaskBase task)
@@ -50,9 +56,7 @@ namespace AsyncSample
                     IsRunning = true
                 };
 
-                _tasks[task.Name] = handle;
-
-                _ = Task.Run(async () =>
+                var runningTask = Task.Factory.StartNew(async () =>
                 {
                     try
                     {
@@ -69,7 +73,14 @@ namespace AsyncSample
                         handle.LastRunTime = DateTime.Now;
                         handle.IsRunning = false;
                     }
-                });
+                },
+                cts.Token,
+                TaskCreationOptions.LongRunning, // 長時間タスクを示す
+                TaskScheduler.Default            // 明示的にスレッドプール利用
+                ).Unwrap();
+
+                handle.RunningTask = runningTask;
+                _tasks[task.Name] = handle;
             }
         }
 
@@ -81,7 +92,6 @@ namespace AsyncSample
                 {
                     handle.CancellationTokenSource.Cancel();
                     handle.IsRunning = false;
-                    _tasks.Remove(name);
                 }
             }
         }
@@ -93,7 +103,7 @@ namespace AsyncSample
                 foreach (var handle in _tasks.Values)
                 {
                     handle.CancellationTokenSource.Cancel();
-                    handle.CancellationTokenSource.Dispose();
+                    //handle.CancellationTokenSource.Dispose();
                 }
 
                 _tasks.Clear();
@@ -111,19 +121,19 @@ namespace AsyncSample
             }
         }
 
-        public void MonitorHealth()
+        public void CheckTaskHealth()
         {
             lock (_lock)
             {
                 foreach (var (name, handle) in _tasks)
                 {
-                    if (!handle.IsRunning)
+                    if (!handle.IsRunning && handle.RunningTask?.IsCompleted == true)
                     {
-                        Console.WriteLine($"[HEALTH] タスク '{name}' は停止中");
+                        Debug.Print($"[HEALTH] タスク '{name}' は停止中");
 
                         if (_autoRestartFailed)
                         {
-                            Console.WriteLine($"[HEALTH] タスク '{name}' を再起動します");
+                            Debug.Print($"[HEALTH] タスク '{name}' を再起動します");
                             StartTask(handle.Task);
                         }
                     }
@@ -131,26 +141,14 @@ namespace AsyncSample
             }
         }
 
-        private void StartHealthMonitor()
-        {
-            _ = Task.Run(async () =>
-            {
-                while (true)
-                {
-                    await Task.Delay(_healthCheckInterval);
-                    MonitorHealth();
-                }
-            });
-        }
-
-        public List<TaskSnapshot> GetMonitorInfoList()
+        public List<TaskMonitorInfo> GetMonitorInfoList()
         {
             lock (_lock)
             {
                 return _tasks.Select(kv =>
                 {
                     var t = kv.Value;
-                    return new TaskSnapshot();
+                    return new TaskMonitorInfo();
                 }).ToList();
             }
         }
@@ -159,11 +157,45 @@ namespace AsyncSample
         {
             if (_disposed) return;
             _disposed = true;
-
             StopAll();
-            _healthMonitorCts.Cancel();
-            _healthMonitorCts.Dispose();
+            _monitor.Dispose();
         }
     }
 
+    public class ScheduledTaskMonitor
+    {
+        private readonly ScheduledTaskService _service;
+        private readonly TimeSpan _interval;
+        private readonly CancellationTokenSource _cts = new();
+        private Task? _monitoringTask;
+
+        public ScheduledTaskMonitor(ScheduledTaskService service, TimeSpan interval)
+        {
+            _service = service;
+            _interval = interval;
+        }
+
+        public void Start()
+        {
+            _monitoringTask = Task.Run(async () =>
+            {
+                while (!_cts.Token.IsCancellationRequested)
+                {
+                    _service.CheckTaskHealth();
+                    await Task.Delay(_interval, _cts.Token);
+                }
+            });
+        }
+
+        public void Stop()
+        {
+            _cts.Cancel();
+        }
+
+        public void Dispose()
+        {
+            Stop();
+            _cts.Dispose();
+        }
+    }
 }

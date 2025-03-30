@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace AsyncSample
 {
@@ -63,6 +64,7 @@ namespace AsyncSample
             }
             catch (Exception ex)
             {
+                ReportProgress($"タスク実行中にエラー発生: {ex.Message}");
                 EndTime = DateTime.Now;
                 LastError = ex;
                 State = TaskState.Failed;
@@ -84,8 +86,6 @@ namespace AsyncSample
                 Error = error
             });
         }
-
-        protected virtual void OnProgressChanged(string message) { }
 
         protected abstract Task ExecuteAsync();
     }

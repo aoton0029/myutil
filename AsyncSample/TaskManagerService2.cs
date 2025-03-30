@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AsyncSample
 {
+    /*
     public class TaskManagerService2 : IDisposable
     {
         private readonly Channel<TaskBase> _channel;
@@ -63,5 +64,5 @@ namespace AsyncSample
             _cts.Dispose();
         }
     }
-
+    */
 }

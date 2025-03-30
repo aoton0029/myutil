@@ -7,3 +7,10 @@ https://newsletter.csharpdigest.net/archive?page=10
 https://goatreview.com/
 https://github.com/klasyc/ScpiNet
 https://www.javatpoint.com/structural-design-patterns-in-c-sharp
+https://qiita.com/Sakai_path/items/fae75bb8e35829a033e5
+https://qiita.com/chai0917/items/d59c52e4c12ce0a892f4
+https://qiita.com/mxProject/items/ad81cb580f758f2530a9
+https://weekref.net/page/7
+https://maciejz.dev/processing-data-in-parallel-channels/?utm_source=newsletter.csharpdigest.net&utm_medium=referral&utm_campaign=processing-data-in-parallel-using-channels
+https://zenn.dev/kznrluk/articles/0cc24e14fec36b
+https://dev.twitch.tv/docs/eventsub/handling-webhook-events/

@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataProcesses\Simple\**" />
     <Compile Remove="PageNavigation\**" />
+    <EmbeddedResource Remove="DataProcesses\Simple\**" />
     <EmbeddedResource Remove="PageNavigation\**" />
+    <None Remove="DataProcesses\Simple\**" />
     <None Remove="PageNavigation\**" />
   </ItemGroup>
 
@@ -25,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataProcesses\Simple\" />
     <Folder Include="DesignPatterns\Adapter\" />
     <Folder Include="DesignPatterns\State\" />
     <Folder Include="DesignPatterns\Strategy\" />

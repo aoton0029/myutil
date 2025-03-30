@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,6 @@ namespace AsyncSample
         protected override async Task ExecuteAsync()
         {
             var nextRunTime = DateTime.Now;
-
             while (!CancellationToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;
@@ -59,8 +59,10 @@ namespace AsyncSample
                 {
                     case OverrunStrategy.FixedInterval:
                         var waitTime = Interval - (actualEnd - actualStart);
-                        if (waitTime > TimeSpan.Zero)
+                        if (waitTime > TimeSpan.Zero) 
+                        {
                             await Task.Delay(waitTime, CancellationToken);
+                        }
                         break;
 
                     case OverrunStrategy.CatchUp:
@@ -69,7 +71,6 @@ namespace AsyncSample
 
                     case OverrunStrategy.Skip:
                         nextRunTime += Interval;
-
                         if (nextRunTime < DateTime.Now)
                         {
                             _skipCount++;
@@ -90,6 +91,7 @@ namespace AsyncSample
                         break;
                 }
             }
+           
         }
     }
 }
