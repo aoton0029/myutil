@@ -1,3 +1,47 @@
+public interface IHierarchical
+{
+IHierarchical? HierarchicalParent { get; }
+
+IHierarchicalRoot? HierarchicalRoot { get; }  
+
+ICoreReadOnlyList<IHierarchical> HierarchicalChildren { get; }  
+
+event EventHandler<HierarchyAttachmentEventArgs> AttachedToHierarchy;  
+event EventHandler<HierarchyAttachmentEventArgs> DetachedFromHierarchy;
+
+}
+
+public interface IHierarchicalRoot : IHierarchical
+{
+event EventHandler<IHierarchical> DescendantAttached;
+
+event EventHandler<IHierarchical> DescendantDetached;  
+
+void OnDescendantAttached(IHierarchical descendant);  
+
+void OnDescendantDetached(IHierarchical descendant);
+
+}
+
+public interface IModifiableHierarchical : IHierarchical
+{
+void AddChild(IHierarchical child);
+
+void RemoveChild(IHierarchical child);  
+
+void SetParent(IHierarchical? parent);  
+
+void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e);  
+
+void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e);
+
+}
+
+を使って階層実装
+
+
+
+
 では、以下の4点すべてに対応した、Runtime.Serialization ベースの汎用 JsonConverter 相当クラスを提示します：
 
 カスタム変換（IDataContractSurrogate）
