@@ -1,3 +1,128 @@
+以下は、ユーザーの構成をもとにしたC#クラスの提案です。Project をルートとして、カテゴリに応じて ProjectItem が Chuck または DeChuck の波形クラスを10個ずつ保持するように設計しています。
+
+
+---
+
+1. Enum: ProjectCategory
+
+public enum ProjectCategory
+{
+    Chuck,
+    DeChuck
+}
+
+
+---
+
+2. Base Class: WaveformBase
+
+public abstract class WaveformBase
+{
+    public string Name { get; set; }
+    public List<float> DataPoints { get; set; } = new();
+}
+
+
+---
+
+3. ChuckWaveform / DeChuckWaveform
+
+public class ChuckWaveform : WaveformBase { }
+public class DeChuckWaveform : WaveformBase { }
+
+
+---
+
+4. Class: ProjectItem
+
+public class ProjectItem
+{
+    public ProjectCategory Category { get; set; }
+    public List<WaveformBase> Waveforms { get; set; } = new();
+
+    public ProjectItem(ProjectCategory category)
+    {
+        Category = category;
+        for (int i = 0; i < 10; i++)
+        {
+            Waveforms.Add(category == ProjectCategory.Chuck
+                ? new ChuckWaveform { Name = $"ChuckWaveform{i + 1}" }
+                : new DeChuckWaveform { Name = $"DeChuckWaveform{i + 1}" });
+        }
+    }
+}
+
+
+---
+
+5. Class: Project
+
+public class Project
+{
+    public string Name { get; set; }
+    public List<ProjectItem> Items { get; set; } = new();
+}
+
+
+---
+
+6. Service: ProjectService
+
+public class ProjectService
+{
+    private readonly ProjectContext _context;
+
+    public ProjectService(ProjectContext context)
+    {
+        _context = context;
+    }
+
+    public void AddItem(ProjectItem item)
+    {
+        _context.CurrentProject?.Items.Add(item);
+    }
+
+    public IEnumerable<ProjectItem> GetItemsByCategory(ProjectCategory category)
+    {
+        return _context.CurrentProject?.Items
+            .Where(i => i.Category == category) ?? Enumerable.Empty<ProjectItem>();
+    }
+}
+
+
+---
+
+7. Class: ProjectContext
+
+public class ProjectContext
+{
+    public Project? CurrentProject { get; set; }
+
+    public void CreateNewProject(string name)
+    {
+        CurrentProject = new Project { Name = name };
+    }
+}
+
+
+---
+
+拡張案：
+
+波形クラスに時系列データの構造追加：List<(DateTime, float)> を保持するようにしても良いです。
+
+保存/読み込み機能：Project 全体をJSONなどでシリアライズ/デシリアライズ可能にする。
+
+UI統合：WinFormsやWPFで ProjectItem ごとの波形をグラフ表示。
+
+カテゴリごとの色分け表示など。
+
+
+必要であれば波形データの操作や統計処理用の関数も追加できます。拡張したい方向性ありますか？
+
+
+
+
 了解です！カテゴリごとに Config を追加する場合、以下のように設計できます。
 
 
