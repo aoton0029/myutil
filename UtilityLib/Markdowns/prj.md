@@ -40,6 +40,107 @@ void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e);
 を使って階層実装
 
 
+Project クラスに IHierarchical を継承させる場合、その階層構造（親・子・ルート）とイベント通知の実装が必要になります。
+ここでは IHierarchical のみを実装した基本的な Project クラスを提示し、後で IModifiableHierarchical や IHierarchicalRoot に拡張できるような構造にしてあります。
+
+
+---
+
+Project クラス実装例（IHierarchical 実装）
+
+public class Project : IHierarchical
+{
+    private IHierarchical? _parent;
+    private IHierarchicalRoot? _root;
+    private readonly List<IHierarchical> _children = new();
+
+    public string Name { get; }
+
+    public Project(string name)
+    {
+        Name = name;
+    }
+
+    public IHierarchical? HierarchicalParent => _parent;
+
+    public IHierarchicalRoot? HierarchicalRoot => _root;
+
+    public ICoreReadOnlyList<IHierarchical> HierarchicalChildren => new CoreReadOnlyList<IHierarchical>(_children);
+
+    public event EventHandler<HierarchyAttachmentEventArgs>? AttachedToHierarchy;
+    public event EventHandler<HierarchyAttachmentEventArgs>? DetachedFromHierarchy;
+
+    // 内部操作用（外部からはIModifiableHierarchicalで操作するのが推奨）
+    internal void SetParent(IHierarchical? parent)
+    {
+        _parent = parent;
+        _root = (parent as IHierarchicalRoot) ?? parent?.HierarchicalRoot;
+    }
+
+    internal void AddChild(IHierarchical child)
+    {
+        _children.Add(child);
+    }
+
+    internal void RemoveChild(IHierarchical child)
+    {
+        _children.Remove(child);
+    }
+
+    internal void RaiseAttachedToHierarchy(HierarchyAttachmentEventArgs e)
+    {
+        AttachedToHierarchy?.Invoke(this, e);
+    }
+
+    internal void RaiseDetachedFromHierarchy(HierarchyAttachmentEventArgs e)
+    {
+        DetachedFromHierarchy?.Invoke(this, e);
+    }
+}
+
+
+---
+
+利用イメージ
+
+この Project クラス単体では階層を動的に変えることはできないため、IModifiableHierarchical を別途継承した管理クラスを用意し、その中で SetParent, AddChild などの内部メソッドを呼び出す設計が考えられます。
+
+
+---
+
+拡張案
+
+1. Project をそのまま IModifiableHierarchical として拡張して自己完結型にする
+
+
+2. Project の階層制御を担当する ProjectManager を別クラスで用意する
+
+
+3. ProjectRoot クラスを作って IHierarchicalRoot を担わせる
+
+
+
+
+---
+
+次にどの方向に拡張したいか教えていただければ、実装を続けます！
+例：
+
+プロジェクトに子を追加する機能が欲しい
+
+ルート通知 (DescendantAttached) も使いたい
+
+ツリー構造を探索したい
+
+
+など、お気軽にどうぞ！
+
+
+
+
+
+
+
 
 
 では、以下の4点すべてに対応した、Runtime.Serialization ベースの汎用 JsonConverter 相当クラスを提示します：
