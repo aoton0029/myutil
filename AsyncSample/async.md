@@ -1,3 +1,164 @@
+非常に鋭い指摘です。
+スケジューラにおけるスキップ処理は、ユースケースによって設計が大きく変わります。
+
+あなたが挙げたように、現在の実装（DateTime.Now + Interval で nextRunTime を更新）は、
+
+> FixedInterval 戦略からずれ始める（ずらす）実装
+
+
+
+になっていて、「リアルタイムにおける“次の最短タイミング”で再スケジュールされる動作」です。
+
+
+---
+
+✅ 今の動作の特性（現在のスキップ処理）
+
+if (executionTime > Interval)
+{
+    nextRunTime = DateTime.Now + Interval;
+}
+
+メリット：
+
+即座に再スケジュールできるので、"可能な限り早く実行する" 要件に向く
+
+
+デメリット：
+
+スケジュール基準（0:00, 0:10, 0:20…）からズレる
+
+スキップが何回分かを正確には捉えられない
+
+
+
+
+---
+
+✅ より「基準に忠実」なスキップ処理（CatchUp or Skip戦略風）
+
+// どれだけ過ぎていたかを元にスキップ回数を求める
+var now = DateTime.Now;
+var expectedRunCount = (int)((now - firstRunTime).TotalMilliseconds / Interval.TotalMilliseconds);
+var skipCount = expectedRunCount - RunCount;
+
+if (skipCount > 0)
+{
+    _skipCount += skipCount;
+    RunCount += skipCount;
+
+    ReportProgress($"スケジュール遅延により {skipCount} 回スキップ（累積: {_skipCount}）");
+
+    if (MaxSkipCount.HasValue && _skipCount > MaxSkipCount.Value)
+    {
+        throw new Exception($"スキップ回数が上限 {MaxSkipCount} を超えました");
+    }
+
+    nextRunTime = firstRunTime + (RunCount * Interval);
+}
+
+この方式の特徴：
+
+スケジュール基準（例: 0:00, 0:10, 0:20）を維持
+
+スキップ回数を明確に計算できる
+
+RunCount が期待される回数に同期する
+
+
+
+
+---
+
+✅ どちらがスタンダード？
+
+→ よって、“どちらもスタンダード”で、用途に応じて選択されるべきです。
+
+
+---
+
+✅ 推奨案（洗練バージョン）
+
+1. firstRunTime を保持
+
+
+2. expectedRunCount を動的に算出してスキップ数を自動判定
+
+
+3. RunCount を expectedRunCount に追従させる
+
+
+4. 次の実行は firstRunTime + RunCount * Interval とする
+
+
+
+private DateTime _firstRunTime;
+
+protected override async Task ExecuteAsync()
+{
+    _firstRunTime = DateTime.Now;
+    var nextRunTime = _firstRunTime;
+
+    while (!CancellationToken.IsCancellationRequested)
+    {
+        var now = DateTime.Now;
+        if (now < nextRunTime)
+        {
+            await Task.Delay(nextRunTime - now, CancellationToken);
+        }
+
+        var start = DateTime.Now;
+        await ExecuteOnceAsync();
+        var end = DateTime.Now;
+
+        LastRun = end;
+        LastDuration = end - start;
+
+        var expectedRunCount = (int)((DateTime.Now - _firstRunTime).TotalMilliseconds / Interval.TotalMilliseconds);
+        var skipCount = expectedRunCount - RunCount - 1;
+
+        if (skipCount > 0)
+        {
+            _skipCount += skipCount;
+            ReportProgress($"スケジュール遅延により {skipCount} 回スキップ（累積: {_skipCount}）");
+
+            if (MaxSkipCount.HasValue && _skipCount > MaxSkipCount.Value)
+                throw new Exception($"スキップ回数が上限を超過しました: {_skipCount}");
+
+            RunCount = expectedRunCount;
+        }
+        else
+        {
+            _skipCount = 0;
+            RunCount++;
+        }
+
+        nextRunTime = _firstRunTime + (RunCount * Interval);
+    }
+}
+
+
+---
+
+✨ 拡張案
+
+「ズレありモード」と「ズレなしモード」を UseFixedSchedule: bool で切替可能にする
+
+スキップ回数だけでなく「直近スキップ時間合計」を記録する
+
+TaskSnapshot に ExpectedRunCount, SkippedCount, NextScheduledTime を追加して見える化
+
+
+
+---
+
+この「ズレを抑える方式」に切り替えることで、より 予測可能・再現性のあるスケジューラ になります。
+切替モードや firstRunTime 管理入りの実装テンプレートも要りますか？
+
+
+
+
+
 了解です！
 以下の2点を実装・統合します：
 
