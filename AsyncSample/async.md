@@ -1,3 +1,162 @@
+了解です！
+以下の2点を実装・統合します：
+
+
+---
+
+✅ 1. FailureCount を ScheduledTaskBase に追加
+
+✅ 2. TaskSnapshot クラスを導入し、状態監視と外部UI/API連携に備える構造
+
+
+---
+
+1. 🔧 ScheduledTaskBase の拡張（FailureCount, ToSnapshot()）
+
+public abstract class ScheduledTaskBase : TaskBase
+{
+    public TimeSpan Interval { get; }
+    public int? MaxSkipCount { get; }
+    public int RunCount { get; private set; }
+    public int FailureCount { get; private set; }
+    public DateTime? LastRun { get; private set; }
+    public TimeSpan? LastDuration { get; private set; }
+
+    public bool IsRunning { get; private set; }
+    public bool IsFaulted { get; private set; }
+    public Exception? LastException { get; private set; }
+
+    private int _skipCount = 0;
+
+    protected ScheduledTaskBase(string name, TimeSpan interval, int? maxSkipCount = null)
+        : base(name)
+    {
+        Interval = interval;
+        MaxSkipCount = maxSkipCount;
+    }
+
+    protected abstract Task ExecuteOnceAsync();
+
+    protected override async Task ExecuteAsync()
+    {
+        var nextRunTime = DateTime.Now;
+        IsRunning = true;
+        IsFaulted = false;
+        LastException = null;
+
+        try
+        {
+            while (!CancellationToken.IsCancellationRequested)
+            {
+                var now = DateTime.Now;
+                if (now < nextRunTime)
+                {
+                    await Task.Delay(nextRunTime - now, CancellationToken);
+                }
+
+                var start = DateTime.Now;
+                await ExecuteOnceAsync();
+                var end = DateTime.Now;
+
+                RunCount++;
+                LastRun = end;
+                LastDuration = end - start;
+                nextRunTime += Interval;
+
+                if (LastDuration <= Interval)
+                {
+                    _skipCount = 0;
+                    var wait = nextRunTime - DateTime.Now;
+                    if (wait > TimeSpan.Zero)
+                        await Task.Delay(wait, CancellationToken);
+                }
+                else
+                {
+                    _skipCount++;
+                    ReportProgress($"スケジュール遅延によりスキップ {_skipCount} 回");
+
+                    if (MaxSkipCount.HasValue && _skipCount > MaxSkipCount.Value)
+                        throw new Exception($"スキップ回数が上限 {MaxSkipCount} を超えました");
+
+                    nextRunTime = DateTime.Now + Interval;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            FailureCount++;
+            IsFaulted = true;
+            LastException = ex;
+            throw;
+        }
+        finally
+        {
+            IsRunning = false;
+        }
+    }
+
+    public TaskSnapshot ToSnapshot()
+    {
+        return new TaskSnapshot
+        {
+            Name = Name,
+            RunCount = RunCount,
+            FailureCount = FailureCount,
+            LastRun = LastRun,
+            LastDuration = LastDuration,
+            IsRunning = IsRunning,
+            IsFaulted = IsFaulted,
+            LastError = LastException?.Message
+        };
+    }
+}
+
+
+---
+
+2. 📦 TaskSnapshot クラスの定義
+
+public class TaskSnapshot
+{
+    public string Name { get; set; } = string.Empty;
+    public int RunCount { get; set; }
+    public int FailureCount { get; set; }
+    public DateTime? LastRun { get; set; }
+    public TimeSpan? LastDuration { get; set; }
+    public bool IsRunning { get; set; }
+    public bool IsFaulted { get; set; }
+    public string? LastError { get; set; }
+}
+
+
+---
+
+3. 🧪 ScheduledTaskService から取得するメソッド例
+
+public List<TaskSnapshot> GetTaskSnapshots()
+{
+    lock (_lock)
+    {
+        return _tasks
+            .Select(kv => kv.Value.Task.ToSnapshot())
+            .ToList();
+    }
+}
+
+
+---
+
+✨ 拡張提案（任意）
+
+
+---
+
+ご希望あれば TaskSnapshot を JSON 出力用に整形したり、UI 表示用のテンプレートを作ることも可能です。
+何か追加しますか？
+
+
+
+
 非常に重要なポイントです！
 ここでは、TaskBase / ScheduledTaskBase を使ったときに例外が発生した場合のハンドリングを、TaskManagerService と TimerService のそれぞれでどう扱うべきかを整理し、具体的な実装例も提示します。
 
