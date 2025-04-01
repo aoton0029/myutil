@@ -135,6 +135,137 @@ public class Project : IHierarchical
 
 など、お気軽にどうぞ！
 
+了解です！
+以下に IHierarchical をベースとした 抽象基底クラス Hierarchical を実装します。
+このクラスは IHierarchical の基本機能を備え、IModifiableHierarchical を継承する具象クラスで拡張できるように設計しています。
+
+
+---
+
+Hierarchical 抽象クラスの実装
+
+public abstract class Hierarchical : IHierarchical
+{
+    private IHierarchical? _parent;
+    private IHierarchicalRoot? _root;
+    private readonly List<IHierarchical> _children = new();
+
+    public IHierarchical? HierarchicalParent => _parent;
+
+    public IHierarchicalRoot? HierarchicalRoot => _root;
+
+    public ICoreReadOnlyList<IHierarchical> HierarchicalChildren => new CoreReadOnlyList<IHierarchical>(_children);
+
+    public event EventHandler<HierarchyAttachmentEventArgs>? AttachedToHierarchy;
+    public event EventHandler<HierarchyAttachmentEventArgs>? DetachedFromHierarchy;
+
+    /// <summary>
+    /// 内部的に親を設定します（Modifiable派生クラスで使用）。
+    /// </summary>
+    protected void SetParentInternal(IHierarchical? parent)
+    {
+        var oldRoot = _root;
+        _parent = parent;
+        _root = (parent as IHierarchicalRoot) ?? parent?.HierarchicalRoot;
+
+        var args = new HierarchyAttachmentEventArgs(oldRoot, _root);
+
+        if (_root != null)
+            AttachedToHierarchy?.Invoke(this, args);
+        else
+            DetachedFromHierarchy?.Invoke(this, args);
+    }
+
+    /// <summary>
+    /// 子を追加します（Modifiable派生クラスで使用）。
+    /// </summary>
+    protected void AddChildInternal(IHierarchical child)
+    {
+        _children.Add(child);
+    }
+
+    /// <summary>
+    /// 子を削除します（Modifiable派生クラスで使用）。
+    /// </summary>
+    protected void RemoveChildInternal(IHierarchical child)
+    {
+        _children.Remove(child);
+    }
+
+    /// <summary>
+    /// イベントを明示的に発火したい場合に使用。
+    /// </summary>
+    protected void RaiseAttachedToHierarchy(HierarchyAttachmentEventArgs args)
+        => AttachedToHierarchy?.Invoke(this, args);
+
+    protected void RaiseDetachedFromHierarchy(HierarchyAttachmentEventArgs args)
+        => DetachedFromHierarchy?.Invoke(this, args);
+}
+
+
+---
+
+拡張案
+
+この抽象クラスを継承して、以下のような拡張が可能です：
+
+1. ModifiableHierarchical（IModifiableHierarchical 実装）
+
+public class ModifiableHierarchical : Hierarchical, IModifiableHierarchical
+{
+    public void AddChild(IHierarchical child)
+    {
+        if (child is IModifiableHierarchical modifiable)
+        {
+            modifiable.SetParent(this);
+        }
+
+        AddChildInternal(child);
+    }
+
+    public void RemoveChild(IHierarchical child)
+    {
+        RemoveChildInternal(child);
+
+        if (child is IModifiableHierarchical modifiable)
+        {
+            modifiable.SetParent(null);
+        }
+    }
+
+    public void SetParent(IHierarchical? parent)
+    {
+        SetParentInternal(parent);
+    }
+
+    public void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        RaiseAttachedToHierarchy(e);
+    }
+
+    public void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        RaiseDetachedFromHierarchy(e);
+    }
+}
+
+
+---
+
+この設計のメリット：
+
+共通ロジックを Hierarchical に集約
+
+継承により Project, Category, Folder など具体クラスを簡単に実装可能
+
+テストがしやすい
+
+
+
+---
+
+必要であれば IHierarchicalRoot を実装した HierarchicalRoot 抽象クラスや、検索機能付きのツリーユーティリティも実装できます。続けて出しましょうか？
+
 
 
 
