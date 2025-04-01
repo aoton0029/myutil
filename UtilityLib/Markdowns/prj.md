@@ -1,3 +1,168 @@
+了解です！WinForms でカテゴリ別設定（IProjectItemConfig）を UI から編集できるようにするために、以下の構成で設計します：
+
+
+---
+
+■ 構成概要
+
+IConfigEditor インターフェース：カテゴリごとの設定編集UI（UserControl）を統一的に扱う。
+
+ChuckConfigEditor / DeChuckConfigEditor：カテゴリ別のUIコンポーネント（UserControl）実装。
+
+ConfigEditorFactory：カテゴリに応じたEditorの生成。
+
+ProjectItemEditorForm：設定を編集するためのホストフォーム。
+
+
+
+---
+
+■ 1. IConfigEditor インターフェース
+
+public interface IConfigEditor
+{
+    IProjectItemConfig Config { get; set; }
+    void LoadFromConfig();
+    void SaveToConfig();
+}
+
+
+---
+
+■ 2. ChuckConfigEditor の例
+
+public partial class ChuckConfigEditor : UserControl, IConfigEditor
+{
+    public IProjectItemConfig Config { get; set; } = new ChuckConfig();
+
+    public ChuckConfigEditor()
+    {
+        InitializeComponent();
+    }
+
+    public void LoadFromConfig()
+    {
+        if (Config is not ChuckConfig chuck) return;
+        textBoxDescription.Text = chuck.Description;
+        numericUpDownSamplingRate.Value = chuck.SamplingRate;
+    }
+
+    public void SaveToConfig()
+    {
+        if (Config is not ChuckConfig chuck) return;
+        chuck.Description = textBoxDescription.Text;
+        chuck.SamplingRate = (int)numericUpDownSamplingRate.Value;
+    }
+}
+
+> ※ textBoxDescription や numericUpDownSamplingRate はデザイナ上で配置。
+
+
+
+
+---
+
+■ 3. DeChuckConfigEditor も同様に作成
+
+public partial class DeChuckConfigEditor : UserControl, IConfigEditor
+{
+    public IProjectItemConfig Config { get; set; } = new DeChuckConfig();
+
+    public DeChuckConfigEditor()
+    {
+        InitializeComponent();
+    }
+
+    public void LoadFromConfig()
+    {
+        if (Config is not DeChuckConfig deChuck) return;
+        textBoxDescription.Text = deChuck.Description;
+        numericUpDownSamplingRate.Value = deChuck.SamplingRate;
+    }
+
+    public void SaveToConfig()
+    {
+        if (Config is not DeChuckConfig deChuck) return;
+        deChuck.Description = textBoxDescription.Text;
+        deChuck.SamplingRate = (int)numericUpDownSamplingRate.Value;
+    }
+}
+
+
+---
+
+■ 4. ConfigEditorFactory
+
+public static class ConfigEditorFactory
+{
+    public static IConfigEditor Create(ProjectCategory category)
+    {
+        return category switch
+        {
+            ProjectCategory.Chuck => new ChuckConfigEditor(),
+            ProjectCategory.DeChuck => new DeChuckConfigEditor(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+}
+
+
+---
+
+■ 5. ProjectItemEditorForm
+
+public partial class ProjectItemEditorForm : Form
+{
+    private readonly ProjectItem _item;
+    private IConfigEditor? _editor;
+
+    public ProjectItemEditorForm(ProjectItem item)
+    {
+        InitializeComponent();
+        _item = item;
+    }
+
+    private void ProjectItemEditorForm_Load(object sender, EventArgs e)
+    {
+        _editor = ConfigEditorFactory.Create(_item.Category);
+        _editor.Config = _item.Config;
+        _editor.LoadFromConfig();
+
+        _editorControlHostPanel.Controls.Add((UserControl)_editor);
+        ((UserControl)_editor).Dock = DockStyle.Fill;
+    }
+
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+        _editor?.SaveToConfig();
+        DialogResult = DialogResult.OK;
+    }
+}
+
+> _editorControlHostPanel は Panel。btnSave は保存ボタン。
+
+
+
+
+---
+
+拡張案
+
+IConfigEditor に Validate() を追加し、入力検証対応。
+
+IConfigEditorFactory をインターフェース化して DI 対応。
+
+カテゴリ別アイコンや色、動的切り替えUIの追加（タブ or コンボボックス）。
+
+
+
+---
+
+WinForms Designer で UI を作成するコードも必要であれば補います。
+「実装コードのテンプレート」や「デザイナ設定」まで必要ですか？
+
+
+
 完璧です！次の3つの拡張を統合した WinForms UI 構成を提案します：
 
 
