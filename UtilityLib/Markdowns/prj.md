@@ -1,3 +1,99 @@
+JsonConverter<T> を継承したカスタムコンバーターを作ることで、System.Text.Json のシリアライズ/デシリアライズをカスタマイズできます。以下に、FileInfo と CultureInfo 用の JsonConverter<T> 実装例を示します。
+
+
+---
+
+1. 基底クラス（不要だが、共通処理入れるなら作成可）
+
+省略しても良いですが、共通処理があるなら以下のように拡張ベースクラスを作ってもOKです：
+
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+public abstract class JsonConverterBase<T> : JsonConverter<T>
+{
+    // 共通ユーティリティやエラーハンドリングを入れられる
+}
+
+
+---
+
+2. FileInfoConverter
+
+using System;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+public class FileInfoConverter : JsonConverter<FileInfo>
+{
+    public override FileInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var path = reader.GetString();
+        return path != null ? new FileInfo(path) : null!;
+    }
+
+    public override void Write(Utf8JsonWriter writer, FileInfo value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.FullName);
+    }
+}
+
+
+---
+
+3. CultureInfoConverter
+
+using System;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+public class CultureInfoConverter : JsonConverter<CultureInfo>
+{
+    public override CultureInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var cultureName = reader.GetString();
+        return cultureName != null ? new CultureInfo(cultureName) : CultureInfo.InvariantCulture;
+    }
+
+    public override void Write(Utf8JsonWriter writer, CultureInfo value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.Name);
+    }
+}
+
+
+---
+
+4. 使用例（JsonSerializerOptionsに追加）
+
+var options = new JsonSerializerOptions
+{
+    Converters =
+    {
+        new FileInfoConverter(),
+        new CultureInfoConverter()
+    },
+    WriteIndented = true
+};
+
+
+---
+
+拡張案
+
+Nullable<T> に対応させた NullableJsonConverter<T> を作る
+
+JsonConverterFactory を使って汎用の TypeConverter<T> 対応コンバータを作る
+
+Uri や TimeZoneInfo、Encoding などの非プリミティブ型への対応を追加する
+
+
+拡張版やJsonConverterFactoryパターンも必要なら作ります。どうしますか？
+
+
+
 以下は、ユーザーの構成をもとにしたC#クラスの提案です。Project をルートとして、カテゴリに応じて ProjectItem が Chuck または DeChuck の波形クラスを10個ずつ保持するように設計しています。
 
 
