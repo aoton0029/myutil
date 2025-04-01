@@ -1,3 +1,189 @@
+完璧です！次の3つの拡張を統合した WinForms UI 構成を提案します：
+
+
+---
+
+【拡張要件】
+
+1. IValidater インターフェースで 設定の検証
+
+
+2. カテゴリ別に UIの色（テーマカラー） を切り替え
+
+
+3. 動的に カテゴリ別設定をタブ表示
+
+
+
+
+---
+
+■ 1. IValidater インターフェース
+
+public interface IValidater
+{
+    bool ValidateConfig(out string errorMessage);
+}
+
+
+---
+
+■ 2. IConfigEditor 拡張
+
+public interface IConfigEditor : IValidater
+{
+    IProjectItemConfig Config { get; set; }
+    void LoadFromConfig();
+    void SaveToConfig();
+}
+
+
+---
+
+■ 3. カテゴリ別色（テーマカラー）
+
+public static class CategoryColorTheme
+{
+    public static Color GetColor(ProjectCategory category)
+    {
+        return category switch
+        {
+            ProjectCategory.Chuck => Color.LightBlue,
+            ProjectCategory.DeChuck => Color.LightCoral,
+            _ => SystemColors.Control
+        };
+    }
+}
+
+
+---
+
+■ 4. ProjectItemEditorTabControlForm の例
+
+public partial class ProjectItemEditorTabForm : Form
+{
+    private readonly List<ProjectItem> _items;
+
+    public ProjectItemEditorTabForm(List<ProjectItem> items)
+    {
+        InitializeComponent();
+        _items = items;
+    }
+
+    private void ProjectItemEditorTabForm_Load(object sender, EventArgs e)
+    {
+        foreach (var item in _items)
+        {
+            var editor = ConfigEditorFactory.Create(item.Category);
+            editor.Config = item.Config;
+            editor.LoadFromConfig();
+
+            var tabPage = new TabPage($"{item.Category}")
+            {
+                BackColor = CategoryColorTheme.GetColor(item.Category)
+            };
+
+            var control = (UserControl)editor;
+            control.Dock = DockStyle.Fill;
+
+            tabPage.Controls.Add(control);
+            tabControlEditors.TabPages.Add(tabPage);
+
+            // 保持しておくなら Dictionary<ProjectItem, IConfigEditor> に格納
+            tabPage.Tag = editor;
+        }
+    }
+
+    private void btnSaveAll_Click(object sender, EventArgs e)
+    {
+        foreach (TabPage page in tabControlEditors.TabPages)
+        {
+            if (page.Tag is IConfigEditor editor)
+            {
+                if (!editor.ValidateConfig(out string error))
+                {
+                    MessageBox.Show($"Validation failed on {page.Text}: {error}", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                editor.SaveToConfig();
+            }
+        }
+
+        DialogResult = DialogResult.OK;
+    }
+}
+
+> tabControlEditors は TabControl、btnSaveAll は保存ボタン。
+
+
+
+
+---
+
+■ 5. ChuckConfigEditor に検証ロジック追加
+
+public partial class ChuckConfigEditor : UserControl, IConfigEditor
+{
+    public IProjectItemConfig Config { get; set; } = new ChuckConfig();
+
+    public void LoadFromConfig()
+    {
+        if (Config is not ChuckConfig chuck) return;
+        textBoxDescription.Text = chuck.Description;
+        numericUpDownSamplingRate.Value = chuck.SamplingRate;
+    }
+
+    public void SaveToConfig()
+    {
+        if (Config is not ChuckConfig chuck) return;
+        chuck.Description = textBoxDescription.Text;
+        chuck.SamplingRate = (int)numericUpDownSamplingRate.Value;
+    }
+
+    public bool ValidateConfig(out string errorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
+        {
+            errorMessage = "説明は必須です。";
+            return false;
+        }
+        if (numericUpDownSamplingRate.Value <= 0)
+        {
+            errorMessage = "サンプリングレートは正の整数でなければなりません。";
+            return false;
+        }
+
+        errorMessage = string.Empty;
+        return true;
+    }
+}
+
+> DeChuckConfigEditor も同様に対応可能。
+
+
+
+
+---
+
+今後の拡張アイデア
+
+編集履歴を保持して Undo/Redo。
+
+タブ内にグラフ表示コントロールを追加。
+
+Waveform ごとの詳細設定 UI をタブ内に動的展開。
+
+
+
+---
+
+必要であれば Designer ファイル（UI のコード部分）やサンプルプロジェクト全体の構成も提示できます！どこまで進めましょうか？
+
+
+
+
+
+
 プロジェクトの構成を以下のように設計します。
 
 設計概要
