@@ -175,6 +175,183 @@ UIからカテゴリ別設定を編集できるようにデータバインド対
 
 
 
+了解です！では、拡張案すべて（IStorable/IProjectCreatableインターフェース、Strategyパターン、バージョン管理対応）を導入した設計を提示します。
+
+
+---
+
+■ 1. インターフェース定義
+
+IStorable（保存/復元対応）
+
+public interface IStorable<T>
+{
+    string Save();
+    static abstract T Restore(string json);
+}
+
+IProjectCreatable（カテゴリに応じたCreate戦略）
+
+public interface IProjectCreatable<T>
+{
+    static abstract T Create(ProjectCategory category);
+}
+
+
+---
+
+■ 2. ProjectItem の改修版
+
+public class ProjectItem : IStorable<ProjectItem>, IProjectCreatable<ProjectItem>
+{
+    public const int FormatVersion = 1;
+
+    public ProjectCategory Category { get; set; }
+    public List<WaveformBase> Waveforms { get; set; } = new();
+    public IProjectItemConfig Config { get; set; }
+    public int Version { get; set; } = FormatVersion;
+
+    public static ProjectItem Create(ProjectCategory category)
+    {
+        var item = new ProjectItem
+        {
+            Category = category,
+            Config = ConfigFactory.Create(category),
+            Waveforms = Enumerable.Range(1, 10).Select(i =>
+                category == ProjectCategory.Chuck
+                    ? new ChuckWaveform { Name = $"ChuckWaveform{i}" }
+                    : new DeChuckWaveform { Name = $"DeChuckWaveform{i}" }
+            ).Cast<WaveformBase>().ToList()
+        };
+        return item;
+    }
+
+    public string Save()
+    {
+        return JsonSerializer.Serialize(this, new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Converters = { new JsonConfigConverter() }
+        });
+    }
+
+    public static ProjectItem Restore(string json)
+    {
+        var item = JsonSerializer.Deserialize<ProjectItem>(json, new JsonSerializerOptions
+        {
+            Converters = { new JsonConfigConverter() }
+        }) ?? throw new InvalidOperationException("Invalid data");
+
+        // バージョンが古ければマイグレーション処理など
+        if (item.Version < FormatVersion)
+        {
+            // MigrationStrategy.Apply(item)
+        }
+
+        return item;
+    }
+}
+
+
+---
+
+■ 3. ConfigFactory（Strategy パターン）
+
+public static class ConfigFactory
+{
+    public static IProjectItemConfig Create(ProjectCategory category) => category switch
+    {
+        ProjectCategory.Chuck => new ChuckConfig(),
+        ProjectCategory.DeChuck => new DeChuckConfig(),
+        _ => throw new ArgumentOutOfRangeException()
+    };
+}
+
+
+---
+
+■ 4. Json変換サポート：JsonConfigConverter
+
+public class JsonConfigConverter : JsonConverter<IProjectItemConfig>
+{
+    public override IProjectItemConfig? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var jsonDoc = JsonDocument.ParseValue(ref reader);
+        if (!jsonDoc.RootElement.TryGetProperty("Category", out var categoryElement))
+            throw new JsonException("Missing Category");
+
+        var category = Enum.Parse<ProjectCategory>(categoryElement.GetString()!);
+        var rawJson = jsonDoc.RootElement.GetRawText();
+
+        return category switch
+        {
+            ProjectCategory.Chuck => JsonSerializer.Deserialize<ChuckConfig>(rawJson, options),
+            ProjectCategory.DeChuck => JsonSerializer.Deserialize<DeChuckConfig>(rawJson, options),
+            _ => throw new JsonException("Invalid Category")
+        };
+    }
+
+    public override void Write(Utf8JsonWriter writer, IProjectItemConfig value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, (object)value, value.GetType(), options);
+    }
+}
+
+
+---
+
+■ 5. Project も IStorable 対応
+
+public class Project : IStorable<Project>
+{
+    public string Name { get; set; } = string.Empty;
+    public List<ProjectItem> Items { get; set; } = new();
+
+    public static Project Create(string name)
+        => new() { Name = name };
+
+    public string Save()
+        => JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+
+    public static Project Restore(string json)
+        => JsonSerializer.Deserialize<Project>(json) ?? throw new Exception("Invalid project data");
+}
+
+
+---
+
+■ バージョン管理戦略（将来的に）
+
+ProjectItem.Version を元に、以下のような Strategy クラスでマイグレーションできます：
+
+public static class MigrationStrategy
+{
+    public static void Apply(ProjectItem item)
+    {
+        if (item.Version == 0)
+        {
+            // 旧形式を最新版に変換
+        }
+    }
+}
+
+
+---
+
+次の拡張候補：
+
+波形データの保存/圧縮（バイナリ/CSV）
+
+Undo/Redo履歴を各ProjectItem単位で管理
+
+UIからカテゴリ別設定を編集できるようにデータバインド対応
+
+
+ご希望があれば、上記に対応したViewModel構成やユニットテスト例もご提供できます！何を優先して進めたいですか？
+
+
+
+
 了解です！WinForms でカテゴリ別設定（IProjectItemConfig）を UI から編集できるようにするために、以下の構成で設計します：
 
 
