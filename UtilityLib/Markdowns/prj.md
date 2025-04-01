@@ -1,3 +1,186 @@
+では、以下の4点すべてに対応した、Runtime.Serialization ベースの汎用 JsonConverter 相当クラスを提示します：
+
+カスタム変換（IDataContractSurrogate）
+
+インターフェース対応（ジェネリック → object）
+
+ストリーム対応（Stream 入出力）
+
+エラー処理（try-catch + バリデーション）
+
+
+
+---
+
+カスタム対応 JsonConverter 実装
+
+using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+
+public class CustomJsonConverter
+{
+    private readonly DataContractJsonSerializerSettings _settings;
+
+    public CustomJsonConverter(IDataContractSurrogate surrogate = null)
+    {
+        _settings = new DataContractJsonSerializerSettings
+        {
+            DataContractSurrogate = surrogate,
+            UseSimpleDictionaryFormat = true
+        };
+    }
+
+    public string Serialize(object obj, Type type)
+    {
+        try
+        {
+            using (var ms = new MemoryStream())
+            {
+                var serializer = new DataContractJsonSerializer(type, _settings);
+                serializer.WriteObject(ms, obj);
+                return Encoding.UTF8.GetString(ms.ToArray());
+            }
+        }
+        catch (SerializationException ex)
+        {
+            // エラー処理
+            Console.Error.WriteLine($"Serialization Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    public object Deserialize(string json, Type type)
+    {
+        try
+        {
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
+            {
+                var serializer = new DataContractJsonSerializer(type, _settings);
+                return serializer.ReadObject(ms);
+            }
+        }
+        catch (SerializationException ex)
+        {
+            Console.Error.WriteLine($"Deserialization Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    public void SerializeToStream(Stream stream, object obj, Type type)
+    {
+        try
+        {
+            var serializer = new DataContractJsonSerializer(type, _settings);
+            serializer.WriteObject(stream, obj);
+        }
+        catch (SerializationException ex)
+        {
+            Console.Error.WriteLine($"Serialization to Stream Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    public object DeserializeFromStream(Stream stream, Type type)
+    {
+        try
+        {
+            var serializer = new DataContractJsonSerializer(type, _settings);
+            return serializer.ReadObject(stream);
+        }
+        catch (SerializationException ex)
+        {
+            Console.Error.WriteLine($"Deserialization from Stream Error: {ex.Message}");
+            throw;
+        }
+    }
+}
+
+
+---
+
+カスタム変換の例（IDataContractSurrogate）
+
+たとえば DateTime を "yyyy-MM-dd" に変換したい場合：
+
+public class DateTimeSurrogate : IDataContractSurrogate
+{
+    public Type GetDataContractType(Type type) =>
+        type == typeof(DateTime) ? typeof(string) : type;
+
+    public object GetObjectToSerialize(object obj, Type targetType)
+    {
+        if (obj is DateTime dt)
+            return dt.ToString("yyyy-MM-dd");
+        return obj;
+    }
+
+    public object GetDeserializedObject(object obj, Type targetType)
+    {
+        if (targetType == typeof(DateTime) && obj is string s &&
+            DateTime.TryParseExact(s, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var dt))
+            return dt;
+        return obj;
+    }
+
+    // 他のメソッドは null か既定でOK
+    public object GetCustomDataToExport(Type clrType, Type dataContractType) => null;
+    public object GetCustomDataToExport(System.Reflection.MemberInfo memberInfo, Type dataContractType) => null;
+    public void GetKnownCustomDataTypes(System.Collections.ObjectModel.Collection<Type> customDataTypes) { }
+    public Type GetReferencedTypeOnImport(string typeName, string typeNamespace, object customData) => null;
+    public System.CodeDom.CodeTypeDeclaration ProcessImportedType(System.CodeDom.CodeTypeDeclaration typeDeclaration, System.CodeDom.CodeCompileUnit compileUnit) => typeDeclaration;
+}
+
+
+---
+
+使用例
+
+[DataContract]
+public class Sample
+{
+    [DataMember]
+    public string Name { get; set; }
+
+    [DataMember]
+    public DateTime Birthday { get; set; }
+}
+
+var converter = new CustomJsonConverter(new DateTimeSurrogate());
+
+var obj = new Sample { Name = "Taro", Birthday = new DateTime(2000, 1, 1) };
+
+string json = converter.Serialize(obj, typeof(Sample));
+Console.WriteLine(json); // {"Name":"Taro","Birthday":"2000-01-01"}
+
+var restored = (Sample)converter.Deserialize(json, typeof(Sample));
+Console.WriteLine(restored.Birthday); // 2000/01/01 0:00:00
+
+
+---
+
+拡張案
+
+Serialize<T>(T obj) / Deserialize<T>(string) のジェネリックラッパー
+
+TrySerialize / TryDeserialize メソッドで例外を抑制
+
+IDataContractSurrogate を戦略パターンで切り替え可能にする構成
+
+カスタム属性に基づくプロパティごとの制御（Reflectionによる）
+
+
+
+---
+
+必要であれば、これを DI や WinForms/WPF の内部で使いやすいラッパー形式にも展開できます。どうしますか？
+
+
+
+
+
 JsonConverter<T> を継承したカスタムコンバーターを作ることで、System.Text.Json のシリアライズ/デシリアライズをカスタマイズできます。以下に、FileInfo と CultureInfo 用の JsonConverter<T> 実装例を示します。
 
 
