@@ -179,6 +179,154 @@ IDataContractSurrogate を戦略パターンで切り替え可能にする構成
 
 
 
+了解です！CustomJsonConverter を基底クラスとして継承し、FileInfo や CultureInfo のカスタム変換を行う FileInfoConverter と CultureInfoConverter を作成します。
+
+
+---
+
+1. 基底クラス：CustomJsonConverter
+
+public class CustomJsonConverter
+{
+    protected readonly DataContractJsonSerializerSettings Settings;
+
+    public CustomJsonConverter(IDataContractSurrogate surrogate = null)
+    {
+        Settings = new DataContractJsonSerializerSettings
+        {
+            DataContractSurrogate = surrogate,
+            UseSimpleDictionaryFormat = true
+        };
+    }
+
+    public string Serialize(object obj, Type type)
+    {
+        using var ms = new MemoryStream();
+        var serializer = new DataContractJsonSerializer(type, Settings);
+        serializer.WriteObject(ms, obj);
+        return Encoding.UTF8.GetString(ms.ToArray());
+    }
+
+    public object Deserialize(string json, Type type)
+    {
+        using var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
+        var serializer = new DataContractJsonSerializer(type, Settings);
+        return serializer.ReadObject(ms);
+    }
+}
+
+
+---
+
+2. FileInfoSurrogate
+
+public class FileInfoSurrogate : IDataContractSurrogate
+{
+    public Type GetDataContractType(Type type) =>
+        type == typeof(FileInfo) ? typeof(string) : type;
+
+    public object GetObjectToSerialize(object obj, Type targetType) =>
+        obj is FileInfo fi ? fi.FullName : obj;
+
+    public object GetDeserializedObject(object obj, Type targetType) =>
+        targetType == typeof(FileInfo) && obj is string path ? new FileInfo(path) : obj;
+
+    public object GetCustomDataToExport(Type clrType, Type dataContractType) => null;
+    public object GetCustomDataToExport(System.Reflection.MemberInfo memberInfo, Type dataContractType) => null;
+    public void GetKnownCustomDataTypes(System.Collections.ObjectModel.Collection<Type> customDataTypes) { }
+    public Type GetReferencedTypeOnImport(string typeName, string typeNamespace, object customData) => null;
+    public System.CodeDom.CodeTypeDeclaration ProcessImportedType(System.CodeDom.CodeTypeDeclaration typeDeclaration, System.CodeDom.CodeCompileUnit compileUnit) => typeDeclaration;
+}
+
+
+---
+
+3. CultureInfoSurrogate
+
+public class CultureInfoSurrogate : IDataContractSurrogate
+{
+    public Type GetDataContractType(Type type) =>
+        type == typeof(CultureInfo) ? typeof(string) : type;
+
+    public object GetObjectToSerialize(object obj, Type targetType) =>
+        obj is CultureInfo ci ? ci.Name : obj;
+
+    public object GetDeserializedObject(object obj, Type targetType) =>
+        targetType == typeof(CultureInfo) && obj is string name ? new CultureInfo(name) : obj;
+
+    public object GetCustomDataToExport(Type clrType, Type dataContractType) => null;
+    public object GetCustomDataToExport(System.Reflection.MemberInfo memberInfo, Type dataContractType) => null;
+    public void GetKnownCustomDataTypes(System.Collections.ObjectModel.Collection<Type> customDataTypes) { }
+    public Type GetReferencedTypeOnImport(string typeName, string typeNamespace, object customData) => null;
+    public System.CodeDom.CodeTypeDeclaration ProcessImportedType(System.CodeDom.CodeTypeDeclaration typeDeclaration, System.CodeDom.CodeCompileUnit compileUnit) => typeDeclaration;
+}
+
+
+---
+
+4. 派生クラス
+
+FileInfoConverter
+
+public class FileInfoConverter : CustomJsonConverter
+{
+    public FileInfoConverter() : base(new FileInfoSurrogate()) { }
+}
+
+CultureInfoConverter
+
+public class CultureInfoConverter : CustomJsonConverter
+{
+    public CultureInfoConverter() : base(new CultureInfoSurrogate()) { }
+}
+
+
+---
+
+使用例
+
+[DataContract]
+public class SampleWithFile
+{
+    [DataMember]
+    public FileInfo File { get; set; }
+}
+
+[DataContract]
+public class SampleWithCulture
+{
+    [DataMember]
+    public CultureInfo Culture { get; set; }
+}
+
+// FileInfo変換
+var fileConverter = new FileInfoConverter();
+var sampleFile = new SampleWithFile { File = new FileInfo(@"C:\test.txt") };
+string jsonFile = fileConverter.Serialize(sampleFile, typeof(SampleWithFile));
+var restoredFile = (SampleWithFile)fileConverter.Deserialize(jsonFile, typeof(SampleWithFile));
+
+// CultureInfo変換
+var cultureConverter = new CultureInfoConverter();
+var sampleCulture = new SampleWithCulture { Culture = new CultureInfo("ja-JP") };
+string jsonCulture = cultureConverter.Serialize(sampleCulture, typeof(SampleWithCulture));
+var restoredCulture = (SampleWithCulture)cultureConverter.Deserialize(jsonCulture, typeof(SampleWithCulture));
+
+
+---
+
+拡張案
+
+CompositeSurrogate による複数型対応（FileInfo + CultureInfo などを1つにまとめる）
+
+自動サロゲートマッピング（Type → Func<object, string> などの辞書）
+
+Json形式バージョン付き保存／復元（将来の互換性考慮）
+
+
+複合的なサロゲート（複数型変換に対応する）もすぐ作れます。必要であればそちらも対応可能です。どうしますか？
+
+
+
 
 
 JsonConverter<T> を継承したカスタムコンバーターを作ることで、System.Text.Json のシリアライズ/デシリアライズをカスタマイズできます。以下に、FileInfo と CultureInfo 用の JsonConverter<T> 実装例を示します。
