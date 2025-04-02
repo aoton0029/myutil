@@ -1,3 +1,157 @@
+いいですね！Dictionary を ConcurrentDictionary に置き換えることで、ロックなしでのスレッド安全な操作が可能になります。
+
+
+---
+
+✅ 修正方針
+
+ScheduledTaskService の次の2つを ConcurrentDictionary<string, TaskHandle> に変更：
+
+private readonly ConcurrentDictionary<string, TaskHandle> _tasks = new();
+private readonly ConcurrentDictionary<string, TaskHandle> _stoppedTasks = new();
+
+また、lock (_lock) の代わりに ConcurrentDictionary のメソッドを使って安全に操作します。
+
+
+---
+
+✅ 主な修正ポイント
+
+1. StartTask
+
+public void StartTask(ScheduledTaskBase task, bool forceRestart = false)
+{
+    if (_tasks.TryGetValue(task.Name, out var existing))
+    {
+        if (!forceRestart || existing.IsRunning)
+            return;
+
+        existing.CancellationTokenSource.Cancel();
+        existing.CancellationTokenSource.Dispose();
+        _tasks.TryRemove(task.Name, out _);
+    }
+
+    var cts = new CancellationTokenSource();
+    var handle = new TaskHandle
+    {
+        Task = task,
+        CancellationTokenSource = cts,
+        LastRunTime = DateTime.MinValue,
+        IsRunning = true
+    };
+
+    var runningTask = Task.Factory.StartNew(async () =>
+    {
+        try
+        {
+            TaskStarted?.Invoke(this, task.Name);
+            await task.RunAsync(cts.Token, _snapshotProgress);
+            TaskCompleted?.Invoke(this, task.Name);
+        }
+        catch (Exception ex)
+        {
+            TaskFailed?.Invoke(this, (task.Name, ex));
+        }
+        finally
+        {
+            handle.LastRunTime = DateTime.Now;
+            handle.IsRunning = false;
+        }
+    }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
+
+    handle.RunningTask = runningTask;
+    _tasks[task.Name] = handle;
+}
+
+
+---
+
+2. StopAsync
+
+public async Task StopAsync(string name)
+{
+    if (_tasks.TryRemove(name, out var handle))
+    {
+        handle.CancellationTokenSource.Cancel();
+        handle.CancellationTokenSource.Dispose();
+
+        handle.IsRunning = false;
+        handle.IsStopped = true;
+
+        _stoppedTasks[name] = handle;
+
+        if (handle.RunningTask != null)
+        {
+            try
+            {
+                await handle.RunningTask;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[StopAsync] タスク '{name}' 停止中に例外: {ex.Message}");
+            }
+        }
+    }
+}
+
+
+---
+
+3. StopAllAsync
+
+public async Task StopAllAsync()
+{
+    var all = _tasks.ToArray(); // スナップショット
+
+    foreach (var (name, handle) in all)
+    {
+        handle.CancellationTokenSource.Cancel();
+        handle.CancellationTokenSource.Dispose();
+        handle.IsRunning = false;
+        handle.IsStopped = true;
+
+        _tasks.TryRemove(name, out _);
+        _stoppedTasks[name] = handle;
+    }
+
+    var tasksToWait = all
+        .Select(kv => kv.Value.RunningTask)
+        .Where(t => t != null)
+        .ToArray();
+
+    try
+    {
+        await Task.WhenAll(tasksToWait!);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[StopAllAsync] 終了待ち中に例外: {ex.Message}");
+    }
+}
+
+
+---
+
+✨ メリット
+
+
+---
+
+✨ 拡張案
+
+TaskHandle.Status を追加して Running/Completed/Faulted 状態を明示的に扱う
+
+ConcurrentDictionary<string, TaskSnapshot> を別に持ってモニタリング用途に特化する
+
+
+
+---
+
+この設計をベースに、UI側のバインディングや状態表示も安定的に構築できます。
+次は UI 向け TaskSnapshot 連携または WPF ダッシュボード設計など見てみますか？
+
+
+
 非常に鋭い指摘です。
 スケジューラにおけるスキップ処理は、ユースケースによって設計が大きく変わります。
 
