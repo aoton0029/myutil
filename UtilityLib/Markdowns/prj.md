@@ -1,3 +1,131 @@
+ハイブリッド方式を採用すると、保存性と操作性の両立が可能になります。
+以下のように 「保存は軽く、操作は強く」 を目指す設計になります。
+
+
+---
+
+ハイブリッド方式の概要
+
+保存：IPageContext のみを保存（軽量・柔軟）。
+
+操作・表示：PageModel<TItem> に IPageContext + List<TItem> を注入して一時的に使う。
+
+復元：IPageContext リストと 全体アイテムリスト から PageModel<TItem> を生成。
+
+
+
+---
+
+構成図イメージ
+
+[SavedData]
+ ├── List<IPageContext>   // 設定のみ保存
+ └── List<TItem>          // 実データ全体（保存してもよい）
+
+[復元時]
+ => List<PageModel<TItem>> ← IPageContext + 対応する List<TItem>
+
+
+---
+
+実装例
+
+1. PageModel<TItem>
+
+public class PageModel<TItem>
+{
+    public IPageContext Context { get; }
+    public List<TItem> Items { get; }
+
+    public PageModel(IPageContext context, IEnumerable<TItem> items)
+    {
+        Context = context;
+        Items = items.ToList();
+    }
+}
+
+
+---
+
+2. PageModelManager<TItem>（ハイブリッド対応）
+
+public class PageModelManager<TItem>
+{
+    private readonly List<IPageContext> _contexts = new();
+
+    public IReadOnlyList<IPageContext> Contexts => _contexts.AsReadOnly();
+
+    public void SaveContext(IPageContext context)
+    {
+        _contexts.Add(context);
+    }
+
+    public IEnumerable<PageModel<TItem>> BuildPages(IEnumerable<TItem> allItems, Func<IPageContext, IEnumerable<TItem>, List<TItem>> splitter)
+    {
+        var itemList = allItems.ToList();
+        foreach (var context in _contexts)
+        {
+            var itemsForPage = splitter(context, itemList);
+            yield return new PageModel<TItem>(context, itemsForPage);
+        }
+    }
+}
+
+
+---
+
+3. splitter関数の例（例: GridContext用）
+
+public static List<TItem> GridSplitter<TItem>(IPageContext context, List<TItem> allItems)
+{
+    if (context is GridContext grid)
+    {
+        int itemsPerPage = grid.Rows * grid.Columns;
+        int index = 0; // GridContextにページ番号を入れておくともっと柔軟に
+        return allItems.Skip(index * itemsPerPage).Take(itemsPerPage).ToList();
+    }
+
+    return new List<TItem>();
+}
+
+
+---
+
+この方式のメリット
+
+Contextのみを永続化でき、データの構成情報として扱える。
+
+復元時に、アイテム差し替え・再構成が簡単。
+
+UIや表示では PageModel を使ってバインド・操作が可能。
+
+必要に応じて PageModel<TItem> に拡張情報（Indexなど）を持たせられる。
+
+
+
+---
+
+拡張案
+
+PageModel<TItem> に PageIndex や IsSelected を持たせてUI状態を保持。
+
+PageModelBuilder クラスを作って、contextに応じた splitter を抽象化。
+
+PageContext に PageNumber を持たせて、アイテムの切り出しを汎用化。
+
+
+
+---
+
+このように、永続性と操作性のトレードオフを解決しながら、柔軟なページ構成・復元ができます。
+必要なら、GridContext, ListContext などにページ番号やIDを足してさらに管理しやすくする設計も可能です。
+
+実際に使うシナリオに合わせて、コードのカスタマイズ例も出せますよ。どうしますか？
+
+
+
+
+
 public interface IHierarchical
 {
 IHierarchical? HierarchicalParent { get; }
