@@ -24,6 +24,7 @@ namespace AsyncSample
         public DateTime? LastRun { get; set; }
 
         private int _skipCount = 0;
+        private readonly Func<SkipContext, bool> _shouldSkip;
 
         protected ScheduledTaskBase(
             string name,
@@ -46,52 +47,84 @@ namespace AsyncSample
             {
                 var now = DateTime.Now;
 
-                if (OverrunStrategy == OverrunStrategy.Skip && now < nextRunTime)
+                if (now < nextRunTime)
                 {
                     await Task.Delay(nextRunTime - now, CancellationToken);
                 }
 
+                CancellationToken.ThrowIfCancellationRequested();
+
                 var actualStart = DateTime.Now;
-                await ExecuteOnceAsync();
-                var actualEnd = DateTime.Now;
 
-                switch (OverrunStrategy)
+                var skipContext = new SkipContext
                 {
-                    case OverrunStrategy.FixedInterval:
-                        var waitTime = Interval - (actualEnd - actualStart);
-                        if (waitTime > TimeSpan.Zero) 
-                        {
-                            await Task.Delay(waitTime, CancellationToken);
-                        }
-                        break;
+                    ScheduledTime = nextRunTime,
+                    ActualStartTime = actualStart,
+                    SkipCount = _skipCount
+                };
 
-                    case OverrunStrategy.CatchUp:
-                        nextRunTime += Interval;
-                        break;
+                if (_shouldSkip(skipContext))
+                {
+                    _skipCount++;
+                    ReportProgress($"スケジュール遅延によりスキップ {_skipCount} 回");
 
-                    case OverrunStrategy.Skip:
-                        nextRunTime += Interval;
-                        if (nextRunTime < DateTime.Now)
-                        {
-                            _skipCount++;
-                            ReportProgress($"スケジュール遅延によりスキップ {_skipCount} 回");
+                    OnSkipped(skipContext);
 
-                            if (MaxSkipCount.HasValue && _skipCount > MaxSkipCount.Value)
-                            {
-                                ReportProgress($"スキップ回数上限超過: {_skipCount} 回");
-                                throw new Exception($"スキップ回数が上限 {MaxSkipCount} を超えました");
-                            }
+                    if (MaxSkipCount.HasValue && _skipCount > MaxSkipCount.Value)
+                    {
+                        var msg = $"スキップ回数が上限 {MaxSkipCount} を超えました";
+                        ReportProgress(msg);
+                        throw new Exception(msg);
+                    }
 
-                            nextRunTime = DateTime.Now + Interval;
-                        }
-                        else
-                        {
-                            _skipCount = 0; // 実行できたのでリセット
-                        }
-                        break;
+                    nextRunTime = DateTime.Now + Interval;
+                    continue;
                 }
+
+                try
+                {
+                    OnBeforeExecute();
+
+                    CancellationToken.ThrowIfCancellationRequested();
+                    await ExecuteOnceAsync();
+
+                    OnAfterExecute();
+                }
+                catch (OperationCanceledException)
+                {
+                    // 通常のキャンセル → そのまま抜ける
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    ReportProgress($"エラー発生: {ex.Message}");
+                    OnError(ex);
+                    throw;
+                }
+
+                RunCount++;
+                LastRun = DateTime.Now;
+                _skipCount = 0;
+
+                nextRunTime += Interval;
             }
-           
         }
+
+        protected virtual void OnBeforeExecute() { }
+        protected virtual void OnAfterExecute() { }
+        protected virtual void OnSkipped(SkipContext ctx) { }
+        protected virtual void OnError(Exception ex) { }
+
+        private static bool DefaultSkipStrategy(SkipContext ctx)
+        {
+            return ctx.ActualStartTime - ctx.ScheduledTime > ctx.ActualStartTime - ctx.ScheduledTime; // 必ずスキップ
+        }
+    }
+
+    public class SkipContext
+    {
+        public DateTime ScheduledTime { get; init; }
+        public DateTime ActualStartTime { get; init; }
+        public int SkipCount { get; init; }
     }
 }

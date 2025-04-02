@@ -6,107 +6,143 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.Models
 {
-    public class TreeNode<T>
+    public interface IHierarchical
     {
-        public T Value { get; set; }
-        public TreeNode<T> Parent { get; private set; }
-        public List<TreeNode<T>> Children { get; set; }
+        IHierarchical? HierarchicalParent { get; }
 
-        public TreeNode(T value)
+        IHierarchicalRoot? HierarchicalRoot { get; }
+
+        IReadOnlyList<IHierarchical> HierarchicalChildren { get; }
+
+        event EventHandler<HierarchyAttachmentEventArgs> AttachedToHierarchy;
+        event EventHandler<HierarchyAttachmentEventArgs> DetachedFromHierarchy;
+    }
+
+    public interface IHierarchicalRoot : IHierarchical
+    {
+        event EventHandler<IHierarchical> DescendantAttached;
+
+        event EventHandler<IHierarchical> DescendantDetached;
+
+        void OnDescendantAttached(IHierarchical descendant);
+
+        void OnDescendantDetached(IHierarchical descendant);
+    }
+
+    public interface IModifiableHierarchical : IHierarchical
+    {
+        void AddChild(IHierarchical child);
+
+        void RemoveChild(IHierarchical child);
+
+        void SetParent(IHierarchical? parent);
+
+        void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e);
+
+        void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e);
+    }
+
+    public readonly struct HierarchyAttachmentEventArgs(IHierarchicalRoot root, IHierarchical? parent)
+    {
+        public IHierarchicalRoot Root { get; } = root;
+
+        public IHierarchical? Parent { get; } = parent;
+    }
+
+    public abstract class Hierarchical : IHierarchical
+    {
+        private IHierarchical? _parent;
+        private IHierarchicalRoot? _root;
+        private readonly List<IHierarchical> _children = new();
+
+        public IHierarchical? HierarchicalParent => _parent;
+
+        public IHierarchicalRoot? HierarchicalRoot => _root;
+
+        public IReadOnlyList<IHierarchical> HierarchicalChildren => new List<IHierarchical>(_children);
+
+        public event EventHandler<HierarchyAttachmentEventArgs>? AttachedToHierarchy;
+        public event EventHandler<HierarchyAttachmentEventArgs>? DetachedFromHierarchy;
+
+        /// <summary>
+        /// 内部的に親を設定します（Modifiable派生クラスで使用）。
+        /// </summary>
+        protected void SetParentInternal(IHierarchical? parent)
         {
-            Value = value;
-            Children = new List<TreeNode<T>>();
-            Parent = null;
+            var oldRoot = _root;
+            _parent = parent;
+            _root = (parent as IHierarchicalRoot) ?? parent?.HierarchicalRoot;
+
+            var args = new HierarchyAttachmentEventArgs(oldRoot, _root);
+
+            if (_root != null)
+                AttachedToHierarchy?.Invoke(this, args);
+            else
+                DetachedFromHierarchy?.Invoke(this, args);
         }
 
-        public void AddChild(TreeNode<T> child)
+        /// <summary>
+        /// 子を追加します（Modifiable派生クラスで使用）。
+        /// </summary>
+        protected void AddChildInternal(IHierarchical child)
         {
-            child.Parent = this;
-            Children.Add(child);
+            _children.Add(child);
         }
 
-        public void RemoveChild(TreeNode<T> child)
+        /// <summary>
+        /// 子を削除します（Modifiable派生クラスで使用）。
+        /// </summary>
+        protected void RemoveChildInternal(IHierarchical child)
         {
-            if (Children.Remove(child))
+            _children.Remove(child);
+        }
+
+        /// <summary>
+        /// イベントを明示的に発火したい場合に使用。
+        /// </summary>
+        protected void RaiseAttachedToHierarchy(HierarchyAttachmentEventArgs args)
+            => AttachedToHierarchy?.Invoke(this, args);
+
+        protected void RaiseDetachedFromHierarchy(HierarchyAttachmentEventArgs args)
+            => DetachedFromHierarchy?.Invoke(this, args);
+    }
+
+    public class ModifiableHierarchical : Hierarchical, IModifiableHierarchical
+    {
+        public void AddChild(IHierarchical child)
+        {
+            if (child is IModifiableHierarchical modifiable)
             {
-                child.Parent = null; // 親ノードとの関係を切る
+                modifiable.SetParent(this);
+            }
+
+            AddChildInternal(child);
+        }
+
+        public void RemoveChild(IHierarchical child)
+        {
+            RemoveChildInternal(child);
+
+            if (child is IModifiableHierarchical modifiable)
+            {
+                modifiable.SetParent(null);
             }
         }
 
-        public int GetDepth()
+        public void SetParent(IHierarchical? parent)
         {
-            int depth = 0;
-            TreeNode<T> current = this;
-            while (current.Parent != null)
-            {
-                depth++;
-                current = current.Parent;
-            }
-            return depth;
+            SetParentInternal(parent);
         }
 
-        public override string ToString()
+        public void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e)
         {
-            return Value?.ToString() ?? "null";
+            RaiseAttachedToHierarchy(e);
+        }
+
+        public void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e)
+        {
+            RaiseDetachedFromHierarchy(e);
         }
     }
 
-    public class Tree<T>
-    {
-        public TreeNode<T> Root { get; private set; }
-
-        public Tree(T rootValue)
-        {
-            Root = new TreeNode<T>(rootValue);
-        }
-
-        // ツリーを深さ優先でトラバース
-        public void TraverseDFS(TreeNode<T> node, Action<TreeNode<T>> action)
-        {
-            if (node == null) return;
-
-            action(node);
-
-            foreach (var child in node.Children)
-            {
-                TraverseDFS(child, action);
-            }
-        }
-
-        // ツリーを幅優先でトラバース
-        public void TraverseBFS(TreeNode<T> node, Action<TreeNode<T>> action)
-        {
-            if (node == null) return;
-
-            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
-            queue.Enqueue(node);
-
-            while (queue.Count > 0)
-            {
-                var current = queue.Dequeue();
-                action(current);
-
-                foreach (var child in current.Children)
-                {
-                    queue.Enqueue(child);
-                }
-            }
-        }
-
-        // 特定の条件でノードを検索 (深さ優先)
-        public TreeNode<T> Find(TreeNode<T> node, Predicate<T> match)
-        {
-            if (node == null) return null;
-
-            if (match(node.Value)) return node;
-
-            foreach (var child in node.Children)
-            {
-                var result = Find(child, match);
-                if (result != null) return result;
-            }
-
-            return null;
-        }
-    }
 }
