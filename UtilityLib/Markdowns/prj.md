@@ -1,3 +1,43 @@
+public class PageModelManager<TItem>
+{
+    private readonly List<PageModel<TItem>> _pages = new();
+
+    public IReadOnlyList<PageModel<TItem>> Pages => _pages;
+
+    public void AddPage(PageModel<TItem> page)
+    {
+        _pages.Add(page);
+    }
+
+    public void SwapPages(int indexA, int indexB)
+    {
+        if (indexA < 0 || indexB < 0 || indexA >= _pages.Count || indexB >= _pages.Count)
+            throw new ArgumentOutOfRangeException();
+
+        (_pages[indexA], _pages[indexB]) = (_pages[indexB], _pages[indexA]);
+    }
+
+    public List<IPageContext> ExtractContexts()
+    {
+        return _pages.Select(p => p.Context).ToList();
+    }
+
+    public void RestorePages(List<TItem> items, List<IPageContext> contexts)
+    {
+        if (contexts.Count == 0)
+            return;
+
+        _pages.Clear();
+        foreach (var context in contexts)
+        {
+            var page = new PageModel<TItem>(items, context);
+            _pages.Add(page);
+        }
+    }
+}
+
+
+
 ハイブリッド方式を採用すると、保存性と操作性の両立が可能になります。
 以下のように 「保存は軽く、操作は強く」 を目指す設計になります。
 
