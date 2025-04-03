@@ -1,3 +1,235 @@
+以下は、現在の構成（App系 + Projects系）を統合した WinForms サンプルアプリです。
+
+このサンプルは以下を満たします：
+
+起動時に AppContext を生成し、設定・状態を保持
+
+「新規プロジェクト」「プロジェクトを開く」ボタンから ProjectService を使って操作
+
+AppContext.CurrentProject に反映し、画面に表示
+
+最小限の UI（MainForm と Panel + Button + Label）
+
+
+
+---
+
+✅ MainForm.cs
+
+public partial class MainForm : Form
+{
+    private readonly ProjectService _projectService;
+    private readonly AppContext _appContext;
+
+    private Label _labelProjectInfo;
+    private Button _btnNewProject;
+    private Button _btnOpenProject;
+
+    public MainForm(INavigationService navigation, ProjectService projectService, AppContext appContext)
+    {
+        _projectService = projectService;
+        _appContext = appContext;
+
+        InitializeComponent();
+        InitializeUi();
+        UpdateProjectLabel();
+    }
+
+    private void InitializeUi()
+    {
+        _btnNewProject = new Button { Text = "新規プロジェクト", Location = new Point(20, 20) };
+        _btnOpenProject = new Button { Text = "プロジェクトを開く", Location = new Point(20, 60) };
+        _labelProjectInfo = new Label { Location = new Point(20, 100), AutoSize = true };
+
+        _btnNewProject.Click += OnNewProjectClicked;
+        _btnOpenProject.Click += OnOpenProjectClicked;
+
+        Controls.Add(_btnNewProject);
+        Controls.Add(_btnOpenProject);
+        Controls.Add(_labelProjectInfo);
+    }
+
+    private void OnNewProjectClicked(object? sender, EventArgs e)
+    {
+        var folder = SelectFolder();
+        if (string.IsNullOrEmpty(folder)) return;
+
+        _projectService.NewProject("新しいプロジェクト", folder);
+        _projectService.SaveProject();
+
+        _appContext.CurrentProject = _projectService.CurrentProject;
+        UpdateProjectLabel();
+    }
+
+    private void OnOpenProjectClicked(object? sender, EventArgs e)
+    {
+        var file = SelectFile();
+        if (string.IsNullOrEmpty(file)) return;
+
+        _projectService.LoadProject(file);
+        _appContext.CurrentProject = _projectService.CurrentProject;
+        UpdateProjectLabel();
+    }
+
+    private void UpdateProjectLabel()
+    {
+        var project = _appContext.CurrentProject;
+        _labelProjectInfo.Text = project != null
+            ? $"プロジェクト名: {project.Name}\nディレクトリ: {project.DirectoryPath}"
+            : "プロジェクト未選択";
+    }
+
+    private string? SelectFolder()
+    {
+        using var dialog = new FolderBrowserDialog();
+        return dialog.ShowDialog() == DialogResult.OK ? dialog.SelectedPath : null;
+    }
+
+    private string? SelectFile()
+    {
+        using var dialog = new OpenFileDialog
+        {
+            Filter = "プロジェクトファイル (*.json)|*.json"
+        };
+        return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
+    }
+}
+
+
+---
+
+✅ Project.cs（既存）
+
+public class Project
+{
+    public string Name { get; set; } = "";
+    public string DirectoryPath { get; set; } = "";
+    public DateTime LastModified { get; set; } = DateTime.Now;
+    public List<ProjectItem> Items { get; set; } = new();
+}
+
+
+---
+
+✅ ProjectService.cs（既存）
+
+public class ProjectService
+{
+    private readonly IProjectPersistence _persistence;
+    public Project? CurrentProject { get; private set; }
+
+    public ProjectService(IProjectPersistence persistence)
+    {
+        _persistence = persistence;
+    }
+
+    public void NewProject(string name, string directory)
+    {
+        CurrentProject = new Project
+        {
+            Name = name,
+            DirectoryPath = directory,
+            LastModified = DateTime.Now
+        };
+    }
+
+    public void LoadProject(string path)
+    {
+        CurrentProject = _persistence.Load(path);
+    }
+
+    public void SaveProject()
+    {
+        if (CurrentProject != null)
+        {
+            _persistence.Save(CurrentProject);
+        }
+    }
+}
+
+
+---
+
+✅ JsonProjectPersistence.cs（既存）
+
+public class JsonProjectPersistence : IProjectPersistence
+{
+    public void Save(Project project)
+    {
+        var json = JsonSerializer.Serialize(project, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(Path.Combine(project.DirectoryPath, "project.json"), json);
+    }
+
+    public Project Load(string path)
+    {
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<Project>(json)!;
+    }
+}
+
+
+---
+
+✅ AppContext.cs（拡張）
+
+public class AppContext
+{
+    public Project? CurrentProject { get; set; }
+
+    public AppSettings Settings { get; private set; }
+
+    public DateTime LaunchTime { get; } = DateTime.Now;
+
+    public AppContext()
+    {
+        Settings = AppSettings.Load();
+    }
+}
+
+
+---
+
+✅ AppSettings.cs（拡張）
+
+public class AppSettings
+{
+    public string Language { get; set; } = "ja-JP";
+
+    public static AppSettings Load(string path = "appsettings.json")
+    {
+        if (!File.Exists(path)) return new AppSettings();
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+    }
+
+    public void Save(string path = "appsettings.json")
+    {
+        var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(path, json);
+    }
+}
+
+
+---
+
+このサンプルは、App系（AppContext, AppSettings）と Projects系（Project, ProjectService）を橋渡しし、画面に反映する基本例です。
+
+
+---
+
+✅ 拡張案
+
+
+---
+
+他にも、プラグイン拡張可能な ProjectItemViewer, プロジェクトテンプレート, Undo/Redoの履歴記録 などへの拡張も可能です。
+
+続きをコードで出しましょうか？例えば UserControl ベースに分離しますか？
+
+
+
+
+
 あなたの現在の構成を以下に整理してみます。
 主に WinFormsアプリケーションにおけるプロジェクトベースのアーキテクチャ構築を進めており、以下の要素が含まれています。
 
