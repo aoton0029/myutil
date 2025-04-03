@@ -91,6 +91,146 @@ CultureInfo / Mutex / Exception Handling の組み込み済み
 コード付きで支援できます！
 
 
+WinForms アプリケーションにおける AppContext は、アプリ全体で共有される「状態」や「環境情報」を管理する重要なクラスです。これをしっかり設計・拡張することで、サービス・UI・ドメインロジックが共通情報にアクセスしやすくなり、コードの整合性とテスト性が高まります。
+
+
+---
+
+✅ 拡張された AppContext の設計例
+
+public class AppContext
+{
+    // 現在のユーザー情報
+    public User? CurrentUser { get; set; }
+
+    // 現在開いているプロジェクト
+    public Project? CurrentProject { get; set; }
+
+    // アプリケーションの設定（読み取り専用/変更可能など）
+    public AppSettings Settings { get; private set; }
+
+    // グローバルフラグ（例: デバッグモード、有効化状態）
+    public bool IsDebugMode { get; set; }
+    public bool IsProjectDirty { get; set; } // 未保存フラグ
+
+    // 起動引数や動的情報
+    public string? StartupArgument { get; set; }
+
+    // タイムスタンプ系
+    public DateTime LaunchTime { get; private set; } = DateTime.Now;
+
+    // アプリケーションの実行パス
+    public string AppRootPath => AppDomain.CurrentDomain.BaseDirectory;
+
+    public AppContext()
+    {
+        // 設定ファイル読み込みなど
+        Settings = AppSettings.Load(); // JSONから読み込むようにする
+    }
+
+    // 状態クリア（ログアウトやプロジェクト変更時）
+    public void Reset()
+    {
+        CurrentUser = null;
+        CurrentProject = null;
+        IsProjectDirty = false;
+        StartupArgument = null;
+    }
+}
+
+
+---
+
+✅ AppSettings.cs 例（JSON設定）
+
+public class AppSettings
+{
+    public string Language { get; set; } = "ja-JP";
+    public string Theme { get; set; } = "Dark";
+    public string LastOpenedProjectPath { get; set; } = "";
+
+    public static AppSettings Load(string path = "appsettings.json")
+    {
+        if (!File.Exists(path))
+            return new AppSettings();
+
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+    }
+
+    public void Save(string path = "appsettings.json")
+    {
+        var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(path, json);
+    }
+}
+
+
+---
+
+🔧 利用例（他のコンポーネントから）
+
+var context = Program.ServiceProvider.Get<AppContext>();
+
+if (context.CurrentUser?.IsAdmin == true)
+{
+    ShowAdminPanel();
+}
+
+if (context.IsProjectDirty)
+{
+    PromptSaveChanges();
+}
+
+
+---
+
+🧩 拡張案
+
+
+---
+
+📌 最終形イメージ
+
+public class AppContext
+{
+    public event Action<Project?>? ProjectChanged;
+    private Project? _currentProject;
+
+    public Project? CurrentProject
+    {
+        get => _currentProject;
+        set
+        {
+            _currentProject = value;
+            ProjectChanged?.Invoke(value);
+        }
+    }
+
+    public Dictionary<string, object> ExtendedData { get; } = new();
+}
+
+
+---
+
+✅ まとめ
+
+AppContext は「アプリのグローバル状態」管理の中心
+
+ログインユーザー、プロジェクト、設定、起動状態などを一元管理
+
+他サービスやフォームとの依存関係が減る
+
+状態イベントや拡張辞書で柔軟な情報連携も可能
+
+
+
+---
+
+「Undo/Redo に対応した履歴型 AppContext を作りたい」や「ユーザーセッションを切り替えたい」といったニーズがあれば、さらに掘り下げて設計できます。
+
+次にやりたいのは、UI側での AppContext 反映？ それとも AppContext による状態イベントの監視設計？
+
 
 
 
