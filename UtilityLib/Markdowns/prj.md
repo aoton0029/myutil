@@ -232,6 +232,161 @@ AppContext は「アプリのグローバル状態」管理の中心
 次にやりたいのは、UI側での AppContext 反映？ それとも AppContext による状態イベントの監視設計？
 
 
+良い着眼点です！
+Program.cs での以下の3つの機能を導入すると、多言語対応、単一起動制御、例外ハンドリングが加わり、より堅牢で国際化された WinForms アプリになります。
+
+
+---
+
+✅ CultureInfo（多言語対応）
+
+using System.Globalization;
+using System.Threading;
+
+private static void SetCulture()
+{
+    // 例: 日本語で固定する場合（システム言語に合わせるなら省略）
+    var culture = new CultureInfo("ja-JP");
+    Thread.CurrentThread.CurrentCulture = culture;
+    Thread.CurrentThread.CurrentUICulture = culture;
+}
+
+
+---
+
+✅ Mutex（多重起動防止）
+
+private static Mutex? _mutex;
+
+private static bool EnsureSingleInstance()
+{
+    bool createdNew;
+    _mutex = new Mutex(true, "MyUniqueAppMutexName", out createdNew);
+    return createdNew;
+}
+
+
+---
+
+✅ Application.ThreadException（未処理例外ハンドリング）
+
+private static void RegisterExceptionHandler()
+{
+    Application.ThreadException += (sender, args) =>
+    {
+        MessageBox.Show(
+            $"エラーが発生しました:\n\n{args.Exception.Message}",
+            "エラー",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error
+        );
+
+        // ログ出力や再起動処理などもここに
+    };
+
+    AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+    {
+        var ex = args.ExceptionObject as Exception;
+        MessageBox.Show(
+            $"重大なエラーが発生しました:\n\n{ex?.Message}",
+            "致命的エラー",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error
+        );
+    };
+}
+
+
+---
+
+🧱 最終的な Program.cs 全体構成例
+
+internal static class Program
+{
+    public static ServiceProvider ServiceProvider { get; private set; } = null!;
+    private static Mutex? _mutex;
+
+    [STAThread]
+    static void Main()
+    {
+        if (!EnsureSingleInstance())
+        {
+            MessageBox.Show("このアプリケーションは既に起動しています。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        ApplicationConfiguration.Initialize();
+        SetCulture();
+        RegisterExceptionHandler();
+        InitializeServices();
+
+        var mainForm = new MainForm(
+            ServiceProvider.Get<INavigationService>(),
+            ServiceProvider.Get<ProjectService>(),
+            ServiceProvider.Get<AppContext>()
+        );
+
+        Application.Run(mainForm);
+    }
+
+    private static void SetCulture()
+    {
+        var culture = new CultureInfo("ja-JP");
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+    }
+
+    private static bool EnsureSingleInstance()
+    {
+        bool createdNew;
+        _mutex = new Mutex(true, "MyUniqueAppMutexName", out createdNew);
+        return createdNew;
+    }
+
+    private static void RegisterExceptionHandler()
+    {
+        Application.ThreadException += (sender, args) =>
+        {
+            MessageBox.Show($"エラーが発生しました:\n\n{args.Exception.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        };
+
+        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            MessageBox.Show($"重大なエラーが発生しました:\n\n{ex?.Message}", "致命的エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        };
+    }
+
+    private static void InitializeServices()
+    {
+        var provider = new ServiceProvider();
+        provider.Register<INavigationService>(new NavigationService());
+        provider.Register<ProjectService>(new ProjectService(new JsonProjectPersistence()));
+        provider.Register<AppContext>(new AppContext());
+        provider.Register<IMessageService>(new MessageService());
+        provider.Register<IUserService>(new UserService());
+
+        ServiceProvider = provider;
+    }
+}
+
+
+---
+
+🔄 拡張案
+
+
+---
+
+必要があれば、「多言語切り替えUI」や「設定ファイルベースのカルチャ選択」、「例外のログ保存処理」なども追加できます！
+
+どこから広げたいですか？
+
+
+
+
+
+
 
 
 
