@@ -383,6 +383,161 @@ internal static class Program
 どこから広げたいですか？
 
 
+Program.cs はアプリ全体の 起動制御・初期化・構成管理の基盤です。既にしっかり設計されていますが、さらに 可読性・拡張性・テスト性・堅牢性 を高めるための 改善ポイントを以下にまとめます。
+
+
+---
+
+✅ 改善点まとめ
+
+
+---
+
+🧱 改善例 1：初期化クラスに委譲
+
+Program.cs → 極小に保つ
+
+internal static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        if (!StartupManager.EnsureSingleInstance()) return;
+
+        ApplicationConfiguration.Initialize();
+        StartupManager.ApplyCulture();
+        StartupManager.RegisterExceptionHandler();
+
+        var services = StartupManager.InitializeServices();
+        var mainForm = services.MainFormFactory();
+
+        Application.Run(mainForm);
+    }
+}
+
+
+---
+
+StartupManager.cs を追加
+
+public static class StartupManager
+{
+    private static Mutex? _mutex;
+
+    public static bool EnsureSingleInstance()
+    {
+        bool createdNew;
+        _mutex = new Mutex(true, "YourApp.UniqueAppMutex", out createdNew);
+        if (!createdNew)
+        {
+            MessageBox.Show("すでに起動しています。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        return createdNew;
+    }
+
+    public static void ApplyCulture()
+    {
+        var culture = new CultureInfo("ja-JP"); // ← 設定ファイルから読み込むようにしてもOK
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+    }
+
+    public static void RegisterExceptionHandler()
+    {
+        Application.ThreadException += (sender, args) =>
+        {
+            LogManager.Log(args.Exception);  // ← 独自ログ
+            MessageBox.Show("エラー：" + args.Exception.Message);
+        };
+    }
+
+    public static AppServices InitializeServices()
+    {
+        var provider = new ServiceProvider();
+
+        var navigation = new NavigationService();
+        var projectService = new ProjectService(new JsonProjectPersistence());
+        var appContext = new AppContext();
+        var messageService = new MessageService();
+        var userService = new UserService();
+
+        provider.Register<INavigationService>(navigation);
+        provider.Register<ProjectService>(projectService);
+        provider.Register<AppContext>(appContext);
+        provider.Register<IMessageService>(messageService);
+        provider.Register<IUserService>(userService);
+
+        return new AppServices
+        {
+            Provider = provider,
+            MainFormFactory = () => new MainForm(navigation, projectService, appContext)
+        };
+    }
+}
+
+
+---
+
+AppServices.cs
+
+public class AppServices
+{
+    public ServiceProvider Provider { get; set; } = null!;
+    public Func<Form> MainFormFactory { get; set; } = null!;
+}
+
+
+---
+
+🔄 その他の改善案
+
+🔧 高DPI対応
+
+Application.SetHighDpiMode(HighDpiMode.SystemAware);
+
+⚙️ 設定ファイル読み込み（appsettings.json）
+
+{
+  "Culture": "ja-JP",
+  "AppId": "MyApp",
+  "Theme": "Dark"
+}
+
+var config = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText("appsettings.json"));
+
+
+---
+
+📦 最終的な構造イメージ
+
+MyWinFormsApp/
+├─ Program.cs                ← 最小の起動制御
+├─ Startup/                 
+│   ├─ StartupManager.cs    ← 初期化まとめ
+│   ├─ AppServices.cs       ← 初期化後に注入されるもの
+├─ Config/                  
+│   └─ AppSettings.cs       ← 設定モデル
+├─ Logging/
+│   └─ LogManager.cs        ← エラーログ
+
+
+---
+
+☑️ まとめ：何が改善される？
+
+構造がシンプルに、責任分離されて見通しが良く
+
+ユニットテストやUI切替も可能に
+
+多言語やDPI、高カスタマイズ性に対応可能
+
+
+
+---
+
+必要であれば、この構造のテンプレートプロジェクト（.zip や dotnet new）を生成しますよ！
+他に改善したい観点や導入したい機能（テーマ切替・ログ保存など）はありますか？
+
 
 
 
