@@ -145,7 +145,7 @@ namespace AsyncSample
             _monitor.Dispose();
         }
 
-        public async Task<bool> TryStartAsync(ScheduledTaskBase task)
+        public bool TryStart(ScheduledTaskBase task)
         {
             if (_tasks.ContainsKey(task.Name)) return false;
 
@@ -157,7 +157,7 @@ namespace AsyncSample
                 IsRunning = true
             };
 
-            var runningTask = Task.Factory.StartNew(async () =>
+            var runningTask = Task.Run(async () =>
             {
                 try
                 {
@@ -171,11 +171,25 @@ namespace AsyncSample
                 {
                     handle.IsRunning = false;
                 }
-            }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
+            }, cts.Token);
 
             handle.RunningTask = runningTask;
             return _tasks.TryAdd(task.Name, handle);
         }
+
+        public async Task<bool> TryRestartAsync(string name)
+        {
+            if (!_tasks.TryGetValue(name, out var existingHandle))
+                return false;
+
+            var task = existingHandle.Task;
+
+            var stopped = await TryStopAsync(name);
+            if (!stopped) return false;
+
+            return TryStart(task);
+        }
+
 
         public async Task<bool> TryStopAsync(string name)
         {

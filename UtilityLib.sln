@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PageNavigationSample", "Pag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleTcpServer", "SampleTcpServer\SampleTcpServer.csproj", "{E029BAA1-CEAE-465E-8CF4-2F58ED37350E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartSample", "ChartSample\ChartSample.csproj", "{B228F8DC-2A14-49E1-A3FD-99442A8015C2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveSample", "ReactiveSample\ReactiveSample.csproj", "{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleTcpClient", "SampleTcpClient\SampleTcpClient.csproj", "{A3F12D13-02F9-4C27-9DA6-0B87A9BAA838}"
@@ -33,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormSample", "FormSample\Fo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectSample", "ProjectSample\ProjectSample.csproj", "{6F713A59-6533-4260-9E85-829B72624DC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,10 +51,6 @@ Global
 		{E029BAA1-CEAE-465E-8CF4-2F58ED37350E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E029BAA1-CEAE-465E-8CF4-2F58ED37350E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E029BAA1-CEAE-465E-8CF4-2F58ED37350E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B228F8DC-2A14-49E1-A3FD-99442A8015C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B228F8DC-2A14-49E1-A3FD-99442A8015C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B228F8DC-2A14-49E1-A3FD-99442A8015C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B228F8DC-2A14-49E1-A3FD-99442A8015C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE3DE30E-927C-4531-ACD7-DFFC4C416A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -99,6 +95,10 @@ Global
 		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EDD201D-4EB9-4DCC-8CD2-FC39859B4EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F713A59-6533-4260-9E85-829B72624DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F713A59-6533-4260-9E85-829B72624DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F713A59-6533-4260-9E85-829B72624DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F713A59-6533-4260-9E85-829B72624DC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

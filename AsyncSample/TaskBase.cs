@@ -35,16 +35,16 @@ namespace AsyncSample
         protected IProgress<TaskSnapshot>? SnapshotReporter { get; private set; }
 
 
-        protected TaskBase(string name)
+        protected TaskBase(string name, IProgress<TaskSnapshot>? progress)
         {
             Name = name;
+            SnapshotReporter = progress;
         }
 
-        public async Task RunAsync(CancellationToken cancellationToken, IProgress<TaskSnapshot>? progress)
+        public async Task RunAsync(CancellationToken cancellationToken)
         {
             State = TaskState.Running;
             CancellationToken = cancellationToken;
-            SnapshotReporter = progress;
             StartTime = DateTime.Now;
 
             try
