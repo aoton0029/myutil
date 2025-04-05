@@ -1,3 +1,951 @@
+以下は、現在の構成（App系 + Projects系）を統合した WinForms サンプルアプリです。
+
+このサンプルは以下を満たします：
+
+起動時に AppContext を生成し、設定・状態を保持
+
+「新規プロジェクト」「プロジェクトを開く」ボタンから ProjectService を使って操作
+
+AppContext.CurrentProject に反映し、画面に表示
+
+最小限の UI（MainForm と Panel + Button + Label）
+
+
+
+---
+
+✅ MainForm.cs
+
+public partial class MainForm : Form
+{
+    private readonly ProjectService _projectService;
+    private readonly AppContext _appContext;
+
+    private Label _labelProjectInfo;
+    private Button _btnNewProject;
+    private Button _btnOpenProject;
+
+    public MainForm(INavigationService navigation, ProjectService projectService, AppContext appContext)
+    {
+        _projectService = projectService;
+        _appContext = appContext;
+
+        InitializeComponent();
+        InitializeUi();
+        UpdateProjectLabel();
+    }
+
+    private void InitializeUi()
+    {
+        _btnNewProject = new Button { Text = "新規プロジェクト", Location = new Point(20, 20) };
+        _btnOpenProject = new Button { Text = "プロジェクトを開く", Location = new Point(20, 60) };
+        _labelProjectInfo = new Label { Location = new Point(20, 100), AutoSize = true };
+
+        _btnNewProject.Click += OnNewProjectClicked;
+        _btnOpenProject.Click += OnOpenProjectClicked;
+
+        Controls.Add(_btnNewProject);
+        Controls.Add(_btnOpenProject);
+        Controls.Add(_labelProjectInfo);
+    }
+
+    private void OnNewProjectClicked(object? sender, EventArgs e)
+    {
+        var folder = SelectFolder();
+        if (string.IsNullOrEmpty(folder)) return;
+
+        _projectService.NewProject("新しいプロジェクト", folder);
+        _projectService.SaveProject();
+
+        _appContext.CurrentProject = _projectService.CurrentProject;
+        UpdateProjectLabel();
+    }
+
+    private void OnOpenProjectClicked(object? sender, EventArgs e)
+    {
+        var file = SelectFile();
+        if (string.IsNullOrEmpty(file)) return;
+
+        _projectService.LoadProject(file);
+        _appContext.CurrentProject = _projectService.CurrentProject;
+        UpdateProjectLabel();
+    }
+
+    private void UpdateProjectLabel()
+    {
+        var project = _appContext.CurrentProject;
+        _labelProjectInfo.Text = project != null
+            ? $"プロジェクト名: {project.Name}\nディレクトリ: {project.DirectoryPath}"
+            : "プロジェクト未選択";
+    }
+
+    private string? SelectFolder()
+    {
+        using var dialog = new FolderBrowserDialog();
+        return dialog.ShowDialog() == DialogResult.OK ? dialog.SelectedPath : null;
+    }
+
+    private string? SelectFile()
+    {
+        using var dialog = new OpenFileDialog
+        {
+            Filter = "プロジェクトファイル (*.json)|*.json"
+        };
+        return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
+    }
+}
+
+
+---
+
+✅ Project.cs（既存）
+
+public class Project
+{
+    public string Name { get; set; } = "";
+    public string DirectoryPath { get; set; } = "";
+    public DateTime LastModified { get; set; } = DateTime.Now;
+    public List<ProjectItem> Items { get; set; } = new();
+}
+
+
+---
+
+✅ ProjectService.cs（既存）
+
+public class ProjectService
+{
+    private readonly IProjectPersistence _persistence;
+    public Project? CurrentProject { get; private set; }
+
+    public ProjectService(IProjectPersistence persistence)
+    {
+        _persistence = persistence;
+    }
+
+    public void NewProject(string name, string directory)
+    {
+        CurrentProject = new Project
+        {
+            Name = name,
+            DirectoryPath = directory,
+            LastModified = DateTime.Now
+        };
+    }
+
+    public void LoadProject(string path)
+    {
+        CurrentProject = _persistence.Load(path);
+    }
+
+    public void SaveProject()
+    {
+        if (CurrentProject != null)
+        {
+            _persistence.Save(CurrentProject);
+        }
+    }
+}
+
+
+---
+
+✅ JsonProjectPersistence.cs（既存）
+
+public class JsonProjectPersistence : IProjectPersistence
+{
+    public void Save(Project project)
+    {
+        var json = JsonSerializer.Serialize(project, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(Path.Combine(project.DirectoryPath, "project.json"), json);
+    }
+
+    public Project Load(string path)
+    {
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<Project>(json)!;
+    }
+}
+
+
+---
+
+✅ AppContext.cs（拡張）
+
+public class AppContext
+{
+    public Project? CurrentProject { get; set; }
+
+    public AppSettings Settings { get; private set; }
+
+    public DateTime LaunchTime { get; } = DateTime.Now;
+
+    public AppContext()
+    {
+        Settings = AppSettings.Load();
+    }
+}
+
+
+---
+
+✅ AppSettings.cs（拡張）
+
+public class AppSettings
+{
+    public string Language { get; set; } = "ja-JP";
+
+    public static AppSettings Load(string path = "appsettings.json")
+    {
+        if (!File.Exists(path)) return new AppSettings();
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+    }
+
+    public void Save(string path = "appsettings.json")
+    {
+        var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(path, json);
+    }
+}
+
+
+---
+
+このサンプルは、App系（AppContext, AppSettings）と Projects系（Project, ProjectService）を橋渡しし、画面に反映する基本例です。
+
+
+---
+
+✅ 拡張案
+
+
+---
+
+他にも、プラグイン拡張可能な ProjectItemViewer, プロジェクトテンプレート, Undo/Redoの履歴記録 などへの拡張も可能です。
+
+続きをコードで出しましょうか？例えば UserControl ベースに分離しますか？
+
+
+
+
+
+あなたの現在の構成を以下に整理してみます。
+主に WinFormsアプリケーションにおけるプロジェクトベースのアーキテクチャ構築を進めており、以下の要素が含まれています。
+
+
+---
+
+✅ 全体構成（2025-04-03 時点）
+
+MyWinFormsApp/
+├─ Program.cs                    ← アプリ起動処理（Culture, Mutex, Exception, ServiceProvider）
+├─ Startup/
+│   ├─ StartupManager.cs        ← 初期化や構成読み込みの統合
+│   └─ AppServices.cs           ← DI的な構成要素まとめ
+│
+├─ Context/
+│   └─ AppContext.cs            ← アプリ全体の状態（ユーザー・プロジェクト・設定・起動時刻など）
+│
+├─ Config/
+│   └─ AppSettings.cs           ← 言語・テーマ・前回プロジェクトパスなど
+│
+├─ Projects/
+│   ├─ Project.cs               ← プロジェクト構造ルート
+│   ├─ ProjectItem.cs           ← プロジェクト内のファイル・構成要素
+│   ├─ ProjectService.cs        ← 読み込み・保存・新規作成の管理
+│   ├─ ProjectContext.cs        ← 現在開いているプロジェクトの操作補助
+│   └─ IProjectPersistence.cs   ← JSONによる保存・読み込み対応
+│
+├─ Navigation/
+│   ├─ NavigationService.cs     ← UserControlベースの画面遷移
+│   └─ INavigationService.cs
+│
+├─ Messaging/
+│   ├─ IMessageService.cs       ← 共通メッセージ表示インターフェース
+│   └─ MessageService.cs
+│
+├─ Services/
+│   ├─ IUserService.cs          ← ユーザー情報の取得・認証など
+│   └─ UserService.cs
+│
+├─ Forms/
+│   ├─ MainForm.cs              ← メインUI、NavigationServiceを使う
+│   └─ UserControls/
+│       └─ 各画面（Dashboard, Editor, Setting など）
+│
+├─ Utils/
+│   └─ Extensions.cs            ← 共通拡張メソッド
+│
+├─ Infrastructure/             ← DB/API/Fileなどのアクセス層
+│   └─ JsonProjectPersistence.cs
+│
+├─ Logging/
+│   └─ LogManager.cs            ← 例外ログ・操作ログ記録（予定/拡張可能）
+
+
+---
+
+✅ 特徴
+
+NavigationService による UserControl 画面遷移
+
+ServiceProvider ベースの軽量DI
+
+AppContext によるアプリ全体の状態保持
+
+Projectベース設計（Project, ProjectItem, Service, Persistence）
+
+CultureInfo / Mutex / Exception Handling の組み込み済み
+
+設定ファイル（AppSettings）対応
+
+拡張を前提とした構成分離
+
+
+
+---
+
+✅ すぐできる追加・次の候補
+
+
+---
+
+この構成は拡張性・責務分離・状態管理・再利用性に非常に優れています。
+特に今後非同期処理やバックグラウンド実行、複数プロジェクト対応などに進む場合にも対応しやすい形です。
+
+
+---
+
+「この構成でサンプルアプリ作ってみたい」
+
+「設定画面やプロジェクト切替画面を作ってみたい」など、次に進みたい方向ありますか？
+コード付きで支援できます！
+
+
+WinForms アプリケーションにおける AppContext は、アプリ全体で共有される「状態」や「環境情報」を管理する重要なクラスです。これをしっかり設計・拡張することで、サービス・UI・ドメインロジックが共通情報にアクセスしやすくなり、コードの整合性とテスト性が高まります。
+
+
+---
+
+✅ 拡張された AppContext の設計例
+
+public class AppContext
+{
+    // 現在のユーザー情報
+    public User? CurrentUser { get; set; }
+
+    // 現在開いているプロジェクト
+    public Project? CurrentProject { get; set; }
+
+    // アプリケーションの設定（読み取り専用/変更可能など）
+    public AppSettings Settings { get; private set; }
+
+    // グローバルフラグ（例: デバッグモード、有効化状態）
+    public bool IsDebugMode { get; set; }
+    public bool IsProjectDirty { get; set; } // 未保存フラグ
+
+    // 起動引数や動的情報
+    public string? StartupArgument { get; set; }
+
+    // タイムスタンプ系
+    public DateTime LaunchTime { get; private set; } = DateTime.Now;
+
+    // アプリケーションの実行パス
+    public string AppRootPath => AppDomain.CurrentDomain.BaseDirectory;
+
+    public AppContext()
+    {
+        // 設定ファイル読み込みなど
+        Settings = AppSettings.Load(); // JSONから読み込むようにする
+    }
+
+    // 状態クリア（ログアウトやプロジェクト変更時）
+    public void Reset()
+    {
+        CurrentUser = null;
+        CurrentProject = null;
+        IsProjectDirty = false;
+        StartupArgument = null;
+    }
+}
+
+
+---
+
+✅ AppSettings.cs 例（JSON設定）
+
+public class AppSettings
+{
+    public string Language { get; set; } = "ja-JP";
+    public string Theme { get; set; } = "Dark";
+    public string LastOpenedProjectPath { get; set; } = "";
+
+    public static AppSettings Load(string path = "appsettings.json")
+    {
+        if (!File.Exists(path))
+            return new AppSettings();
+
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+    }
+
+    public void Save(string path = "appsettings.json")
+    {
+        var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(path, json);
+    }
+}
+
+
+---
+
+🔧 利用例（他のコンポーネントから）
+
+var context = Program.ServiceProvider.Get<AppContext>();
+
+if (context.CurrentUser?.IsAdmin == true)
+{
+    ShowAdminPanel();
+}
+
+if (context.IsProjectDirty)
+{
+    PromptSaveChanges();
+}
+
+
+---
+
+🧩 拡張案
+
+
+---
+
+📌 最終形イメージ
+
+public class AppContext
+{
+    public event Action<Project?>? ProjectChanged;
+    private Project? _currentProject;
+
+    public Project? CurrentProject
+    {
+        get => _currentProject;
+        set
+        {
+            _currentProject = value;
+            ProjectChanged?.Invoke(value);
+        }
+    }
+
+    public Dictionary<string, object> ExtendedData { get; } = new();
+}
+
+
+---
+
+✅ まとめ
+
+AppContext は「アプリのグローバル状態」管理の中心
+
+ログインユーザー、プロジェクト、設定、起動状態などを一元管理
+
+他サービスやフォームとの依存関係が減る
+
+状態イベントや拡張辞書で柔軟な情報連携も可能
+
+
+
+---
+
+「Undo/Redo に対応した履歴型 AppContext を作りたい」や「ユーザーセッションを切り替えたい」といったニーズがあれば、さらに掘り下げて設計できます。
+
+次にやりたいのは、UI側での AppContext 反映？ それとも AppContext による状態イベントの監視設計？
+
+
+良い着眼点です！
+Program.cs での以下の3つの機能を導入すると、多言語対応、単一起動制御、例外ハンドリングが加わり、より堅牢で国際化された WinForms アプリになります。
+
+
+---
+
+✅ CultureInfo（多言語対応）
+
+using System.Globalization;
+using System.Threading;
+
+private static void SetCulture()
+{
+    // 例: 日本語で固定する場合（システム言語に合わせるなら省略）
+    var culture = new CultureInfo("ja-JP");
+    Thread.CurrentThread.CurrentCulture = culture;
+    Thread.CurrentThread.CurrentUICulture = culture;
+}
+
+
+---
+
+✅ Mutex（多重起動防止）
+
+private static Mutex? _mutex;
+
+private static bool EnsureSingleInstance()
+{
+    bool createdNew;
+    _mutex = new Mutex(true, "MyUniqueAppMutexName", out createdNew);
+    return createdNew;
+}
+
+
+---
+
+✅ Application.ThreadException（未処理例外ハンドリング）
+
+private static void RegisterExceptionHandler()
+{
+    Application.ThreadException += (sender, args) =>
+    {
+        MessageBox.Show(
+            $"エラーが発生しました:\n\n{args.Exception.Message}",
+            "エラー",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error
+        );
+
+        // ログ出力や再起動処理などもここに
+    };
+
+    AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+    {
+        var ex = args.ExceptionObject as Exception;
+        MessageBox.Show(
+            $"重大なエラーが発生しました:\n\n{ex?.Message}",
+            "致命的エラー",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error
+        );
+    };
+}
+
+
+---
+
+🧱 最終的な Program.cs 全体構成例
+
+internal static class Program
+{
+    public static ServiceProvider ServiceProvider { get; private set; } = null!;
+    private static Mutex? _mutex;
+
+    [STAThread]
+    static void Main()
+    {
+        if (!EnsureSingleInstance())
+        {
+            MessageBox.Show("このアプリケーションは既に起動しています。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        ApplicationConfiguration.Initialize();
+        SetCulture();
+        RegisterExceptionHandler();
+        InitializeServices();
+
+        var mainForm = new MainForm(
+            ServiceProvider.Get<INavigationService>(),
+            ServiceProvider.Get<ProjectService>(),
+            ServiceProvider.Get<AppContext>()
+        );
+
+        Application.Run(mainForm);
+    }
+
+    private static void SetCulture()
+    {
+        var culture = new CultureInfo("ja-JP");
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+    }
+
+    private static bool EnsureSingleInstance()
+    {
+        bool createdNew;
+        _mutex = new Mutex(true, "MyUniqueAppMutexName", out createdNew);
+        return createdNew;
+    }
+
+    private static void RegisterExceptionHandler()
+    {
+        Application.ThreadException += (sender, args) =>
+        {
+            MessageBox.Show($"エラーが発生しました:\n\n{args.Exception.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        };
+
+        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            MessageBox.Show($"重大なエラーが発生しました:\n\n{ex?.Message}", "致命的エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        };
+    }
+
+    private static void InitializeServices()
+    {
+        var provider = new ServiceProvider();
+        provider.Register<INavigationService>(new NavigationService());
+        provider.Register<ProjectService>(new ProjectService(new JsonProjectPersistence()));
+        provider.Register<AppContext>(new AppContext());
+        provider.Register<IMessageService>(new MessageService());
+        provider.Register<IUserService>(new UserService());
+
+        ServiceProvider = provider;
+    }
+}
+
+
+---
+
+🔄 拡張案
+
+
+---
+
+必要があれば、「多言語切り替えUI」や「設定ファイルベースのカルチャ選択」、「例外のログ保存処理」なども追加できます！
+
+どこから広げたいですか？
+
+
+Program.cs はアプリ全体の 起動制御・初期化・構成管理の基盤です。既にしっかり設計されていますが、さらに 可読性・拡張性・テスト性・堅牢性 を高めるための 改善ポイントを以下にまとめます。
+
+
+---
+
+✅ 改善点まとめ
+
+
+---
+
+🧱 改善例 1：初期化クラスに委譲
+
+Program.cs → 極小に保つ
+
+internal static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        if (!StartupManager.EnsureSingleInstance()) return;
+
+        ApplicationConfiguration.Initialize();
+        StartupManager.ApplyCulture();
+        StartupManager.RegisterExceptionHandler();
+
+        var services = StartupManager.InitializeServices();
+        var mainForm = services.MainFormFactory();
+
+        Application.Run(mainForm);
+    }
+}
+
+
+---
+
+StartupManager.cs を追加
+
+public static class StartupManager
+{
+    private static Mutex? _mutex;
+
+    public static bool EnsureSingleInstance()
+    {
+        bool createdNew;
+        _mutex = new Mutex(true, "YourApp.UniqueAppMutex", out createdNew);
+        if (!createdNew)
+        {
+            MessageBox.Show("すでに起動しています。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        return createdNew;
+    }
+
+    public static void ApplyCulture()
+    {
+        var culture = new CultureInfo("ja-JP"); // ← 設定ファイルから読み込むようにしてもOK
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+    }
+
+    public static void RegisterExceptionHandler()
+    {
+        Application.ThreadException += (sender, args) =>
+        {
+            LogManager.Log(args.Exception);  // ← 独自ログ
+            MessageBox.Show("エラー：" + args.Exception.Message);
+        };
+    }
+
+    public static AppServices InitializeServices()
+    {
+        var provider = new ServiceProvider();
+
+        var navigation = new NavigationService();
+        var projectService = new ProjectService(new JsonProjectPersistence());
+        var appContext = new AppContext();
+        var messageService = new MessageService();
+        var userService = new UserService();
+
+        provider.Register<INavigationService>(navigation);
+        provider.Register<ProjectService>(projectService);
+        provider.Register<AppContext>(appContext);
+        provider.Register<IMessageService>(messageService);
+        provider.Register<IUserService>(userService);
+
+        return new AppServices
+        {
+            Provider = provider,
+            MainFormFactory = () => new MainForm(navigation, projectService, appContext)
+        };
+    }
+}
+
+
+---
+
+AppServices.cs
+
+public class AppServices
+{
+    public ServiceProvider Provider { get; set; } = null!;
+    public Func<Form> MainFormFactory { get; set; } = null!;
+}
+
+
+---
+
+🔄 その他の改善案
+
+🔧 高DPI対応
+
+Application.SetHighDpiMode(HighDpiMode.SystemAware);
+
+⚙️ 設定ファイル読み込み（appsettings.json）
+
+{
+  "Culture": "ja-JP",
+  "AppId": "MyApp",
+  "Theme": "Dark"
+}
+
+var config = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText("appsettings.json"));
+
+
+---
+
+📦 最終的な構造イメージ
+
+MyWinFormsApp/
+├─ Program.cs                ← 最小の起動制御
+├─ Startup/                 
+│   ├─ StartupManager.cs    ← 初期化まとめ
+│   ├─ AppServices.cs       ← 初期化後に注入されるもの
+├─ Config/                  
+│   └─ AppSettings.cs       ← 設定モデル
+├─ Logging/
+│   └─ LogManager.cs        ← エラーログ
+
+
+---
+
+☑️ まとめ：何が改善される？
+
+構造がシンプルに、責任分離されて見通しが良く
+
+ユニットテストやUI切替も可能に
+
+多言語やDPI、高カスタマイズ性に対応可能
+
+
+
+---
+
+必要であれば、この構造のテンプレートプロジェクト（.zip や dotnet new）を生成しますよ！
+他に改善したい観点や導入したい機能（テーマ切替・ログ保存など）はありますか？
+
+
+
+
+
+
+
+
+
+public class PageModelManager<TItem>
+{
+    private readonly List<PageModel<TItem>> _pages = new();
+
+    public IReadOnlyList<PageModel<TItem>> Pages => _pages;
+
+    public void AddPage(PageModel<TItem> page)
+    {
+        _pages.Add(page);
+    }
+
+    public void SwapPages(int indexA, int indexB)
+    {
+        if (indexA < 0 || indexB < 0 || indexA >= _pages.Count || indexB >= _pages.Count)
+            throw new ArgumentOutOfRangeException();
+
+        (_pages[indexA], _pages[indexB]) = (_pages[indexB], _pages[indexA]);
+    }
+
+    public List<IPageContext> ExtractContexts()
+    {
+        return _pages.Select(p => p.Context).ToList();
+    }
+
+    public void RestorePages(List<TItem> items, List<IPageContext> contexts)
+    {
+        if (contexts.Count == 0)
+            return;
+
+        _pages.Clear();
+        foreach (var context in contexts)
+        {
+            var page = new PageModel<TItem>(items, context);
+            _pages.Add(page);
+        }
+    }
+}
+
+
+
+ハイブリッド方式を採用すると、保存性と操作性の両立が可能になります。
+以下のように 「保存は軽く、操作は強く」 を目指す設計になります。
+
+
+---
+
+ハイブリッド方式の概要
+
+保存：IPageContext のみを保存（軽量・柔軟）。
+
+操作・表示：PageModel<TItem> に IPageContext + List<TItem> を注入して一時的に使う。
+
+復元：IPageContext リストと 全体アイテムリスト から PageModel<TItem> を生成。
+
+
+
+---
+
+構成図イメージ
+
+[SavedData]
+ ├── List<IPageContext>   // 設定のみ保存
+ └── List<TItem>          // 実データ全体（保存してもよい）
+
+[復元時]
+ => List<PageModel<TItem>> ← IPageContext + 対応する List<TItem>
+
+
+---
+
+実装例
+
+1. PageModel<TItem>
+
+public class PageModel<TItem>
+{
+    public IPageContext Context { get; }
+    public List<TItem> Items { get; }
+
+    public PageModel(IPageContext context, IEnumerable<TItem> items)
+    {
+        Context = context;
+        Items = items.ToList();
+    }
+}
+
+
+---
+
+2. PageModelManager<TItem>（ハイブリッド対応）
+
+public class PageModelManager<TItem>
+{
+    private readonly List<IPageContext> _contexts = new();
+
+    public IReadOnlyList<IPageContext> Contexts => _contexts.AsReadOnly();
+
+    public void SaveContext(IPageContext context)
+    {
+        _contexts.Add(context);
+    }
+
+    public IEnumerable<PageModel<TItem>> BuildPages(IEnumerable<TItem> allItems, Func<IPageContext, IEnumerable<TItem>, List<TItem>> splitter)
+    {
+        var itemList = allItems.ToList();
+        foreach (var context in _contexts)
+        {
+            var itemsForPage = splitter(context, itemList);
+            yield return new PageModel<TItem>(context, itemsForPage);
+        }
+    }
+}
+
+
+---
+
+3. splitter関数の例（例: GridContext用）
+
+public static List<TItem> GridSplitter<TItem>(IPageContext context, List<TItem> allItems)
+{
+    if (context is GridContext grid)
+    {
+        int itemsPerPage = grid.Rows * grid.Columns;
+        int index = 0; // GridContextにページ番号を入れておくともっと柔軟に
+        return allItems.Skip(index * itemsPerPage).Take(itemsPerPage).ToList();
+    }
+
+    return new List<TItem>();
+}
+
+
+---
+
+この方式のメリット
+
+Contextのみを永続化でき、データの構成情報として扱える。
+
+復元時に、アイテム差し替え・再構成が簡単。
+
+UIや表示では PageModel を使ってバインド・操作が可能。
+
+必要に応じて PageModel<TItem> に拡張情報（Indexなど）を持たせられる。
+
+
+
+---
+
+拡張案
+
+PageModel<TItem> に PageIndex や IsSelected を持たせてUI状態を保持。
+
+PageModelBuilder クラスを作って、contextに応じた splitter を抽象化。
+
+PageContext に PageNumber を持たせて、アイテムの切り出しを汎用化。
+
+
+
+---
+
+このように、永続性と操作性のトレードオフを解決しながら、柔軟なページ構成・復元ができます。
+必要なら、GridContext, ListContext などにページ番号やIDを足してさらに管理しやすくする設計も可能です。
+
+実際に使うシナリオに合わせて、コードのカスタマイズ例も出せますよ。どうしますか？
+
+
+
+
+
 public interface IHierarchical
 {
 IHierarchical? HierarchicalParent { get; }

@@ -1,3 +1,41 @@
+public class PageModelFactory
+{
+    public static List<PageModel<TItem>> CreatePagesFromContexts<TItem>(
+        List<TItem> allItems,
+        List<IPageContext> contexts)
+    {
+        var result = new List<PageModel<TItem>>();
+        int currentIndex = 0;
+
+        foreach (var context in contexts)
+        {
+            int itemCount = GetItemCountFromContext(context);
+
+            var pageItems = allItems
+                .Skip(currentIndex)
+                .Take(itemCount)
+                .ToList();
+
+            result.Add(new PageModel<TItem>(pageItems, context));
+
+            currentIndex += itemCount;
+        }
+
+        return result;
+    }
+
+    private static int GetItemCountFromContext(IPageContext context)
+    {
+        return context switch
+        {
+            ListContext lc => lc.ItemCount,
+            GridContext gc => gc.Rows * gc.Columns,
+            _ => throw new InvalidOperationException("Unknown context type"),
+        };
+    }
+}
+
+
 了解です！角丸モードを追加するには、カスタムパネルに「通常の矩形枠」と「角丸枠」を切り替えられるプロパティを用意して、描画処理を分岐させればOKです。
 
 
