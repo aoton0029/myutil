@@ -218,3 +218,134 @@ IChartStyleProvider を導入して色・線種・テーマを外部から注入
 さらにリアルタイム更新やズーム・パンに対応したインタラクティブチャートに拡張したい場合も対応可能です。
 次に進めたい方向を教えてください！
 
+
+
+前回提案した 2, 4, 5 の改善を踏まえたうえで、さらに改善・洗練できるポイントをいくつか追加で提案します。
+
+
+---
+
+追加の改善点（2, 4, 5に関連して）
+
+2. 波形シーケンス管理の簡素化の強化
+
+改善点
+
+WaveformSequence の種類が将来増える場合（例：Raw, Filtered など）に備えて、WaveformCategory の enum を使うよりも、ポリモーフィズムで解決する方が拡張性に優れます。
+
+
+改善案
+
+public abstract class WaveformSequence
+{
+    public string Name { get; set; }
+    public ObservableCollection<WaveformSetting> Settings { get; set; } = new();
+    public abstract WaveformCategory Category { get; }
+}
+
+public class ChunkWaveformSequence : WaveformSequence
+{
+    public override WaveformCategory Category => WaveformCategory.Chunk;
+}
+
+public class DechunkWaveformSequence : WaveformSequence
+{
+    public override WaveformCategory Category => WaveformCategory.Dechunk;
+}
+
+メリット
+
+カテゴリごとの処理を仮想メソッドで書ける（BuildChart()など）
+
+switch(Category) を使わずに済む（SOLID原則：OCP）
+
+
+
+---
+
+4. チャート構築責務分離の強化
+
+改善点
+
+チャート描画に必要な座標点だけでなく、**メタ情報（ラベル、色、補助線）**などの生成も責務に入れると良い。
+
+
+改善案
+
+public class ChartData
+{
+    public IEnumerable<PointF> Points { get; set; }
+    public string Label { get; set; }
+    public Color Color { get; set; }
+    public IEnumerable<GuideLine> GuideLines { get; set; } = Enumerable.Empty<GuideLine>();
+}
+
+public interface IChartDataBuilder
+{
+    ChartData Build(WaveformSetting setting, int sampleCount);
+}
+
+メリット
+
+表示側が WaveformSetting を知らずに描画可能
+
+チャート用のプロパティ追加が容易（例：選択強調、警告域）
+
+
+
+---
+
+5. AppContextの分割と制御の強化
+
+改善点
+
+Context の変更通知が必要な場合、イベント発行または INotifyPropertyChanged に対応させる。
+
+一部 AppContext を 読み取り専用（ReadOnlyAppContext） として expose する。
+
+
+改善案
+
+public class ProjectContext : INotifyPropertyChanged
+{
+    private ProjectItem _currentProject;
+    public ProjectItem CurrentProject
+    {
+        get => _currentProject;
+        set
+        {
+            if (_currentProject != value)
+            {
+                _currentProject = value;
+                OnPropertyChanged(nameof(CurrentProject));
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(string name) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+}
+
+メリット
+
+ViewModelやUIバインディングがしやすくなる
+
+テストやシミュレーション環境でも状態をトラッキングしやすくなる
+
+
+
+---
+
+さらに洗練したい方向があれば、以下のような拡張も可能です：
+
+チャート描画を完全にサービス化（IChartRenderer）
+
+AppContextをシリアライズ可能にして、セッション復元対応
+
+設定項目の変更をリアルタイムに反映（イベント連携）
+
+
+特定の改善案をもっと具体化したいものがあれば教えてください。設計ドキュメント風にもまとめられます。
+
+
