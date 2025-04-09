@@ -168,6 +168,136 @@ MyApp/
 なども提供できます。どこを進めましょうか？
 
 
+WinFormsでの AppContext と MainForm の連携は、「グローバルなサービスを安全・明示的に MainForm に渡す」設計がベストです。
+ここでは DIコンテナなしでの明示的依存注入 を前提に構成します。
+
+
+---
+
+✅ 目的
+
+AppContext はアプリ全体の状態（設定・プロジェクト情報・サービス）を保持
+
+MainForm から ProjectService などへアクセスできる
+
+安全かつ明示的な依存注入（グローバル変数の回避）
+
+
+
+---
+
+✅ AppContext.cs
+
+public class AppContext
+{
+    public AppSetting Setting { get; set; } = new();
+    public ProjectContext ProjectContext { get; private set; } = new();
+    public ProjectService ProjectService { get; private set; }
+
+    public AppContext()
+    {
+        // 永続化方式を切り替え可能にする
+        var persistence = new JsonProjectPersistence();
+        ProjectService = new ProjectService(ProjectContext, persistence);
+    }
+}
+
+
+---
+
+✅ Program.cs（MainFormにAppContextを渡す）
+
+internal static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        ApplicationConfiguration.Initialize();
+
+        var appContext = new AppContext(); // 1回だけ生成
+        var mainForm = new MainForm(appContext);
+
+        Application.Run(mainForm);
+    }
+}
+
+
+---
+
+✅ MainForm.cs（AppContextの利用）
+
+public partial class MainForm : Form
+{
+    private readonly AppContext _app;
+
+    public MainForm(AppContext appContext)
+    {
+        InitializeComponent();
+        _app = appContext;
+    }
+
+    private void buttonOpen_Click(object sender, EventArgs e)
+    {
+        using var dialog = new OpenFileDialog();
+        dialog.Filter = "Project Files|*.json";
+
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            var success = _app.ProjectService.TryLoad(dialog.FileName);
+            if (success)
+            {
+                Text = $"プロジェクト - {_app.ProjectContext.Current.Name}";
+                // 必要ならUI更新
+            }
+        }
+    }
+
+    private void buttonSave_Click(object sender, EventArgs e)
+    {
+        _app.ProjectService.Save(_app.ProjectContext.CurrentFilePath);
+    }
+}
+
+
+---
+
+✅ 補足：AppContext にサービスを追加する場合
+
+public class AppContext
+{
+    public AppSetting Setting { get; set; } = new();
+    public ProjectContext ProjectContext { get; private set; } = new();
+    public ProjectService ProjectService { get; private set; }
+    public LoggerService Logger { get; private set; }
+    public MessageService Messager { get; private set; }
+
+    public AppContext()
+    {
+        var persistence = new JsonProjectPersistence();
+        ProjectService = new ProjectService(ProjectContext, persistence);
+        Logger = new LoggerService(); // 任意のサービス追加
+        Messager = new MessageService();
+    }
+}
+
+このように AppContext に集約することで、UI層（Form）は余計な依存を持たず、保守性と拡張性の高い構成になります。
+
+
+---
+
+次に進めるとしたら：
+
+MainForm でのプロジェクト状態表示（ラベル/タイトル変更）
+
+UserControlベースの画面遷移と AppContext の共有
+
+IFormFactory や NavigationService を使った画面管理
+
+
+などの構成例も出せます。どこを拡張しましょうか？
+
+
+
 
 
 了解です！
