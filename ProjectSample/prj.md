@@ -2,7 +2,7 @@
 
 
 ---
-
+```
 MyWinFormsApp/
 
 ├─ Program.cs                    ← アプリ起動処理（Culture, Mutex, Exception, ServiceProvider）
@@ -65,7 +65,7 @@ MyWinFormsApp/
 │
 ├─ Logging/
 │   └─ LogManager.cs
-
+```
 
 ---
 
@@ -85,6 +85,90 @@ SettingContextの保存/読み込み：アプリ設定を自動で保存・復�
 
 さらに構成に追加したい機能・ディレクトリ・クラスがあれば教えてください。
 必要に応じて UML やクラス図も生成できます。
+
+
+
+以下は、これまでのやりとりを踏まえた「現在のアプリ構成（安全性・保守性・アトミック保存対応済み）」の全体像です。
+
+---
+
+## ✅ **現在のプロジェクト構成（WinFormsアプリ）**
+
+```
+MyApp/
+├── Core/
+│   ├── AppSetting.cs
+│   ├── Project.cs
+│   ├── ProjectItem.cs
+│   ├── IProjectPersistence.cs
+│   ├── JsonProjectPersistence.cs
+│   └── SafeFileWriter.cs     ← アトミック保存
+│
+├── Service/
+│   ├── ProjectContext.cs     ← 変更状態の監視
+│   └── ProjectService.cs     ← 読込・保存・差分管理
+│
+├── App/
+│   ├── AppContext.cs         ← グローバルDIなし管理
+│   ├── MainForm.cs
+│   └── Program.cs
+```
+
+---
+
+## ✅ **主なクラスの責務**
+
+| クラス | 役割 |
+|-------|------|
+| **AppSetting** | アプリ設定（直近のプロジェクトパスなど）の保存・読込 |
+| **Project** | プロジェクト全体のモデル（名前・Items） |
+| **ProjectItem** | 個々のデータ単位（ID、ファイル、波形など） |
+| **ProjectContext** | 編集中プロジェクトの状態を保持、差分管理 |
+| **ProjectService** | プロジェクトの保存・読込・アトミック保存・差分時警告 |
+| **SafeFileWriter** | `File.Replace` を使ったアトミック保存処理 |
+| **JsonProjectPersistence** | `IProjectPersistence` 実装。保存処理を責務分離 |
+| **AppContext** | アプリ全体の共有サービスを格納（DIなしで済む） |
+
+---
+
+## ✅ **対応済みの設計方針と安全性要素**
+
+| 種別 | 内容 |
+|------|------|
+| 🔐 アトミック保存 | `SafeFileWriter` により `.tmp → .json` でファイル損傷を防止 |
+| ⚙ 保守性 | `IProjectPersistence` で JSON 以外の保存方式にも切替可能 |
+| 🔍 差分検知 | `ProjectContext.HasChanges` により編集状態の把握と警告 |
+| 📂 バックアップ | `SafeFileWriter` が `.bak` を自動保存（オプション復旧も可） |
+| ✅ バリデーション | `Project.IsValid(out string error)` により保存前のチェック |
+| 🔁 責務分離 | UI ロジックから保存/読込/検証ロジックを完全分離済み |
+
+---
+
+## ✅ **拡張候補**
+
+| 機能 | 説明 |
+|------|------|
+| 🔄 自動復旧 | `.json` 読込失敗時に `.bak` を復旧に使う `SafeFileReader` を追加 |
+| 🧪 単体テスト対応 | `Project`, `ProjectService`, `AppSetting` はMockを使ってテスト可能 |
+| 🕒 バージョン履歴 | `Project.v1.json`, `.v2.json` のように履歴付き保存 |
+| 🔔 ファイル監視 | プロジェクトファイルが外部変更されたとき警告・再読込対応 |
+| 🔒 同時実行制御 | `.lock` ファイルなどを用いた排他制御で同時アクセス防止 |
+
+---
+
+この構成はWinFormsだけでなく、**WPF** や **MAUI**, **Tauri(C#バックエンド)** にも拡張しやすい構成です。
+
+---
+
+必要であれば：
+- `AppContext` と `MainForm` の連携サンプル
+- `ProjectEditorForm` などの編集UI例
+- `SafeFileReader` の復旧ロジック
+
+なども提供できます。どこを進めましょうか？
+
+
+
 
 了解です！
 ここでは以下の2点を実現します：
