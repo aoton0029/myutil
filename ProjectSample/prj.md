@@ -298,6 +298,93 @@ IFormFactory や NavigationService を使った画面管理
 
 
 
+以下は、アトミック保存と組み合わせるための SafeFileReader クラス の実装例です。
+目的は、「通常ファイル → バックアップファイル → 一時ファイル」の順で安全に読み込み、
+破損時は自動で復旧・通知できるようにすることです。
+
+
+---
+
+✅ SafeFileReader.cs
+
+public static class SafeFileReader
+{
+    /// <summary>
+    /// 安全に JSON ファイルを読み込む。失敗時は .bak または .tmp から復旧を試みる。
+    /// </summary>
+    public static T LoadSafe<T>(string filePath, out string loadedFromPath)
+    {
+        var candidates = new[]
+        {
+            filePath,
+            filePath + ".bak",
+            filePath + ".tmp"
+        };
+
+        foreach (var path in candidates)
+        {
+            if (File.Exists(path))
+            {
+                try
+                {
+                    var json = File.ReadAllText(path);
+                    var result = JsonSerializer.Deserialize<T>(json);
+                    if (result != null)
+                    {
+                        loadedFromPath = path;
+                        return result;
+                    }
+                }
+                catch
+                {
+                    // 次の候補へ
+                }
+            }
+        }
+
+        throw new IOException("プロジェクトの読み込みに失敗しました（元ファイル・バックアップ・一時ファイルが全て無効）");
+    }
+}
+
+
+---
+
+✅ 使用例（JsonProjectPersistence.cs 内）
+
+public class JsonProjectPersistence : IProjectPersistence
+{
+    public Project Load(string filePath)
+    {
+        var project = SafeFileReader.LoadSafe<Project>(filePath, out string loadedFrom);
+        
+        if (loadedFrom != filePath)
+        {
+            MessageBox.Show($"プロジェクトファイルの読み込みに失敗し、{Path.GetFileName(loadedFrom)} から復元しました。",
+                "復旧", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        return project;
+    }
+
+    public void Save(Project project, string filePath)
+    {
+        var json = JsonSerializer.Serialize(project, new JsonSerializerOptions { WriteIndented = true });
+        SafeFileWriter.WriteAtomic(filePath, json);
+    }
+}
+
+
+---
+
+✅ 拡張案
+
+
+---
+
+必要であれば SafeFileReader に復旧成功時の自動保存や、検証付きの強化バージョンも出せます！どうしますか？
+
+
+
 
 
 了解です！
