@@ -1,3 +1,106 @@
+RangeValidator と MultipleValidator を IValidator<T> を使って実装する例を以下に示します。これはWinFormsの入力検証などに便利です。
+
+
+---
+
+1. RangeValidator<T>：範囲チェック用バリデータ
+
+public class RangeValidator<T> : IValidator<T> where T : IComparable<T>
+{
+    private readonly T _min;
+    private readonly T _max;
+
+    public RangeValidator(T min, T max)
+    {
+        _min = min;
+        _max = max;
+    }
+
+    public bool Validate(T input, out string errorMessage)
+    {
+        if (input.CompareTo(_min) < 0 || input.CompareTo(_max) > 0)
+        {
+            errorMessage = $"値は {_min} 以上 {_max} 以下でなければなりません。";
+            return false;
+        }
+
+        errorMessage = string.Empty;
+        return true;
+    }
+}
+
+
+---
+
+2. MultipleValidator<T>：複数バリデータの合成
+
+public class MultipleValidator<T> : IValidator<T>
+{
+    private readonly IEnumerable<IValidator<T>> _validators;
+
+    public MultipleValidator(IEnumerable<IValidator<T>> validators)
+    {
+        _validators = validators;
+    }
+
+    public bool Validate(T input, out string errorMessage)
+    {
+        foreach (var validator in _validators)
+        {
+            if (!validator.Validate(input, out errorMessage))
+            {
+                return false;
+            }
+        }
+
+        errorMessage = string.Empty;
+        return true;
+    }
+}
+
+
+---
+
+3. 使用例（WinForms などで）
+
+var rangeValidator = new RangeValidator<int>(1, 100);
+var notZeroValidator = new NotEqualValidator<int>(0); // 自作バリデータと想定
+
+var combinedValidator = new MultipleValidator<int>(new IValidator<int>[] {
+    rangeValidator,
+    notZeroValidator
+});
+
+if (!combinedValidator.Validate(int.Parse(textBox1.Text), out string error))
+{
+    MessageBox.Show(error, "検証エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+}
+
+
+---
+
+拡張案
+
+OptionalValidator<T>：nullや空文字はスキップ
+
+RegexValidator：正規表現による文字列チェック
+
+IValidator<object> ベースの汎用対応
+
+エラー詳細を ValidationResult クラスで返す
+
+UIコンポーネント（TextBoxなど）に直接バインド可能なバリデータフレームワークの構築
+
+
+
+---
+
+さらにUI連携やバリデーションルールの管理なども含めたアーキテクチャを作りたい場合は、その構成例も出せます。必要ですか？
+
+
+
+
+
 了解です！ObservableCollection<T> に対して Undo / Redo をサポートするように拡張します。
 
 
