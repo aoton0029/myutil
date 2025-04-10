@@ -1,3 +1,135 @@
+AppContext に EventBus を組み込むことで、WinForms アプリケーション全体で疎結合なイベント通知を実現できます。以下に、リアルな構成を示します。
+
+
+---
+
+1. EventBusの目的
+
+コンポーネント間の通知（例：ProjectLoaded を全体に通知）
+
+状態の変更（例：ThemeChanged → UI 全体更新）
+
+非同期タスクの完了通知（例：ファイル読込完了）
+
+
+
+---
+
+2. AppContextにEventBusを持たせる構成例
+
+public class AppContext
+{
+    public AppSettings Settings { get; }
+    public EventBus EventBus { get; }
+    public ProjectContext? CurrentProject { get; set; }
+
+    public AppContext(AppSettings settings)
+    {
+        Settings = settings;
+        EventBus = new EventBus();
+    }
+}
+
+
+---
+
+3. EventBus 実装例
+
+public class EventBus
+{
+    private readonly Dictionary<Type, List<Delegate>> _handlers = new();
+
+    public void Subscribe<TEvent>(Action<TEvent> handler)
+    {
+        if (!_handlers.ContainsKey(typeof(TEvent)))
+            _handlers[typeof(TEvent)] = new List<Delegate>();
+
+        _handlers[typeof(TEvent)].Add(handler);
+    }
+
+    public void Publish<TEvent>(TEvent evt)
+    {
+        if (_handlers.TryGetValue(typeof(TEvent), out var delegates))
+        {
+            foreach (var handler in delegates.OfType<Action<TEvent>>())
+            {
+                handler(evt);
+            }
+        }
+    }
+
+    public void Unsubscribe<TEvent>(Action<TEvent> handler)
+    {
+        if (_handlers.TryGetValue(typeof(TEvent), out var delegates))
+        {
+            delegates.Remove(handler);
+        }
+    }
+}
+
+
+---
+
+4. イベントクラス定義の例
+
+public class ProjectLoadedEvent
+{
+    public ProjectContext Project { get; }
+
+    public ProjectLoadedEvent(ProjectContext project)
+    {
+        Project = project;
+    }
+}
+
+public class ThemeChangedEvent
+{
+    public string NewTheme { get; }
+
+    public ThemeChangedEvent(string newTheme)
+    {
+        NewTheme = newTheme;
+    }
+}
+
+
+---
+
+5. 使用例
+
+購読（フォームやコンポーネントで）
+
+_appContext.EventBus.Subscribe<ProjectLoadedEvent>(e =>
+{
+    MessageBox.Show($"プロジェクト {e.Project.Name} が読み込まれました");
+});
+
+発行（プロジェクト読み込み後など）
+
+_appContext.EventBus.Publish(new ProjectLoadedEvent(loadedProject));
+
+
+---
+
+拡張案
+
+async Task 対応で非同期イベントをサポート（例：Func<TEvent, Task>）
+
+イベントログを記録してデバッグに利用
+
+グローバルロギングと連携
+
+優先度・フィルタ・トピックベースの配信対応（複雑化するなら）
+
+
+
+---
+
+この方式はユーザーの WinForms + DIなし構成 に自然に組み込めるシンプル設計です。他のパーツ（例：NavigationService, MessageService）との連携案もご紹介できます。必要であればどうぞ！
+
+
+
+
 WinFormsアプリケーションで、AppSetting, AppContext, ProjectContext を分けて扱う場合、各コンテキストが管理するべきリアルワールドな要素（保存・読込対象）は以下のように設計できます。
 
 
