@@ -1,3 +1,113 @@
+IValidator を INotifyPropertyChanged と組み合わせると、「プロパティが変更されたときに自動でバリデーション → エラー表示」といったMVVM的なUI連携が可能になります。以下はその基本実装です。
+
+
+---
+
+1. BindableValidatorViewModel<T>：INotifyPropertyChanged + IValidator 対応
+
+public class BindableValidatorViewModel<T> : INotifyPropertyChanged
+{
+    private T _value;
+    private string _errorMessage;
+    private readonly IValidator<T> _validator;
+
+    public BindableValidatorViewModel(IValidator<T> validator)
+    {
+        _validator = validator;
+    }
+
+    public T Value
+    {
+        get => _value;
+        set
+        {
+            if (!EqualityComparer<T>.Default.Equals(_value, value))
+            {
+                _value = value;
+                OnPropertyChanged(nameof(Value));
+                Validate(); // 値が変わるたびにバリデーション
+            }
+        }
+    }
+
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        private set
+        {
+            if (_errorMessage != value)
+            {
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
+    }
+
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+
+    private void Validate()
+    {
+        if (!_validator.Validate(_value, out var message))
+        {
+            ErrorMessage = message;
+        }
+        else
+        {
+            ErrorMessage = string.Empty;
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(string propertyName) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+
+
+---
+
+2. 使用例：WinFormsやWPFバインディング向け
+
+// バリデータを組み合わせる
+var validator = new MultipleValidator<int>(new IValidator<int>[] {
+    new RangeValidator<int>(1, 100),
+    new NotEqualValidator<int>(0)
+});
+
+var viewModel = new BindableValidatorViewModel<int>(validator);
+
+// バインディング対象：ViewModel.Value, ViewModel.ErrorMessage
+viewModel.Value = 150;
+Console.WriteLine(viewModel.HasError); // true
+Console.WriteLine(viewModel.ErrorMessage); // "値は 1 以上 100 以下でなければなりません。"
+
+
+---
+
+3. 拡張案
+
+BindableValidatorViewModel をジェネリックから BindableStringValidator, BindableIntValidator など具体型に分けて使いやすく
+
+IDataErrorInfo や INotifyDataErrorInfo に対応（WPF用）
+
+WinFormsの ErrorProvider と連携して即時フィードバック（例：テキストボックスにエラーマーク）
+
+
+
+---
+
+4. WinForms用ErrorProvider連携例
+
+errorProvider1.SetError(textBox1, viewModel.ErrorMessage);
+
+
+---
+
+もっとUI側に最適化したバリデーションコンポーネント化（UserControl + ViewModel）も可能です。必要であれば設計案出します。どうしますか？
+
+
+
+
 RangeValidator と MultipleValidator を IValidator<T> を使って実装する例を以下に示します。これはWinFormsの入力検証などに便利です。
 
 
