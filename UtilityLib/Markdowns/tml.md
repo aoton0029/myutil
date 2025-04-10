@@ -1,3 +1,152 @@
+WinFormsアプリケーションで、AppSetting, AppContext, ProjectContext を分けて扱う場合、各コンテキストが管理するべきリアルワールドな要素（保存・読込対象）は以下のように設計できます。
+
+
+---
+
+1. AppSetting（アプリケーション設定）
+
+アプリケーション全体の永続的な設定（マシン/ユーザー単位）。基本的にアプリの実行ファイルに紐づく。
+
+保存対象例：
+
+ウィンドウの初期サイズ・位置
+
+テーマ（ライト/ダーク）
+
+使用言語（ja/en など）
+
+最後に開いたプロジェクトのパス
+
+APIキーや外部サービスの接続情報（暗号化推奨）
+
+自動保存やバックアップの間隔設定
+
+デフォルトの保存フォルダパス
+
+アップデート確認の有無
+
+使用するプラグイン一覧や状態
+
+
+保存場所例：
+
+Properties.Settings
+
+JSONファイル（appsettings.json）
+
+レジストリ（古典的だが、近年は非推奨）
+
+
+
+---
+
+2. AppContext（アプリ実行中の一時状態）
+
+アプリケーション実行中に使う共有状態で、永続化されない。
+
+保存対象例：
+
+現在ログイン中のユーザー情報
+
+現在編集中のドキュメント
+
+現在選択中のプロジェクトやファイル
+
+ローディング中かどうかの状態フラグ
+
+サービスのインスタンスやイベントバス
+
+タスクマネージャーやスケジューラの状態
+
+ナビゲーションの現在の画面情報
+
+
+> 主に DI（ServiceProvider）や Singleton でアプリ起動中に保持。
+
+
+
+
+---
+
+3. ProjectContext（プロジェクト単位の情報）
+
+ユーザーが開いているプロジェクト固有の設定やデータを扱う。ユーザーが保存操作を行う対象。
+
+保存対象例：
+
+プロジェクトの名前・説明
+
+プロジェクト内のファイル一覧（構成）
+
+チャート設定、レイアウト構成
+
+プロジェクトのパスや相対ディレクトリ
+
+波形シーケンス、デバイス設定、シナリオ情報（ユーザーの例に合わせ）
+
+プロジェクト固有の変数定義、マッピング
+
+タイムラインや履歴、バージョン情報
+
+
+保存場所例：
+
+project.json や独自の形式ファイル（XMLなど）
+
+複数ファイルをまとめたフォルダ構成（例: *.proj/ ディレクトリ）
+
+
+
+---
+
+補足：構成イメージ（クラス階層）
+
+public class AppSettings {
+    public string Language { get; set; }
+    public string Theme { get; set; }
+    public string LastProjectPath { get; set; }
+    // ...
+}
+
+public class AppContext {
+    public AppSettings Settings { get; }
+    public UserInfo CurrentUser { get; set; }
+    public ITaskManager TaskManager { get; }
+    public NavigationService Navigation { get; }
+    // ...
+}
+
+public class ProjectContext {
+    public string Name { get; set; }
+    public string BasePath { get; set; }
+    public List<ProjectItem> Items { get; set; }
+    public List<WaveSequence> WaveSequences { get; set; }
+    public DeviceSetting DeviceSetting { get; set; }
+    // ...
+}
+
+
+---
+
+拡張案
+
+AppSettingにバージョン管理を導入し、旧フォーマットとの互換性チェック。
+
+ProjectContextにUndo/Redo履歴やタイムスタンプ履歴を持たせる。
+
+AppContextにローカルメッセージバス（EventBus）やログサービスを組み込んで、デバッグやUI表示に利用。
+
+ProjectContextをZip形式で保存し、リソースを同梱する（画像、設定などをまとめる）。
+
+
+
+---
+
+必要に応じて、保存・読み込みの実装例も提示できます。どの部分を深掘りましょうか？
+
+
+
+
 IValidator を INotifyPropertyChanged と組み合わせると、「プロパティが変更されたときに自動でバリデーション → エラー表示」といったMVVM的なUI連携が可能になります。以下はその基本実装です。
 
 
