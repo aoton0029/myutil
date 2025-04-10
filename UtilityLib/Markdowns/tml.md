@@ -1,3 +1,218 @@
+了解です！ObservableCollection<T> に対して Undo / Redo をサポートするように拡張します。
+
+
+---
+
+方針
+
+ICommand パターンに基づく操作履歴を保持
+
+UndoStack / RedoStack を使って操作の巻き戻しとやり直しを実装
+
+
+
+---
+
+拡張版 CollectionClipboard<T>
+
+public class CollectionClipboard<T>
+{
+    private readonly ObservableCollection<T> _collection;
+    private List<T> _clipboard = new();
+
+    private readonly Stack<ICommand> _undoStack = new();
+    private readonly Stack<ICommand> _redoStack = new();
+
+    public CollectionClipboard(ObservableCollection<T> collection)
+    {
+        _collection = collection;
+    }
+
+    // -------- コピー＆カット --------
+    public void Copy(IEnumerable<T> items)
+    {
+        _clipboard = items.Select(Clone).ToList();
+    }
+
+    public void CopyAt(int index, int count)
+    {
+        var items = _collection.Skip(index).Take(count).ToList();
+        Copy(items);
+    }
+
+    public void Cut(IEnumerable<T> items)
+    {
+        Copy(items);
+        var command = new RemoveCommand<T>(_collection, items.ToList());
+        command.Execute();
+        PushUndo(command);
+    }
+
+    public void CutAt(int index, int count)
+    {
+        var items = _collection.Skip(index).Take(count).ToList();
+        Cut(items);
+    }
+
+    // -------- ペースト --------
+    public void Paste(int index)
+    {
+        var items = _clipboard.Select(Clone).ToList();
+        var command = new InsertCommand<T>(_collection, items, index);
+        command.Execute();
+        PushUndo(command);
+    }
+
+    // -------- 挿入・削除 --------
+    public void Insert(int index, T item)
+    {
+        var command = new InsertCommand<T>(_collection, new List<T> { item }, index);
+        command.Execute();
+        PushUndo(command);
+    }
+
+    public void Delete(IEnumerable<T> items)
+    {
+        var command = new RemoveCommand<T>(_collection, items.ToList());
+        command.Execute();
+        PushUndo(command);
+    }
+
+    // -------- Undo / Redo --------
+    public void Undo()
+    {
+        if (_undoStack.Any())
+        {
+            var command = _undoStack.Pop();
+            command.Undo();
+            _redoStack.Push(command);
+        }
+    }
+
+    public void Redo()
+    {
+        if (_redoStack.Any())
+        {
+            var command = _redoStack.Pop();
+            command.Execute();
+            _undoStack.Push(command);
+        }
+    }
+
+    private void PushUndo(ICommand command)
+    {
+        _undoStack.Push(command);
+        _redoStack.Clear();
+    }
+
+    private T Clone(T item) => item;
+}
+
+
+---
+
+コマンドインターフェースと実装
+
+public interface ICommand
+{
+    void Execute();
+    void Undo();
+}
+
+public class InsertCommand<T> : ICommand
+{
+    private readonly ObservableCollection<T> _collection;
+    private readonly List<T> _items;
+    private readonly int _index;
+
+    public InsertCommand(ObservableCollection<T> collection, List<T> items, int index)
+    {
+        _collection = collection;
+        _items = items;
+        _index = index;
+    }
+
+    public void Execute()
+    {
+        for (int i = 0; i < _items.Count; i++)
+            _collection.Insert(_index + i, _items[i]);
+    }
+
+    public void Undo()
+    {
+        for (int i = 0; i < _items.Count; i++)
+            _collection.RemoveAt(_index);
+    }
+}
+
+public class RemoveCommand<T> : ICommand
+{
+    private readonly ObservableCollection<T> _collection;
+    private readonly List<T> _items;
+    private readonly List<int> _indices = new();
+
+    public RemoveCommand(ObservableCollection<T> collection, List<T> items)
+    {
+        _collection = collection;
+        _items = items;
+    }
+
+    public void Execute()
+    {
+        foreach (var item in _items)
+        {
+            int index = _collection.IndexOf(item);
+            if (index >= 0)
+            {
+                _indices.Add(index);
+                _collection.RemoveAt(index);
+            }
+        }
+    }
+
+    public void Undo()
+    {
+        for (int i = 0; i < _items.Count; i++)
+        {
+            _collection.Insert(_indices[i], _items[i]);
+        }
+    }
+}
+
+
+---
+
+使用例
+
+var list = new ObservableCollection<string> { "A", "B", "C" };
+var manager = new CollectionClipboard<string>(list);
+
+manager.CutAt(0, 1); // "A" をカット → list: B, C
+manager.Undo();      // "A" を戻す → list: A, B, C
+manager.Redo();      // 再カット → list: B, C
+
+
+---
+
+拡張案
+
+Undo/Redo 上限数の制限
+
+変更イベントとの統合（UI更新連動）
+
+コマンド履歴のラベル管理（例: "カット A" → UI表示）
+
+
+
+---
+
+WinFormsでこのUndo/Redoをボタンやショートカットと連携する例も出せます。必要ならお知らせください！
+
+
+
+
+
+
 public class PageModelFactory
 {
     public static List<PageModel<TItem>> CreatePagesFromContexts<TItem>(
