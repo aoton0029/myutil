@@ -144,6 +144,85 @@ await RunWithProgressLoadingAsync("データを読み込み中...", async (progr
 
 
 
+キャンセル時にユーザーへ適切なフィードバックを与えるために、キャンセルされたことを明確にUI上で表示し、必要であればすぐ閉じずに少しの間表示する、またはエラーメッセージ表示と同じように再利用できるように設計すると良いです。
+
+
+---
+
+LoadingForm におけるキャンセル時のUI変更案
+
+変更ポイント：
+
+1. メッセージラベルに「キャンセルされました」と表示
+
+
+2. プログレスバーを停止状態に変更
+
+
+3. キャンセルボタンを非活性化
+
+
+4. 自動的に少し待って閉じる（オプション）
+
+
+
+
+---
+
+修正後の btnCancel_Click ハンドラー
+
+private async void btnCancel_Click(object sender, EventArgs e)
+{
+    btnCancel.Enabled = false;
+    _cts.Cancel();
+    
+    lblMessage.Text = "キャンセルされました";
+    progressBar.Style = ProgressBarStyle.Blocks;
+    lblProgress.Text = "";
+
+    // 任意：ユーザーが読めるように1秒ほど待つ
+    await Task.Delay(1000);
+
+    Close();
+}
+
+
+---
+
+拡張：処理側からキャンセル後のUI制御を行いたい場合
+
+LoadingForm に次のようなメソッドを追加して、処理完了後に キャンセル済み、正常終了、エラー を切り替えて表示できます：
+
+public void ShowStatusMessage(string message, Color color)
+{
+    if (InvokeRequired)
+    {
+        Invoke(() => ShowStatusMessage(message, color));
+        return;
+    }
+
+    lblMessage.Text = message;
+    lblMessage.ForeColor = color;
+    progressBar.Style = ProgressBarStyle.Blocks;
+    lblProgress.Text = "";
+}
+
+使用例：
+
+loadingForm.ShowStatusMessage("キャンセルされました", Color.DarkOrange);
+
+
+---
+
+補足：キャンセル時にフォームを即時閉じず、ユーザーが確認するまで待機したい場合
+
+キャンセルボタン押下後は閉じずに一定時間表示、または閉じボタンを表示して手動で閉じてもらうパターンも検討できます。その場合は Close() 呼び出しを外して、代わりにフォーム右上で閉じるか「閉じる」ボタンを新たに追加して対応します。
+
+
+---
+
+ご希望に合わせて「キャンセル後に自動再試行」「リトライボタンを表示」なども組み込み可能です。続けて作りましょうか？
+
 
 
 
