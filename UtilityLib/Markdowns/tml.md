@@ -1,3 +1,90 @@
+了解しました。RunWithLoadingAsync と同じ動きをする同期版の RunWithLoading を用意します。
+
+
+---
+
+目的
+
+非同期 (async Task) ではなく、通常の void や Action を使った同期処理向け
+
+WinForms の UI スレッドがブロックされないように、LoadingForm を別スレッドで表示
+
+CancellationToken によるキャンセルサポートあり
+
+
+
+---
+
+実装：RunWithLoading（マーキー版、同期処理）
+
+public static void RunWithLoading(string message, Action<CancellationToken> action)
+{
+    var loadingFormReady = new ManualResetEvent(false);
+    CancellationTokenSource cts = new CancellationTokenSource();
+    LoadingForm loadingForm = null;
+
+    var uiThread = new Thread(() =>
+    {
+        loadingForm = new LoadingForm(message, useProgress: false);
+        loadingForm.FormClosed += (_, __) => Application.ExitThread(); // 必須
+        loadingFormReady.Set();
+        Application.Run(loadingForm);
+    });
+
+    uiThread.SetApartmentState(ApartmentState.STA);
+    uiThread.Start();
+
+    // LoadingFormの初期化完了を待つ
+    loadingFormReady.WaitOne();
+
+    try
+    {
+        action(loadingForm.Token); // 同期処理の実行
+    }
+    catch (OperationCanceledException)
+    {
+        // キャンセル時の例外をここで握りつぶす or 投げ直す
+    }
+    finally
+    {
+        // 終了後にフォームを閉じる
+        loadingForm?.Invoke(() => loadingForm.Close());
+        uiThread.Join();
+    }
+}
+
+
+---
+
+使用例（同期マーキー処理）
+
+RunWithLoading("同期処理中...", token =>
+{
+    for (int i = 0; i < 5; i++)
+    {
+        token.ThrowIfCancellationRequested();
+        Thread.Sleep(500); // 疑似処理
+    }
+});
+
+
+---
+
+補足と拡張案
+
+RunWithProgressLoading の同期版も必要であれば同様に作成可能です（IProgress<int> 使用）
+
+try-catch 内で例外を UI 上に表示する仕組みも追加可能です（例：ShowStatusMessage() ）
+
+
+
+---
+
+同期版のプログレス表示付き（％あり）バージョンも作りましょうか？
+
+
+
+
 AppContext に EventBus を組み込むことで、WinForms アプリケーション全体で疎結合なイベント通知を実現できます。以下に、リアルな構成を示します。
 
 
