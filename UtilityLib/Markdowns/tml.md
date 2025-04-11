@@ -1,3 +1,152 @@
+WinForms向けに、以下の要件を満たす汎用的なロード画面表示用の仕組みを提供します：
+
+ロード画面は以下のUI要素を持つ
+
+メッセージラベル
+
+プログレスバー（マーキー or 値表示）
+
+進捗ラベル（xx%のように表示）
+
+キャンセルボタン
+
+
+非同期処理実行中に表示
+
+マーキースタイルの進捗不要版と進捗制御あり版の2パターンの実行メソッドを用意
+
+
+
+---
+
+1. LoadingForm クラス（共通のUI）
+
+public partial class LoadingForm : Form
+{
+    private CancellationTokenSource _cts;
+
+    public CancellationToken Token => _cts.Token;
+
+    public LoadingForm(string message, bool useProgress)
+    {
+        InitializeComponent();
+        lblMessage.Text = message;
+        progressBar.Style = useProgress ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee;
+        lblProgress.Text = useProgress ? "0%" : "";
+        btnCancel.Visible = true;
+        _cts = new CancellationTokenSource();
+    }
+
+    public void UpdateProgress(int value)
+    {
+        if (InvokeRequired)
+        {
+            Invoke(() => UpdateProgress(value));
+            return;
+        }
+
+        progressBar.Value = Math.Min(value, 100);
+        lblProgress.Text = $"{value}%";
+    }
+
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+        _cts.Cancel();
+        btnCancel.Enabled = false;
+        lblMessage.Text = "キャンセル中…";
+    }
+}
+
+
+---
+
+2. マーキー用：RunWithLoadingAsync メソッド
+
+public static async Task RunWithLoadingAsync(string message, Func<CancellationToken, Task> action)
+{
+    using var loadingForm = new LoadingForm(message, useProgress: false);
+
+    var task = Task.Run(() => action(loadingForm.Token));
+    loadingForm.Show();
+
+    while (!task.IsCompleted && !task.IsCanceled)
+    {
+        Application.DoEvents(); // フリーズ防止
+        await Task.Delay(100);
+    }
+
+    loadingForm.Close();
+    await task;
+}
+
+
+---
+
+3. 進捗あり用：RunWithProgressLoadingAsync メソッド
+
+public static async Task RunWithProgressLoadingAsync(string message, Func<IProgress<int>, CancellationToken, Task> action)
+{
+    using var loadingForm = new LoadingForm(message, useProgress: true);
+    var progress = new Progress<int>(val => loadingForm.UpdateProgress(val));
+
+    var task = Task.Run(() => action(progress, loadingForm.Token));
+    loadingForm.Show();
+
+    while (!task.IsCompleted && !task.IsCanceled)
+    {
+        Application.DoEvents(); // フリーズ防止
+        await Task.Delay(100);
+    }
+
+    loadingForm.Close();
+    await task;
+}
+
+
+---
+
+使用例
+
+マーキーモード
+
+await RunWithLoadingAsync("処理中です...", async token =>
+{
+    await Task.Delay(3000, token); // 疑似処理
+});
+
+プログレスあり
+
+await RunWithProgressLoadingAsync("データを読み込み中...", async (progress, token) =>
+{
+    for (int i = 0; i <= 100; i++)
+    {
+        token.ThrowIfCancellationRequested();
+        progress.Report(i);
+        await Task.Delay(50);
+    }
+});
+
+
+---
+
+拡張案
+
+タイムアウト設定の追加（一定時間後に自動キャンセル）
+
+ローディングメッセージの途中変更 (UpdateMessage メソッド追加)
+
+エラーハンドリングUI（例外表示用のラベル or メッセージボックス）
+
+非同期処理の中でキャンセル時のUI表示
+
+
+必要であれば、LoadingForm の Designer.cs も用意できます！作りますか？
+
+
+
+
+
+
 了解しました。RunWithLoadingAsync と同じ動きをする同期版の RunWithLoading を用意します。
 
 
