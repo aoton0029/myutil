@@ -1,3 +1,166 @@
+以下は、INotifyPropertyChanged、INotifyDataErrorInfo、IValidator を使ってバリデーションを行い、ObservableCollection を DataGridView にバインドし、プロパティにエラーがある場合に MessageBox を表示する WinForms の例です。
+
+
+---
+
+1. バリデーション対象のモデルクラス
+
+public class Person : INotifyPropertyChanged, INotifyDataErrorInfo
+{
+    private string _name;
+    private readonly Dictionary<string, List<string>> _errors = new();
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (_name == value) return;
+            _name = value;
+            OnPropertyChanged(nameof(Name));
+            ValidateName();
+        }
+    }
+
+    private void ValidateName()
+    {
+        ClearErrors(nameof(Name));
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            AddError(nameof(Name), "名前は必須です。");
+        }
+        else if (Name.Length < 3)
+        {
+            AddError(nameof(Name), "名前は3文字以上で入力してください。");
+        }
+    }
+
+    public bool HasErrors => _errors.Any();
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+    public IEnumerable GetErrors(string propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName)) return null;
+        return _errors.ContainsKey(propertyName) ? _errors[propertyName] : null;
+    }
+
+    private void AddError(string propertyName, string error)
+    {
+        if (!_errors.ContainsKey(propertyName))
+            _errors[propertyName] = new List<string>();
+        if (!_errors[propertyName].Contains(error))
+        {
+            _errors[propertyName].Add(error);
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+    }
+
+    private void ClearErrors(string propertyName)
+    {
+        if (_errors.ContainsKey(propertyName))
+        {
+            _errors.Remove(propertyName);
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(string name) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+}
+
+
+---
+
+2. IValidator の定義（オプション）
+
+これは拡張としてモデルとは別にバリデーション戦略を分離したいときに使えます：
+
+public interface IValidator<T>
+{
+    Dictionary<string, List<string>> Validate(T instance);
+}
+
+public class PersonValidator : IValidator<Person>
+{
+    public Dictionary<string, List<string>> Validate(Person person)
+    {
+        var errors = new Dictionary<string, List<string>>();
+        if (string.IsNullOrWhiteSpace(person.Name))
+        {
+            errors[nameof(person.Name)] = new List<string> { "名前は必須です。" };
+        }
+        else if (person.Name.Length < 3)
+        {
+            errors[nameof(person.Name)] = new List<string> { "名前は3文字以上で入力してください。" };
+        }
+        return errors;
+    }
+}
+
+
+---
+
+3. フォームとバインディング
+
+public partial class MainForm : Form
+{
+    private BindingList<Person> _people = new();
+
+    public MainForm()
+    {
+        InitializeComponent();
+
+        _people.ListChanged += People_ListChanged;
+        dataGridView1.AutoGenerateColumns = true;
+        dataGridView1.DataSource = _people;
+
+        // テストデータ
+        _people.Add(new Person { Name = "太郎" });
+        _people.Add(new Person { Name = "" }); // エラーになる
+    }
+
+    private void People_ListChanged(object sender, ListChangedEventArgs e)
+    {
+        if (e.ListChangedType == ListChangedType.ItemChanged)
+        {
+            var person = _people[e.NewIndex];
+            if (person is INotifyDataErrorInfo errorInfo && errorInfo.HasErrors)
+            {
+                var errors = errorInfo.GetErrors(nameof(Person.Name))?.Cast<string>()?.ToList();
+                if (errors?.Any() == true)
+                {
+                    MessageBox.Show(string.Join("\n", errors), "バリデーションエラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+    }
+}
+
+
+---
+
+拡張案
+
+IValidator<T> を使って Person クラスの Validate を外部委譲に置き換える。
+
+IDataErrorInfo にも対応することで WPF 互換の柔軟性を高める。
+
+ErrorProvider を併用して、UI にエラー表示を追加。
+
+Undo/Redo 機構と連携した変更履歴管理。
+
+ValidationContext を使った DataAnnotations 互換の汎用バリデーション。
+
+
+
+---
+
+必要であれば ErrorProvider バージョンも出せます。続けて何を拡張しますか？
+
+
+
+
 WinForms向けに、以下の要件を満たす汎用的なロード画面表示用の仕組みを提供します：
 
 ロード画面は以下のUI要素を持つ
