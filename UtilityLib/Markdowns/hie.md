@@ -1,3 +1,4 @@
+```
 public interface IHierarchical { IHierarchical? HierarchicalParent { get; }
 
 IHierarchicalRoot? HierarchicalRoot { get; }
@@ -31,7 +32,7 @@ void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e);
 void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e);
 
 }
-
+```
 以下は、あなたの定義に基づく IHierarchical, IHierarchicalRoot, IModifiableHierarchical の実装と、それを活かした拡張案になります。
 
 
@@ -284,7 +285,7 @@ public static class HierarchicalExtensions
 ---
 
 ✅ 使用例
-
+```
 var root = new ProjectItem("Root");
 var child = new ProjectItem("Child");
 var grandChild = new ProjectItem("GrandChild");
@@ -309,7 +310,7 @@ foreach (var ancestor in grandChild.Ancestors())
 // Descendants
 foreach (var desc in root.Descendants())
     Console.WriteLine("Descendant: " + desc.Name);
-
+```
 
 ---
 
@@ -326,4 +327,147 @@ PathToRoot()：ルートまでのパスを返す（Ancestors().Reverse().Prepend
 
 必要であれば、これらの追加も実装できます。どれか追加しましょうか？
 
+
+了解です！HierarchicalBase にて 自己参照や循環参照 を検出し、例外をスローするロジックを組み込みます。
+
+
+---
+
+✅ 追加仕様
+
+例外条件
+
+SetParent(this) のような 自己参照
+
+親候補に自分自身の 子孫が含まれる → 循環参照
+
+
+
+---
+
+✅ 改良版 HierarchicalBase
+```
+public abstract class HierarchicalBase : IModifiableHierarchical
+{
+    private IHierarchical? _parent;
+    private readonly List<IHierarchical> _children = new();
+
+    public IHierarchical? HierarchicalParent => _parent;
+    public virtual IHierarchicalRoot? HierarchicalRoot => _parent?.HierarchicalRoot;
+
+    public IReadOnlyList<IHierarchical> HierarchicalChildren => _children;
+
+    public event EventHandler<HierarchyAttachmentEventArgs>? AttachedToHierarchy;
+    public event EventHandler<HierarchyAttachmentEventArgs>? DetachedFromHierarchy;
+
+    public void AddChild(IHierarchical child)
+    {
+        if (child == this)
+            throw new InvalidOperationException("Cannot add self as a child.");
+
+        if (child.Flatten().Contains(this))
+            throw new InvalidOperationException("Cannot add child that would create a circular reference.");
+
+        if (!_children.Contains(child))
+        {
+            if (child is IModifiableHierarchical modifiable)
+                modifiable.SetParent(this);
+
+            _children.Add(child);
+        }
+    }
+
+    public void RemoveChild(IHierarchical child)
+    {
+        if (_children.Remove(child) && child is IModifiableHierarchical modifiable)
+        {
+            modifiable.SetParent(null);
+        }
+    }
+
+    public void SetParent(IHierarchical? parent)
+    {
+        if (parent == this)
+            throw new InvalidOperationException("Cannot set parent to self.");
+
+        if (parent != null && parent.Flatten().Contains(this))
+            throw new InvalidOperationException("Cannot set parent that would create a circular reference.");
+
+        var oldRoot = HierarchicalRoot;
+        _parent = parent;
+        var newRoot = HierarchicalRoot;
+
+        var args = new HierarchyAttachmentEventArgs(oldRoot, newRoot);
+        NotifyDetachedFromHierarchy(args);
+        NotifyAttachedToHierarchy(args);
+    }
+
+    public void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        AttachedToHierarchy?.Invoke(this, e);
+        HierarchicalRoot?.OnDescendantAttached(this);
+    }
+
+    public void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        DetachedFromHierarchy?.Invoke(this, e);
+        HierarchicalRoot?.OnDescendantDetached(this);
+    }
+}
+```
+
+---
+
+✅ 依存拡張：Flatten()（拡張メソッド）
+```
+public static class HierarchicalExtensions
+{
+    public static IEnumerable<IHierarchical> Flatten(this IHierarchical node)
+    {
+        yield return node;
+        foreach (var child in node.HierarchicalChildren)
+        {
+            foreach (var descendant in child.Flatten())
+            {
+                yield return descendant;
+            }
+        }
+    }
+}
+```
+
+---
+
+✅ テスト例
+```
+var a = new ProjectItem("A");
+var b = new ProjectItem("B");
+var c = new ProjectItem("C");
+
+a.AddChild(b);
+b.AddChild(c);
+
+// 循環参照を試みる（例外スロー）
+try
+{
+    c.AddChild(a); // InvalidOperationException: circular reference
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
+```
+
+---
+
+✅ 拡張提案
+
+bool HasCycle()：安全チェック専用メソッド（例外スローではなく true/false）
+
+TrySetParent(IHierarchical? parent, out string? error)：安全な親設定
+
+IHierarchical.RootPath：ルートへのパスをキャッシュ
+
+
+要望があれば、より防御的なバージョンも構築できます。続けますか？
 
