@@ -1,3 +1,102 @@
+DataAnnotations ベースの IValidator 実装例を以下に示します。System.ComponentModel.DataAnnotations を使って属性に基づくバリデーションを行う方式です。
+
+
+---
+
+1. DataAnnotationsValidator 実装
+
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+public class DataAnnotationsValidator : IValidator
+{
+    private readonly object _instance;
+
+    public DataAnnotationsValidator(object instance)
+    {
+        _instance = instance;
+    }
+
+    public IEnumerable<string> Validate(string propertyName, object? value)
+    {
+        var context = new ValidationContext(_instance)
+        {
+            MemberName = propertyName
+        };
+
+        var results = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateProperty(value, context, results);
+
+        foreach (var result in results)
+        {
+            yield return result.ErrorMessage ?? "不明なエラー";
+        }
+    }
+}
+
+
+---
+
+2. モデルに属性を付ける
+
+ObservableIModel を継承したモデルに属性を付与します。
+
+using System.ComponentModel.DataAnnotations;
+
+public class PersonModel : ObservableIModel
+{
+    public PersonModel() : base(new DataAnnotationsValidator(this)) { }
+
+    private string _name = string.Empty;
+
+    [Required(ErrorMessage = "名前は必須です。")]
+    [StringLength(50, ErrorMessage = "名前は50文字以内で入力してください。")]
+    public string Name
+    {
+        get => _name;
+        set => SetProperty(ref _name, value);
+    }
+
+    private int _age;
+
+    [Range(0, 120, ErrorMessage = "年齢は0〜120の範囲で指定してください。")]
+    public int Age
+    {
+        get => _age;
+        set => SetProperty(ref _age, value);
+    }
+}
+
+
+---
+
+ポイント
+
+DataAnnotationsValidator は ValidationContext を通して、object のインスタンスに属するプロパティの属性を読み取ります。
+
+属性のついたプロパティに SetProperty を通じて値をセットすると、自動的にバリデーションが実行されます。
+
+エラーは INotifyDataErrorInfo の仕組みによって UI に反映されます（DataGridView, TextBox, ErrorProvider などで活用可能）。
+
+
+
+---
+
+拡張案
+
+全プロパティ一括検証: ValidateAll() を DataAnnotationsValidator に追加可能。
+
+複合バリデータ対応: DataAnnotationsValidator と独自バリデータを組み合わせた CompositeValidator を作成可能。
+
+属性のローカライズ対応: ErrorMessageResourceType を使ってエラーメッセージの多言語対応。
+
+
+必要があれば、ErrorProviderとの連携サンプルやWPF向けの実装にも対応できます。続きを希望しますか？
+
+
+
+
+
 ObservableCollection<T> に格納された ObservableModel（INotifyDataErrorInfo 実装済）なアイテムのエラーチェックを行う方法は以下のようになります。
 
 
