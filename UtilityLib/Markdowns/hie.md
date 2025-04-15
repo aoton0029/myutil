@@ -471,3 +471,178 @@ IHierarchical.RootPath：ルートへのパスをキャッシュ
 
 要望があれば、より防御的なバージョンも構築できます。続けますか？
 
+
+了解です！例外をスローせず、安全に操作を試みてエラーを呼び出し側に返す Try系メソッド を設計します。
+
+
+---
+
+✅ Try系の目的
+
+TrySetParent(IHierarchical? parent, out string? error)
+
+TryAddChild(IHierarchical child, out string? error)
+
+TryRemoveChild(IHierarchical child, out string? error)
+
+
+これにより呼び出し側は例外制御をせずに安全にチェックできます。
+
+
+---
+
+✅ HierarchicalBase への追加
+```
+public abstract class HierarchicalBase : IModifiableHierarchical
+{
+    private IHierarchical? _parent;
+    private readonly List<IHierarchical> _children = new();
+
+    public IHierarchical? HierarchicalParent => _parent;
+    public virtual IHierarchicalRoot? HierarchicalRoot => _parent?.HierarchicalRoot;
+    public IReadOnlyList<IHierarchical> HierarchicalChildren => _children;
+
+    public event EventHandler<HierarchyAttachmentEventArgs>? AttachedToHierarchy;
+    public event EventHandler<HierarchyAttachmentEventArgs>? DetachedFromHierarchy;
+
+    public void AddChild(IHierarchical child)
+    {
+        if (!TryAddChild(child, out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    public void RemoveChild(IHierarchical child)
+    {
+        if (!TryRemoveChild(child, out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    public void SetParent(IHierarchical? parent)
+    {
+        if (!TrySetParent(parent, out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    // Try系の実装
+    public bool TryAddChild(IHierarchical child, out string? error)
+    {
+        error = null;
+
+        if (child == this)
+        {
+            error = "Cannot add self as a child.";
+            return false;
+        }
+
+        if (child.Flatten().Contains(this))
+        {
+            error = "Adding this child would create a circular reference.";
+            return false;
+        }
+
+        if (_children.Contains(child))
+        {
+            error = "This child is already added.";
+            return false;
+        }
+
+        if (child is IModifiableHierarchical modifiable)
+        {
+            if (!modifiable.TrySetParent(this, out error))
+                return false;
+        }
+
+        _children.Add(child);
+        return true;
+    }
+
+    public bool TryRemoveChild(IHierarchical child, out string? error)
+    {
+        error = null;
+
+        if (!_children.Contains(child))
+        {
+            error = "The specified child is not present.";
+            return false;
+        }
+
+        _children.Remove(child);
+
+        if (child is IModifiableHierarchical modifiable)
+        {
+            if (!modifiable.TrySetParent(null, out error))
+                return false;
+        }
+
+        return true;
+    }
+
+    public bool TrySetParent(IHierarchical? parent, out string? error)
+    {
+        error = null;
+
+        if (parent == this)
+        {
+            error = "Cannot set parent to self.";
+            return false;
+        }
+
+        if (parent != null && parent.Flatten().Contains(this))
+        {
+            error = "Setting this parent would create a circular reference.";
+            return false;
+        }
+
+        var oldRoot = HierarchicalRoot;
+        _parent = parent;
+        var newRoot = HierarchicalRoot;
+
+        var args = new HierarchyAttachmentEventArgs(oldRoot, newRoot);
+        NotifyDetachedFromHierarchy(args);
+        NotifyAttachedToHierarchy(args);
+
+        return true;
+    }
+
+    public void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        AttachedToHierarchy?.Invoke(this, e);
+        HierarchicalRoot?.OnDescendantAttached(this);
+    }
+
+    public void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        DetachedFromHierarchy?.Invoke(this, e);
+        HierarchicalRoot?.OnDescendantDetached(this);
+    }
+}
+
+```
+---
+
+✅ 利用例（Try系）
+
+if (!a.TryAddChild(b, out var error))
+{
+    Console.WriteLine($"AddChild failed: {error}");
+}
+
+if (!b.TrySetParent(c, out var err2))
+{
+    Console.WriteLine($"SetParent failed: {err2}");
+}
+
+
+---
+
+✅ 拡張案
+
+TryMoveTo(IHierarchical newParent, out string? error)：子を別の親に移動
+
+CanAddChild(IHierarchical child)：バリデーションのみ（エラー文字列なし）
+
+ValidationResult ValidateStructure()：ツリー構造全体の整合性チェック
+
+
+これらも加えましょうか？
+
