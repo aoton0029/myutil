@@ -646,3 +646,91 @@ ValidationResult ValidateStructure()：ツリー構造全体の整合性チェ�
 
 これらも加えましょうか？
 
+
+了解です！HierarchicalBase に ClearAllChildren() メソッド（および TryClearAllChildren(out string? error)）を追加します。
+
+
+---
+
+✅ 振る舞い仕様
+
+すべての子要素を削除
+
+各子要素には SetParent(null) を呼ぶ（親リンク解除）
+
+IModifiableHierarchical のみ対応
+
+失敗があれば途中で中断、エラーを返す Try 版も提供
+
+
+
+---
+
+✅ 実装追加（HierarchicalBase）
+
+public void ClearAllChildren()
+{
+    if (!TryClearAllChildren(out var error))
+        throw new InvalidOperationException(error);
+}
+
+public bool TryClearAllChildren(out string? error)
+{
+    error = null;
+
+    // 一時リスト化（foreachでの変更回避）
+    var childrenSnapshot = _children.ToList();
+
+    foreach (var child in childrenSnapshot)
+    {
+        if (child is IModifiableHierarchical modifiable)
+        {
+            if (!modifiable.TrySetParent(null, out error))
+                return false;
+        }
+
+        _children.Remove(child);
+    }
+
+    return true;
+}
+
+
+---
+
+✅ 使用例
+
+var root = new ProjectItem("Root");
+var child1 = new ProjectItem("Child1");
+var child2 = new ProjectItem("Child2");
+
+root.AddChild(child1);
+root.AddChild(child2);
+
+// Try版で安全にクリア
+if (!root.TryClearAllChildren(out var error))
+{
+    Console.WriteLine("Failed to clear: " + error);
+}
+else
+{
+    Console.WriteLine("All children removed.");
+}
+
+
+---
+
+✅ 拡張提案
+
+RemoveChildRecursive(IHierarchical target)：ツリー全体から特定ノードを除去
+
+DetachFromParent()：SetParent(null) の簡略化版
+
+MoveAllChildrenTo(IModifiableHierarchical newParent)：子を一括移動
+
+ReplaceChildren(IEnumerable<IHierarchical>)：ツリー構造の置き換え
+
+
+どこまで機能を広げたいかに応じて、拡張していきましょうか？
+
+
