@@ -1,3 +1,136 @@
+DataAnnotations ベースのバリデーションに対応した ObservableIModel（ここでは ObservableModel と名前変更）を、より自然な形に整理した完全コードを以下に示します。
+
+
+---
+
+【1】ObservableModel（INotifyPropertyChanged + INotifyDataErrorInfo + DataAnnotations）
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
+
+public abstract class ObservableModel : INotifyPropertyChanged, INotifyDataErrorInfo
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private readonly Dictionary<string, List<string>> _errors = new();
+
+    protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+
+        field = value;
+        OnPropertyChanged(propertyName);
+        ValidateProperty(propertyName, value);
+        return true;
+    }
+
+    protected virtual void OnPropertyChanged(string propertyName)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    private void ValidateProperty(string propertyName, object? value)
+    {
+        // エラーを一度消す
+        if (_errors.ContainsKey(propertyName))
+            _errors.Remove(propertyName);
+
+        var context = new ValidationContext(this)
+        {
+            MemberName = propertyName
+        };
+
+        var results = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateProperty(value, context, results);
+
+        if (results.Count > 0)
+        {
+            var messages = new List<string>();
+            foreach (var result in results)
+            {
+                messages.Add(result.ErrorMessage ?? "不明なエラー");
+            }
+
+            _errors[propertyName] = messages;
+        }
+
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+
+    public bool HasErrors => _errors.Count > 0;
+
+    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+    public IEnumerable GetErrors(string? propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName)) return Array.Empty<string>();
+        return _errors.TryGetValue(propertyName, out var errors) ? errors : Array.Empty<string>();
+    }
+
+    /// <summary>
+    /// モデル全体の一括検証（オプション）
+    /// </summary>
+    public void ValidateAllProperties()
+    {
+        var properties = GetType().GetProperties();
+
+        foreach (var property in properties)
+        {
+            var value = property.GetValue(this);
+            ValidateProperty(property.Name, value);
+        }
+    }
+}
+
+
+---
+
+【2】モデルの例（属性でバリデーション）
+
+using System.ComponentModel.DataAnnotations;
+
+public class PersonModel : ObservableModel
+{
+    private string _name = string.Empty;
+
+    [Required(ErrorMessage = "名前は必須です。")]
+    [StringLength(50, ErrorMessage = "名前は50文字以内で入力してください。")]
+    public string Name
+    {
+        get => _name;
+        set => SetProperty(ref _name, value);
+    }
+
+    private int _age;
+
+    [Range(0, 120, ErrorMessage = "年齢は0〜120の範囲で指定してください。")]
+    public int Age
+    {
+        get => _age;
+        set => SetProperty(ref _age, value);
+    }
+}
+
+
+---
+
+【拡張案】
+
+ErrorProvider と組み合わせて WinForms UI にバリデーション表示。
+
+ValidateAllProperties() を保存前や登録前チェックに使う。
+
+継承元クラスに [MetadataType(typeof(MetaClass))] を使ってモデル本体とは別に属性定義することも可能。
+
+
+必要に応じて、WinForms画面での使い方や、ErrorProviderの連携例も提示できます。表示側の例も見ますか？
+
+
+
+
+
 WinFormsでのSaveAs、Save、Open処理を、変更フラグ（IsModified）とファイル指定フラグ（HasFilePath）を持つ構成でまとめると、以下のようなフローになります。OpenFileDialog、SaveFileDialog、MessageBoxを使用した具体例も併せて示します。
 
 
