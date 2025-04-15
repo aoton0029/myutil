@@ -1,3 +1,118 @@
+WinFormsでのSaveAs、Save、Open処理を、変更フラグ（IsModified）とファイル指定フラグ（HasFilePath）を持つ構成でまとめると、以下のようなフローになります。OpenFileDialog、SaveFileDialog、MessageBoxを使用した具体例も併せて示します。
+
+
+---
+
+フラグ定義
+
+bool IsModified = false;
+string? CurrentFilePath = null;
+bool HasFilePath => !string.IsNullOrEmpty(CurrentFilePath);
+
+
+---
+
+Open のフロー
+
+(1) 編集済みであれば保存確認 → YesならSave(), Cancelなら中断
+(2) OpenFileDialogを表示し、ファイル選択
+(3) ファイル読み込み、内容反映
+(4) IsModified = false, CurrentFilePathを更新
+
+public void OpenFile()
+{
+    if (IsModified)
+    {
+        var result = MessageBox.Show("変更内容を保存しますか？", "確認", MessageBoxButtons.YesNoCancel);
+        if (result == DialogResult.Cancel)
+            return;
+        if (result == DialogResult.Yes)
+            SaveFile(); // Save()はHasFilePathチェックを含む
+    }
+
+    using var dialog = new OpenFileDialog { Filter = "Text Files|*.txt|All Files|*.*" };
+    if (dialog.ShowDialog() == DialogResult.OK)
+    {
+        var content = File.ReadAllText(dialog.FileName);
+        textBox.Text = content;
+        CurrentFilePath = dialog.FileName;
+        IsModified = false;
+    }
+}
+
+
+---
+
+Save のフロー
+
+(1) HasFilePathがtrueならそのパスに上書き保存
+(2) なければ SaveAs() を呼び出す
+
+public void SaveFile()
+{
+    if (HasFilePath)
+    {
+        File.WriteAllText(CurrentFilePath, textBox.Text);
+        IsModified = false;
+    }
+    else
+    {
+        SaveFileAs();
+    }
+}
+
+
+---
+
+Save As のフロー
+
+(1) SaveFileDialogを表示
+(2) 選ばれたパスに保存
+(3) CurrentFilePathを更新、IsModifiedをfalseに
+
+public void SaveFileAs()
+{
+    using var dialog = new SaveFileDialog { Filter = "Text Files|*.txt|All Files|*.*" };
+    if (dialog.ShowDialog() == DialogResult.OK)
+    {
+        File.WriteAllText(dialog.FileName, textBox.Text);
+        CurrentFilePath = dialog.FileName;
+        IsModified = false;
+    }
+}
+
+
+---
+
+拡張案
+
+タイトルバーにファイル名を表示：
+
+void UpdateTitle() => this.Text = $"MyEditor - {(HasFilePath ? Path.GetFileName(CurrentFilePath) : "無題")}{(IsModified ? "*" : "")}";
+
+フォームクローズ時の保存確認：
+
+private void Form_FormClosing(object sender, FormClosingEventArgs e)
+{
+    if (IsModified)
+    {
+        var result = MessageBox.Show("変更を保存しますか？", "終了確認", MessageBoxButtons.YesNoCancel);
+        if (result == DialogResult.Cancel)
+            e.Cancel = true;
+        else if (result == DialogResult.Yes)
+            SaveFile();
+    }
+}
+
+
+
+---
+
+必要であれば、これをクラス構造やMVVM風に整理するアーキテクチャも提示できます。続きを希望されますか？
+
+
+
+
 以下は、INotifyPropertyChanged、INotifyDataErrorInfo、IValidator を使ってバリデーションを行い、ObservableCollection を DataGridView にバインドし、プロパティにエラーがある場合に MessageBox を表示する WinForms の例です。
 
 
