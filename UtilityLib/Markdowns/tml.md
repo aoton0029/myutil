@@ -1,3 +1,89 @@
+ObservableCollection<T> に格納された ObservableModel（INotifyDataErrorInfo 実装済）なアイテムのエラーチェックを行う方法は以下のようになります。
+
+
+---
+
+【目的】
+
+ObservableCollection<T> にバインドされた複数モデルの中で、どれか1つでもエラーがあるかチェックしたい。
+
+UIや保存処理の前に全体の検証状態を確認したい。
+
+
+
+---
+
+【1】コレクションの検証ヘルパー
+
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+
+public static class ValidationHelper
+{
+    public static bool HasErrors<T>(ObservableCollection<T> collection) where T : INotifyDataErrorInfo
+    {
+        return collection.Any(item => item.HasErrors);
+    }
+
+    public static void ValidateAll<T>(ObservableCollection<T> collection) where T : ObservableModel
+    {
+        foreach (var item in collection)
+        {
+            item.ValidateAllProperties();
+        }
+    }
+}
+
+
+---
+
+【2】使用例
+
+ObservableCollection<PersonModel> people = new()
+{
+    new PersonModel { Name = "田中", Age = 25 },
+    new PersonModel { Name = "", Age = 999 } // ←バリデーションエラー
+};
+
+// 全件バリデート（UIが自動で反映される）
+ValidationHelper.ValidateAll(people);
+
+// エラー有無チェック
+bool hasError = ValidationHelper.HasErrors(people);
+
+if (hasError)
+{
+    MessageBox.Show("1つ以上の入力に誤りがあります。");
+}
+else
+{
+    // 保存処理など
+}
+
+
+---
+
+【3】拡張案
+
+イベント購読による動的エラーフラグの監視
+コレクション中のモデルに対して ErrorsChanged を購読し、全体の状態をリアルタイム更新。
+
+UI連携用のViewModelに全体エラーを保持する
+例：public bool CollectionHasError => ValidationHelper.HasErrors(MyCollection);
+
+ObservableCollection を拡張して INotifyDataErrorInfo を持たせる
+
+
+
+---
+
+【補足】WPFなら Validation.HasError を ItemsControl に使う手もありますが、WinFormsなら ErrorProvider との統合が一般的です。
+
+WinFormsの DataGridView にバインドする場合など、個々の行に ErrorProvider を紐づける方法も説明可能です。必要ですか？
+
+
+
+
 DataAnnotations ベースのバリデーションに対応した ObservableIModel（ここでは ObservableModel と名前変更）を、より自然な形に整理した完全コードを以下に示します。
 
 
