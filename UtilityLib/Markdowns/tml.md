@@ -7,7 +7,7 @@
 ---
 
 1. ISnapshotable<T> インターフェース
-,```
+```
 public interface ISnapshotable<T>
 {
     T CreateSnapshot();
