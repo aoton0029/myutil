@@ -734,3 +734,180 @@ ReplaceChildren(IEnumerable<IHierarchical>)：ツリー構造の置き換え
 どこまで機能を広げたいかに応じて、拡張していきましょうか？
 
 
+了解です！HierarchicalBase に ClearAllChildren() メソッド（および TryClearAllChildren(out string? error)）を追加します。
+
+
+---
+
+✅ 振る舞い仕様
+
+すべての子要素を削除
+
+各子要素には SetParent(null) を呼ぶ（親リンク解除）
+
+IModifiableHierarchical のみ対応
+
+失敗があれば途中で中断、エラーを返す Try 版も提供
+
+
+
+---
+
+✅ 実装追加（HierarchicalBase）
+
+public void ClearAllChildren()
+{
+    if (!TryClearAllChildren(out var error))
+        throw new InvalidOperationException(error);
+}
+
+public bool TryClearAllChildren(out string? error)
+{
+    error = null;
+
+    // 一時リスト化（foreachでの変更回避）
+    var childrenSnapshot = _children.ToList();
+
+    foreach (var child in childrenSnapshot)
+    {
+        if (child is IModifiableHierarchical modifiable)
+        {
+            if (!modifiable.TrySetParent(null, out error))
+                return false;
+        }
+
+        _children.Remove(child);
+    }
+
+    return true;
+}
+
+
+---
+
+✅ 使用例
+
+var root = new ProjectItem("Root");
+var child1 = new ProjectItem("Child1");
+var child2 = new ProjectItem("Child2");
+
+root.AddChild(child1);
+root.AddChild(child2);
+
+// Try版で安全にクリア
+if (!root.TryClearAllChildren(out var error))
+{
+    Console.WriteLine("Failed to clear: " + error);
+}
+else
+{
+    Console.WriteLine("All children removed.");
+}
+
+
+---
+
+✅ 拡張提案
+
+RemoveChildRecursive(IHierarchical target)：ツリー全体から特定ノードを除去
+
+DetachFromParent()：SetParent(null) の簡略化版
+
+MoveAllChildrenTo(IModifiableHierarchical newParent)：子を一括移動
+
+ReplaceChildren(IEnumerable<IHierarchical>)：ツリー構造の置き換え
+
+
+どこまで機能を広げたいかに応じて、拡張していきましょうか？
+
+了解しました！
+1つのクラスでルート・中間ノード・リーフノードの全ての役割を担えるようにするには、以下のように IHierarchicalRoot, IModifiableHierarchical のすべてを実装する統合クラスを用意します。
+
+
+---
+
+✅ 統合クラス設計：HierarchicalNode
+
+public class HierarchicalNode : HierarchicalBase, IHierarchicalRoot
+{
+    public string Name { get; }
+
+    public HierarchicalNode(string name)
+    {
+        Name = name;
+    }
+
+    public event EventHandler<IHierarchical>? DescendantAttached;
+    public event EventHandler<IHierarchical>? DescendantDetached;
+
+    public void OnDescendantAttached(IHierarchical descendant)
+    {
+        DescendantAttached?.Invoke(this, descendant);
+        // さらに親のルートにも伝播させる（多段階ルート）
+        if (HierarchicalParent is IHierarchicalRoot parentRoot)
+            parentRoot.OnDescendantAttached(descendant);
+    }
+
+    public void OnDescendantDetached(IHierarchical descendant)
+    {
+        DescendantDetached?.Invoke(this, descendant);
+        if (HierarchicalParent is IHierarchicalRoot parentRoot)
+            parentRoot.OnDescendantDetached(descendant);
+    }
+
+    // 自分自身がルートとして機能する場合はこれをオーバーライド
+    public override IHierarchicalRoot? HierarchicalRoot => this;
+}
+
+
+---
+
+✅ 使用例（単一クラスでツリー構築）
+
+var root = new HierarchicalNode("Root");
+var child1 = new HierarchicalNode("Child1");
+var child2 = new HierarchicalNode("Child2");
+var grandChild = new HierarchicalNode("GrandChild");
+
+root.AddChild(child1);
+child1.AddChild(child2);
+child2.AddChild(grandChild);
+
+// イベントハンドリングも可能
+root.DescendantAttached += (s, e) => Console.WriteLine($"{((HierarchicalNode)e).Name} attached");
+root.DescendantDetached += (s, e) => Console.WriteLine($"{((HierarchicalNode)e).Name} detached");
+
+// テスト: 循環を試みる
+if (!grandChild.TryAddChild(root, out var error))
+    Console.WriteLine($"循環防止成功: {error}");
+
+// 子一覧
+foreach (var item in root.Flatten())
+    Console.WriteLine(item is HierarchicalNode node ? node.Name : "Unknown");
+
+
+---
+
+✅ 特徴
+
+
+---
+
+✅ 拡張提案
+
+IsRoot => HierarchicalParent == null
+
+Depth => Ancestors().Count()
+
+Path => Ancestors().Reverse().Append(this)
+
+JSONツリー構造への変換（ToJson()）
+
+ツリー変更通知イベント（INotifyTreeChanged）
+
+
+必要であれば、それらも追加できます。
+次はどの機能を強化しましょうか？
+
+
+
