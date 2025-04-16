@@ -118,6 +118,123 @@ DataGridViewのセル変更イベントでもチャートを再描画
 ViewModel→Service層→Model構成で責務分離
 
 
+以下に、IChartRendererインターフェースを導入し、DataGridViewのセル変更イベントでチャートを再描画するように拡張したWinForms + ViewModel構成の例を提示します。
+
+
+---
+
+1. IChartRendererインターフェース
+
+public interface IChartRenderer
+{
+    void RenderChart(IEnumerable<ChartSetting> settings);
+}
+
+
+---
+
+2. ChartRenderer 実装例
+```
+public class ChartRenderer : IChartRenderer
+{
+    private readonly Chart _chart;
+
+    public ChartRenderer(Chart chart)
+    {
+        _chart = chart;
+    }
+
+    public void RenderChart(IEnumerable<ChartSetting> settings)
+    {
+        _chart.Series.Clear();
+
+        foreach (var setting in settings)
+        {
+            var series = new Series(setting.Name)
+            {
+                ChartType = SeriesChartType.Line
+            };
+
+            for (int i = 0; i <= 100; i++)
+            {
+                double x = i / 10.0;
+                double y = setting.Amplitude * Math.Sin(2 * Math.PI * setting.Frequency * x);
+                series.Points.AddXY(x, y);
+            }
+
+            _chart.Series.Add(series);
+        }
+    }
+}
+```
+
+---
+```
+3. ChartForm の修正
+
+public partial class ChartForm : Form
+{
+    private readonly ChartSettingViewModel _viewModel = new();
+    private IChartRenderer? _chartRenderer;
+
+    public ChartForm()
+    {
+        InitializeComponent();
+        InitializeGrid();
+    }
+
+    private void InitializeGrid()
+    {
+        var bindingList = new BindingList<ChartSetting>(_viewModel.Settings);
+        dataGridView1.DataSource = bindingList;
+
+        // セル値変更イベントでチャート再描画
+        dataGridView1.CellValueChanged += (_, __) => _chartRenderer?.RenderChart(_viewModel.Settings);
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+
+        _chartRenderer = new ChartRenderer(chart1);
+
+        _viewModel.LoadSampleSettings();
+        // 初回描画
+        _chartRenderer.RenderChart(_viewModel.Settings);
+    }
+}
+
+```
+---
+
+補足
+
+CellValueChangedは、編集確定時に呼ばれます（Enterキー or フォーカス移動）。
+
+もし即時反映したい場合は CellEndEdit や CurrentCellDirtyStateChanged を追加して調整します。
+
+
+IChartRenderer を導入したことで、今後 別チャートライブラリ（LiveCharts等） への差し替えも容易になります。
+
+
+
+---
+
+拡張案
+
+IChartRenderer に Clear() や HighlightSeries(string name) のような インタラクションAPI を追加。
+
+ChartSettingViewModel に UpdateSetting(int index, string columnName, object value) を設けて編集操作を統一管理。
+
+設定のUndo/Redo管理、チャートの状態スナップショット保存など。
+
+
+要望に応じて、設定操作や描画方式もさらに整理可能です。どう拡張したいですか？
+
+
+
+
+
 
 ---
 
