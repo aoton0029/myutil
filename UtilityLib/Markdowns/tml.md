@@ -1,19 +1,22 @@
+
+
+
 ありがとうございます、構成がよく整理されていますね。以下のようなクラス構成を提案します。C# / WinForms環境を想定しています。
 
 
 ---
 
 1. ISnapshotable<T> インターフェース
-
+,```
 public interface ISnapshotable<T>
 {
     T CreateSnapshot();
     void RestoreFromSnapshot(T snapshot);
 }
-
+```
 
 ---
-
+```
 2. 登録フローデータクラス (RegistrationFlowData)
 
 梱包（Package）リストを保持。
@@ -42,9 +45,9 @@ public class RegistrationFlowData : ISnapshotable<RegistrationFlowData>
     }
 }
 
-
+```
 ---
-
+```
 3. 梱包クラス (Package)
 
 HierarchicalBase, IHierarchicalRoot 継承。箱ページモデルリストを保持。
@@ -80,9 +83,9 @@ public class Package : HierarchicalBase, IHierarchicalRoot, ISnapshotable<Packag
     }
 }
 
-
+```
 ---
-
+```
 4. 箱ページモデル (BoxPageModel)
 
 public class BoxPageModel : ISnapshotable<BoxPageModel>
@@ -106,7 +109,7 @@ public class BoxPageModel : ISnapshotable<BoxPageModel>
     }
 }
 
-
+```
 ---
 
 5. 拡張案
@@ -124,6 +127,176 @@ WinForms UI上でスナップショット状態との比較ビュー。
 ---
 
 必要に応じて、HierarchicalBase や PageContext の実装も用意できます。さらに拡張したい点があれば教えてください。
+
+了解です。親子関係（階層構造）を含んだスナップショットを取り、Undo可能にするには、以下の要点を押さえる必要があります：
+
+
+---
+
+■ 要件整理
+
+1. スナップショット対象：
+　RegistrationFlowData から Package → BoxPageModel → SerialNumbers と親子関係あり。
+
+
+2. 階層構造の復元：
+　スナップショット復元時に SetParent や NotifyAttachedToHierarchy などで親子関係を再構築。
+
+
+3. Undo/Redo の仕組み：
+　ISnapshotable<T> + HistoryManager<T> を用意して過去の状態に戻せるようにする。
+
+
+
+
+---
+
+■ 改良版インターフェース
+
+public interface ISnapshotable<T>
+{
+    T CreateSnapshot();
+    void RestoreFromSnapshot(T snapshot);
+}
+
+
+---
+
+■ Undo用 HistoryManager<T>
+
+public class HistoryManager<T> where T : ISnapshotable<T>
+{
+    private readonly Stack<T> _undoStack = new();
+    private readonly Stack<T> _redoStack = new();
+    private readonly T _target;
+
+    public HistoryManager(T target)
+    {
+        _target = target;
+    }
+
+    public void TakeSnapshot()
+    {
+        _undoStack.Push(_target.CreateSnapshot());
+        _redoStack.Clear(); // Redoの履歴はリセット
+    }
+
+    public void Undo()
+    {
+        if (_undoStack.Count > 0)
+        {
+            var snapshot = _undoStack.Pop();
+            _redoStack.Push(_target.CreateSnapshot());
+            _target.RestoreFromSnapshot(snapshot);
+        }
+    }
+
+    public void Redo()
+    {
+        if (_redoStack.Count > 0)
+        {
+            var snapshot = _redoStack.Pop();
+            _undoStack.Push(_target.CreateSnapshot());
+            _target.RestoreFromSnapshot(snapshot);
+        }
+    }
+}
+
+
+---
+
+■ 階層構造復元付き Restore（Package例）
+
+public class Package : HierarchicalBase, IHierarchicalRoot, ISnapshotable<Package>
+{
+    public List<BoxPageModel> BoxPages { get; set; } = new();
+
+    // スナップショット用クローン
+    public Package CreateSnapshot()
+    {
+        var snapshot = new Package();
+        foreach (var page in BoxPages)
+        {
+            var copy = page.CreateSnapshot();
+            snapshot.BoxPages.Add(copy);
+        }
+        return snapshot;
+    }
+
+    public void RestoreFromSnapshot(Package snapshot)
+    {
+        BoxPages.Clear();
+
+        foreach (var snapPage in snapshot.BoxPages)
+        {
+            var newPage = new BoxPageModel();
+            newPage.RestoreFromSnapshot(snapPage);
+            newPage.SetParent(this); // 親子関係を再構築
+            BoxPages.Add(newPage);
+        }
+
+        // ルートイベントを再通知
+        foreach (var child in BoxPages)
+        {
+            NotifyAttachedToHierarchy(new HierarchyAttachmentEventArgs(this));
+        }
+    }
+
+    // IHierarchicalRootのイベント
+    public event EventHandler? DescendantAttached;
+    public event EventHandler? DescendantDetached;
+
+    public void OnDescendantAttached(IHierarchical descendant) => DescendantAttached?.Invoke(this, EventArgs.Empty);
+    public void OnDescendantDetached(IHierarchical descendant) => DescendantDetached?.Invoke(this, EventArgs.Empty);
+}
+
+
+---
+
+■ 登録フローデータでも同様に
+
+public class RegistrationFlowData : ISnapshotable<RegistrationFlowData>
+{
+    public List<Package> Packages { get; set; } = new();
+
+    public RegistrationFlowData CreateSnapshot()
+    {
+        var snapshot = new RegistrationFlowData();
+        snapshot.Packages = Packages.Select(p => p.CreateSnapshot()).ToList();
+        return snapshot;
+    }
+
+    public void RestoreFromSnapshot(RegistrationFlowData snapshot)
+    {
+        Packages.Clear();
+        foreach (var snapPackage in snapshot.Packages)
+        {
+            var newPackage = new Package();
+            newPackage.RestoreFromSnapshot(snapPackage);
+            Packages.Add(newPackage);
+        }
+    }
+}
+
+
+---
+
+■ 拡張案
+
+1. 差分ベーススナップショット：変更箇所だけ保存して軽量化。
+
+
+2. イベント通知付きスナップショット：復元時にUI通知。
+
+
+3. Version付きSnapshot：バージョン管理でUIに巻き戻し履歴を表示。
+
+
+
+
+---
+
+必要であれば IHierarchical, HierarchicalBase, BoxPageModel などのコードもあわせて提示できます。どの階層でUndo/Redoを使いたいか（例：全体かパッケージ単位か）も教えてもらえればさらに絞れます！
 
 
 
