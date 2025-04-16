@@ -1,3 +1,131 @@
+WinFormsで「設定グリッド」→「チャート表示」連携を行うための構成を、MVVM風アーキテクチャで実現する案を示します。WinFormsはWPFほどMVVMに最適化されていないため、ViewModelによる中間層を意識的に設ける形になります。
+
+
+---
+
+1. 設定モデルクラス（SettingItem）
+```
+public class ChartSetting : INotifyPropertyChanged
+{
+    private string _name;
+    private double _amplitude;
+    private double _frequency;
+
+    public string Name
+    {
+        get => _name;
+        set { _name = value; OnPropertyChanged(nameof(Name)); }
+    }
+
+    public double Amplitude
+    {
+        get => _amplitude;
+        set { _amplitude = value; OnPropertyChanged(nameof(Amplitude)); }
+    }
+
+    public double Frequency
+    {
+        get => _frequency;
+        set { _frequency = value; OnPropertyChanged(nameof(Frequency)); }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged(string name)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+}
+
+```
+---
+```
+2. ViewModelクラス
+
+public class ChartSettingViewModel
+{
+    public ObservableCollection<ChartSetting> Settings { get; } = new();
+
+    public void LoadSampleSettings()
+    {
+        Settings.Clear();
+        Settings.Add(new ChartSetting { Name = "A", Amplitude = 1.0, Frequency = 50 });
+        Settings.Add(new ChartSetting { Name = "B", Amplitude = 0.5, Frequency = 60 });
+    }
+}
+```
+
+---
+```
+3. フォーム（View）
+
+public partial class ChartForm : Form
+{
+    private readonly ChartSettingViewModel _viewModel;
+
+    public ChartForm()
+    {
+        InitializeComponent();
+        _viewModel = new ChartSettingViewModel();
+        InitializeGrid();
+    }
+
+    private void InitializeGrid()
+    {
+        var bindingList = new BindingList<ChartSetting>(_viewModel.Settings);
+        dataGridView1.DataSource = bindingList;
+
+        // グリッド更新 → チャート再描画
+        foreach (var setting in _viewModel.Settings)
+            setting.PropertyChanged += (_, _) => RedrawChart();
+    }
+
+    private void RedrawChart()
+    {
+        chart1.Series.Clear();
+
+        foreach (var setting in _viewModel.Settings)
+        {
+            var series = new Series(setting.Name) { ChartType = SeriesChartType.Line };
+            for (int i = 0; i <= 100; i++)
+            {
+                double x = i / 10.0;
+                double y = setting.Amplitude * Math.Sin(2 * Math.PI * setting.Frequency * x);
+                series.Points.AddXY(x, y);
+            }
+            chart1.Series.Add(series);
+        }
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        _viewModel.LoadSampleSettings();
+        RedrawChart();
+    }
+}
+```
+
+---
+
+拡張案
+
+INotifyDataErrorInfoを使ってバリデーション対応
+
+Undo/Redo対応（ISnapshotableとICommand履歴）
+
+ChartSettingをファイルに保存/読み込みするChartSettingService
+
+DataGridViewのセル変更イベントでもチャートを再描画
+
+ViewModel→Service層→Model構成で責務分離
+
+
+
+---
+
+他のアーキテクチャスタイル（DDD、イベント駆動など）に寄せる拡張もできます。必要に応じて、デザインパターンを交えた構成にもできます。どう組みたいかの方向性があれば、さらに具体化して提案できます。
+
+
+
+
 以下は、現在の構成（App系 + Projects系）を統合した WinForms サンプルアプリです。
 
 このサンプルは以下を満たします：
