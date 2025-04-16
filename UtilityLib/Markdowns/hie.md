@@ -910,4 +910,124 @@ JSONツリー構造への変換（ToJson()）
 次はどの機能を強化しましょうか？
 
 
+HierarchicalNode のスナップショットを 親子関係ごと丸ごとコピーする機能を作ります。
+
+
+---
+
+✅ 要件整理
+
+
+---
+
+✅ インターフェース ISnapshotable<T>
+
+public interface ISnapshotable<T>
+{
+    T Snapshot();
+}
+
+
+---
+
+✅ 改良版 HierarchicalNode
+
+public class HierarchicalNode : HierarchicalBase, IHierarchicalRoot, ISnapshotable<HierarchicalNode>
+{
+    public string Name { get; }
+
+    public HierarchicalNode(string name)
+    {
+        Name = name;
+    }
+
+    public event EventHandler<IHierarchical>? DescendantAttached;
+    public event EventHandler<IHierarchical>? DescendantDetached;
+
+    public void OnDescendantAttached(IHierarchical descendant)
+    {
+        DescendantAttached?.Invoke(this, descendant);
+        if (HierarchicalParent is IHierarchicalRoot parentRoot)
+            parentRoot.OnDescendantAttached(descendant);
+    }
+
+    public void OnDescendantDetached(IHierarchical descendant)
+    {
+        DescendantDetached?.Invoke(this, descendant);
+        if (HierarchicalParent is IHierarchicalRoot parentRoot)
+            parentRoot.OnDescendantDetached(descendant);
+    }
+
+    public override IHierarchicalRoot? HierarchicalRoot => this;
+
+    // スナップショット機能
+    public HierarchicalNode Snapshot()
+    {
+        var cloneMap = new Dictionary<HierarchicalNode, HierarchicalNode>();
+        return SnapshotRecursive(this, cloneMap);
+    }
+
+    private static HierarchicalNode SnapshotRecursive(HierarchicalNode source, Dictionary<HierarchicalNode, HierarchicalNode> map)
+    {
+        if (map.ContainsKey(source))
+            return map[source];
+
+        var clone = new HierarchicalNode(source.Name);
+        map[source] = clone;
+
+        foreach (var child in source.HierarchicalChildren)
+        {
+            if (child is HierarchicalNode childNode)
+            {
+                var clonedChild = SnapshotRecursive(childNode, map);
+                clone.AddChild(clonedChild); // ここで親も設定される
+            }
+        }
+
+        return clone;
+    }
+}
+
+
+---
+
+✅ 使用例
+
+var root = new HierarchicalNode("Root");
+var a = new HierarchicalNode("A");
+var b = new HierarchicalNode("B");
+var c = new HierarchicalNode("C");
+
+root.AddChild(a);
+a.AddChild(b);
+b.AddChild(c);
+
+var snapshot = root.Snapshot();
+
+// 表示
+foreach (var node in snapshot.Flatten().OfType<HierarchicalNode>())
+{
+    Console.WriteLine($"[Snapshot] {node.Name}");
+}
+
+
+---
+
+✅ 拡張案
+
+1. ID付きノードの識別：Guid Id { get; } を持ち、元とスナップショットの対応関係を保存
+
+
+2. JSONとして保存・復元：永続化対応
+
+
+3. 変更比較用：bool DeepEquals(HierarchicalNode other) 実装
+
+
+4. 差分表示：元と比較して変更箇所を列挙する
+
+
+
+どこまでスナップショット機能を拡張しましょうか？ 差分比較なども入れますか？
+
 
