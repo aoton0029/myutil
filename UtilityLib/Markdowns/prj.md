@@ -1,3 +1,168 @@
+Project や WaveformSequence の変更通知は、以下のように INotifyPropertyChanged + イベントバスの Publish を組み合わせると、編集検知と画面通知を一元管理できます。
+
+
+---
+
+■ 目的
+
+Project.Name の変更や
+
+WaveformSequence の設定変更を
+
+アプリ全体に通知し、
+
+保存フラグの変更、タイトル更新、ログ表示などにつなげる。
+
+
+
+---
+
+■ 1. Project / WaveformSequence に変更通知実装
+
+Project.cs
+
+public class Project : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string _name = "";
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (_name != value)
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+    }
+
+    public ObservableCollection<WaveformSequence> Sequences { get; } = new();
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+WaveformSequence.cs
+
+public class WaveformSequence : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string _label = "";
+    public string Label
+    {
+        get => _label;
+        set
+        {
+            if (_label != value)
+            {
+                _label = value;
+                OnPropertyChanged(nameof(Label));
+            }
+        }
+    }
+
+    // 他の設定プロパティも同様に
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+
+---
+
+■ 2. ProjectContext が変更イベントを監視して、AppContext.EventBus に流す
+
+public class ProjectContext
+{
+    private readonly AppContext _appContext;
+
+    public Project? CurrentProject { get; private set; }
+
+    public ProjectContext(AppContext appContext)
+    {
+        _appContext = appContext;
+    }
+
+    public void SetProject(Project project)
+    {
+        CurrentProject = project;
+
+        project.PropertyChanged += (s, e) =>
+        {
+            _appContext.EventBus.Publish(new ProjectChangedEvent(e.PropertyName));
+        };
+
+        foreach (var seq in project.Sequences)
+        {
+            seq.PropertyChanged += (s, e) =>
+            {
+                _appContext.EventBus.Publish(new ProjectChangedEvent($"Sequence.{e.PropertyName}"));
+            };
+        }
+
+        project.Sequences.CollectionChanged += (s, e) =>
+        {
+            _appContext.EventBus.Publish(new ProjectChangedEvent("SequencesChanged"));
+        };
+    }
+}
+
+
+---
+
+■ 3. イベント定義
+
+public class ProjectChangedEvent : IEvent
+{
+    public string PropertyName { get; }
+
+    public ProjectChangedEvent(string propertyName)
+    {
+        PropertyName = propertyName;
+    }
+}
+
+
+---
+
+■ 4. View や ViewModel で購読して動作
+
+_appContext.EventBus.Subscribe<ProjectChangedEvent>(e =>
+{
+    _isModified = true;
+    UpdateTitle();
+});
+
+
+---
+
+■ 拡張案
+
+ProjectChangedEvent に変更対象の参照を追加 → 変更元の追跡も可能に
+
+public ProjectChangedEvent(object sender, string propertyName)
+
+UndoEvent, ValidationErrorEvent, ChartUpdateRequestedEvent なども同様に実装
+
+WaveformSequence の中に ChartSetting があるなら、そこまで監視を拡張
+
+
+
+---
+
+要望あれば、CollectionChanged + PropertyChanged を自動購読するユーティリティクラスも提供できます。欲しいですか？
+
+
+
+
 WinFormsで「設定グリッド」→「チャート表示」連携を行うための構成を、MVVM風アーキテクチャで実現する案を示します。WinFormsはWPFほどMVVMに最適化されていないため、ViewModelによる中間層を意識的に設ける形になります。
 
 
