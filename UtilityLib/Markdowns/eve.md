@@ -148,3 +148,144 @@ Priority/Filter付きハンドラー管理
 
 要望があれば、WinFormsでのUI連動例も出せます。次に何を追加したい？
 
+アプリ全体で使えるイベント管理機構として、シンプルかつ拡張可能な EventBus パターン を提案します。WinForms + MVVM アーキテクチャにも適合し、疎結合な通信が可能になります。
+
+
+---
+
+■ 基本構成：EventBus（イベントの購読・発行・解除）
+
+1. IEvent: イベントのマーカーインターフェース
+
+public interface IEvent { }
+
+
+---
+
+2. IEventHandler<T>: 各イベントに対応するハンドラー
+
+public interface IEventHandler<T> where T : IEvent
+{
+    void Handle(T e);
+}
+
+
+---
+
+3. EventBus 実装
+
+public class EventBus
+{
+    private readonly Dictionary<Type, List<Delegate>> _handlers = new();
+
+    public void Subscribe<T>(Action<T> handler) where T : IEvent
+    {
+        var type = typeof(T);
+        if (!_handlers.ContainsKey(type))
+        {
+            _handlers[type] = new List<Delegate>();
+        }
+        _handlers[type].Add(handler);
+    }
+
+    public void Unsubscribe<T>(Action<T> handler) where T : IEvent
+    {
+        var type = typeof(T);
+        if (_handlers.TryGetValue(type, out var list))
+        {
+            list.Remove(handler);
+        }
+    }
+
+    public void Publish<T>(T eventData) where T : IEvent
+    {
+        var type = typeof(T);
+        if (_handlers.TryGetValue(type, out var list))
+        {
+            foreach (var handler in list.OfType<Action<T>>())
+            {
+                handler.Invoke(eventData);
+            }
+        }
+    }
+
+    public void Clear()
+    {
+        _handlers.Clear();
+    }
+}
+
+
+---
+
+■ 利用例
+
+1. イベント定義
+
+public class ProjectChangedEvent : IEvent
+{
+    public string PropertyName { get; }
+    public ProjectChangedEvent(string propertyName)
+    {
+        PropertyName = propertyName;
+    }
+}
+
+
+---
+
+2. 購読（Subscribe）
+
+_eventBus.Subscribe<ProjectChangedEvent>(e =>
+{
+    Console.WriteLine($"Changed: {e.PropertyName}");
+});
+
+
+---
+
+3. 発行（Publish）
+
+_eventBus.Publish(new ProjectChangedEvent("Name"));
+
+
+---
+
+4. 購読解除（Unsubscribe）
+
+_eventBus.Unsubscribe<ProjectChangedEvent>(handler);
+
+
+---
+
+■ AppContextでの管理例
+
+public class AppContext
+{
+    public EventBus EventBus { get; } = new();
+}
+
+すべてのフォームやViewModelに AppContext を渡して、EventBus を共有できます。
+
+
+---
+
+■ 拡張案
+
+WeakReference を使ってメモリリーク対策
+
+AsyncEventBus に拡張（async/await対応）
+
+優先度付きイベント (PriorityEventBus)
+
+ログやデバッグ出力を仕込むことで、イベントの流れを追跡可能に
+
+
+
+---
+
+必要であれば、イベント種別ごとの管理クラスや ICommand 連携もできます。
+フォーム間通知や非同期データ処理のトリガーとしても活用可能です。
+
+続きでフォーム統合やMVVM連携のサンプルを出しましょうか？
+
