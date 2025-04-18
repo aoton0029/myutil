@@ -1271,3 +1271,152 @@ EventBus と組み合わせたイベント連動
 
 
 
+
+
+了解です。
+HierarchicalBase に スナップショット機能（Undo/Redo用途など） を導入します。
+
+
+---
+
+✅ 要件
+
+ツリー全体をスナップショットできる（親子構造含む）
+
+各ノードの状態（子リスト、親情報）を含む
+
+スナップショットを復元できる
+
+スナップショット形式は独立した Record 型
+
+スナップショット対象クラスは ISnapshotable<T> を実装
+
+
+
+---
+
+✅ インターフェース定義
+```
+public interface ISnapshotable<TSnapshot>
+{
+    TSnapshot CreateSnapshot();
+    void RestoreFromSnapshot(TSnapshot snapshot);
+}
+```
+
+---
+
+✅ スナップショット構造体
+```
+public record HierarchicalSnapshot(string Id, string? ParentId, List<HierarchicalSnapshot> Children);
+```
+ここでは Id を仮定します（例：ノード名など）。HierarchicalBase に Id プロパティを追加する必要があります。
+
+
+---
+
+✅ HierarchicalBase に ISnapshotable<HierarchicalSnapshot> を実装
+```
+public abstract class HierarchicalBase : IModifiableHierarchical, IHierarchicalRoot, ISnapshotable<HierarchicalSnapshot>
+{
+    // ... 既存コード省略 ...
+
+    public abstract string Id { get; }
+
+    public virtual HierarchicalSnapshot CreateSnapshot()
+    {
+        return new HierarchicalSnapshot(
+            Id,
+            HierarchicalParent is HierarchicalBase parent ? parent.Id : null,
+            HierarchicalChildren
+                .OfType<HierarchicalBase>()
+                .Select(c => c.CreateSnapshot())
+                .ToList()
+        );
+    }
+
+    public virtual void RestoreFromSnapshot(HierarchicalSnapshot snapshot)
+    {
+        ClearAllChildren();
+
+        foreach (var childSnapshot in snapshot.Children)
+        {
+            var child = CreateChildFromSnapshot(childSnapshot);
+            AddChild(child);
+            child.RestoreFromSnapshot(childSnapshot);
+        }
+    }
+
+    // ツリー復元のための子ノード作成（派生クラスで override 推奨）
+    protected virtual HierarchicalBase CreateChildFromSnapshot(HierarchicalSnapshot snapshot)
+    {
+        throw new NotImplementedException("You must override CreateChildFromSnapshot to support RestoreFromSnapshot.");
+    }
+}
+
+```
+---
+
+✅ 派生クラス例：TreeNode
+```
+public class TreeNode : HierarchicalBase
+{
+    public override string Id { get; }
+    public string Label { get; set; }
+
+    public TreeNode(string id, string label)
+    {
+        Id = id;
+        Label = label;
+    }
+
+    public override string ToString() => $"{Label} ({Id})";
+
+    protected override HierarchicalBase CreateChildFromSnapshot(HierarchicalSnapshot snapshot)
+    {
+        return new TreeNode(snapshot.Id, "Restored");
+    }
+}
+```
+
+---
+
+✅ 使用例
+```
+var root = new TreeNode("root", "Root");
+var a = new TreeNode("a", "A");
+var b = new TreeNode("b", "B");
+
+root.AddChild(a);
+a.AddChild(b);
+
+// スナップショットを取得
+var snapshot = root.CreateSnapshot();
+
+// 変更を加える
+root.ClearAllChildren();
+
+// スナップショットから復元
+root.RestoreFromSnapshot(snapshot);
+```
+
+---
+
+✅ 拡張案
+
+Undo/RedoStack<HierarchicalSnapshot> による履歴管理
+
+ISerializableSnapshot により JSON 保存・読み込み
+
+INotifySnapshotChanged による外部通知
+
+
+
+---
+
+必要であれば、ID管理機構（Guid自動割当やマップによる復元） も作れます。
+スナップショットをより永続化向けにしたい場合も対応可能です。続けますか？
+
+
+
+
