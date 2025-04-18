@@ -1031,3 +1031,243 @@ foreach (var node in snapshot.Flatten().OfType<HierarchicalNode>())
 どこまでスナップショット機能を拡張しましょうか？ 差分比較なども入れますか？
 
 
+
+
+
+了解しました！
+1つのクラスがルート・親・子のすべての役割を担えるように、HierarchicalBase を柔軟に設計し直します。
+
+
+---
+
+✅ 目的
+
+HierarchicalBase 単体で以下すべてを担う：
+
+IHierarchical（全ノード共通）
+
+IModifiableHierarchical（編集可能）
+
+IHierarchicalRoot（ルート）
+
+
+
+
+---
+
+✅ 対応内容
+
+OnDescendantAttached / Detached をデフォルト実装（必要なとき override）
+
+HierarchicalRoot を再帰的に自分がルートかどうか確認
+
+通知の伝播 (NotifyAttachedToHierarchy) で IHierarchicalRoot の実装を見て判断
+
+
+
+---
+
+✅ 改訂版 HierarchicalBase
+```
+public abstract class HierarchicalBase : IModifiableHierarchical, IHierarchicalRoot
+{
+    private IHierarchical? _parent;
+    private readonly List<IHierarchical> _children = new();
+
+    public IHierarchical? HierarchicalParent => _parent;
+
+    public virtual IHierarchicalRoot? HierarchicalRoot
+    {
+        get
+        {
+            if (this is IHierarchicalRoot root && _parent == null)
+                return root;
+
+            return _parent?.HierarchicalRoot;
+        }
+    }
+
+    public IReadOnlyList<IHierarchical> HierarchicalChildren => _children;
+
+    public event EventHandler<HierarchyAttachmentEventArgs>? AttachedToHierarchy;
+    public event EventHandler<HierarchyAttachmentEventArgs>? DetachedFromHierarchy;
+
+    public event EventHandler<IHierarchical>? DescendantAttached;
+    public event EventHandler<IHierarchical>? DescendantDetached;
+
+    public void AddChild(IHierarchical child)
+    {
+        if (!TryAddChild(child, out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    public void RemoveChild(IHierarchical child)
+    {
+        if (!TryRemoveChild(child, out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    public void SetParent(IHierarchical? parent)
+    {
+        if (!TrySetParent(parent, out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    public void ClearAllChildren()
+    {
+        if (!TryClearAllChildren(out var error))
+            throw new InvalidOperationException(error);
+    }
+
+    public bool TryAddChild(IHierarchical child, out string? error)
+    {
+        error = null;
+
+        if (child == this)
+        {
+            error = "Cannot add self as a child.";
+            return false;
+        }
+
+        if (child.Flatten().Contains(this))
+        {
+            error = "Adding this child would create a circular reference.";
+            return false;
+        }
+
+        if (_children.Contains(child))
+        {
+            error = "Child is already added.";
+            return false;
+        }
+
+        if (child is IModifiableHierarchical modifiable)
+        {
+            if (!modifiable.TrySetParent(this, out error))
+                return false;
+        }
+
+        _children.Add(child);
+        return true;
+    }
+
+    public bool TryRemoveChild(IHierarchical child, out string? error)
+    {
+        error = null;
+
+        if (!_children.Remove(child))
+        {
+            error = "Child not found.";
+            return false;
+        }
+
+        if (child is IModifiableHierarchical modifiable)
+        {
+            if (!modifiable.TrySetParent(null, out error))
+                return false;
+        }
+
+        return true;
+    }
+
+    public bool TrySetParent(IHierarchical? parent, out string? error)
+    {
+        error = null;
+
+        if (parent == this)
+        {
+            error = "Cannot set self as parent.";
+            return false;
+        }
+
+        if (parent != null && parent.Flatten().Contains(this))
+        {
+            error = "Parenting would create a cycle.";
+            return false;
+        }
+
+        var oldRoot = HierarchicalRoot;
+        _parent = parent;
+        var newRoot = HierarchicalRoot;
+
+        var args = new HierarchyAttachmentEventArgs(oldRoot, newRoot);
+        NotifyDetachedFromHierarchy(args);
+        NotifyAttachedToHierarchy(args);
+
+        return true;
+    }
+
+    public bool TryClearAllChildren(out string? error)
+    {
+        error = null;
+        var snapshot = _children.ToList();
+        foreach (var child in snapshot)
+        {
+            if (child is IModifiableHierarchical modifiable)
+            {
+                if (!modifiable.TrySetParent(null, out error))
+                    return false;
+            }
+
+            _children.Remove(child);
+        }
+        return true;
+    }
+
+    public void NotifyAttachedToHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        AttachedToHierarchy?.Invoke(this, e);
+        HierarchicalRoot?.OnDescendantAttached(this);
+    }
+
+    public void NotifyDetachedFromHierarchy(in HierarchyAttachmentEventArgs e)
+    {
+        DetachedFromHierarchy?.Invoke(this, e);
+        HierarchicalRoot?.OnDescendantDetached(this);
+    }
+
+    // IHierarchicalRoot のデフォルト実装（必要に応じて override 可）
+    public virtual void OnDescendantAttached(IHierarchical descendant)
+    {
+        DescendantAttached?.Invoke(this, descendant);
+    }
+
+    public virtual void OnDescendantDetached(IHierarchical descendant)
+    {
+        DescendantDetached?.Invoke(this, descendant);
+    }
+}
+
+```
+---
+
+✅ 使用例：1つのクラスで全対応
+
+public class TreeNode : HierarchicalBase
+{
+    public string Name { get; }
+
+    public TreeNode(string name)
+    {
+        Name = name;
+    }
+
+    public override string ToString() => Name;
+}
+
+
+---
+
+✅ 拡張案
+
+IsRootNode => HierarchicalParent == null プロパティ追加
+
+Level（階層）や Path（親からの一覧）プロパティ
+
+EventBus と組み合わせたイベント連動
+
+
+他にも欲しい操作があれば、どんどん追加できます！
+
+
+
