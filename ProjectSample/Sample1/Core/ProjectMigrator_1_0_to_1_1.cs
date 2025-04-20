@@ -14,11 +14,11 @@ namespace ProjectSample.Core
         public Project Migrate(Project oldProject)
         {
             // 例: ProjectItem に Description フィールド追加など
-            foreach (var item in oldProject.Items)
-            {
-                if (item is ProjectItemWithDescription descItem)
-                    descItem.Description ??= "default";
-            }
+            //foreach (var item in oldProject.Items)
+            //{
+            //    if (item is ProjectItemWithDescription descItem)
+            //        descItem.Description ??= "default";
+            //}
 
             oldProject.Version = ToVersion;
             return oldProject;

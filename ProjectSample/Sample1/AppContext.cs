@@ -16,7 +16,7 @@ namespace ProjectSample
 
         public AppContext()
         {
-            ProjectService = new ProjectService(ProjectContext);
+
         }
     }
 

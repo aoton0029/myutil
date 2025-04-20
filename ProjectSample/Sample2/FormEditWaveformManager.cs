@@ -28,12 +28,12 @@ namespace ProjectSample.Sample2
 
             var form = new FormEditWaveform(sequence);
             form.MdiParent = _owner;
-            form.EditingFinished += (s, updated) =>
-            {
-                // 更新された sequence を既存のリストに反映（参照型なので通常は不要）
-                _onSequencesUpdated(allSequences);
-                _openForms.Remove(sequence);
-            };
+            //form.EditingFinished += (s, updated) =>
+            //{
+            //    // 更新された sequence を既存のリストに反映（参照型なので通常は不要）
+            //    _onSequencesUpdated(allSequences);
+            //    _openForms.Remove(sequence);
+            //};
             form.FormClosed += (s, e) => _openForms.Remove(sequence);
             _openForms[sequence] = form;
             form.Show();
