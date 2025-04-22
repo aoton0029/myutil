@@ -1,3 +1,87 @@
+以下は 改善ポイント 1（循環参照チェック） と 5（拡張性の高いファクトリ登録） を反映した ServiceProvider の改良版です。
+
+
+---
+
+改良版 ServiceProvider
+
+public class ServiceProvider
+{
+    private readonly Dictionary<Type, Func<ServiceProvider, object>> _factories = new();
+    private readonly Dictionary<Type, object> _singletons = new();
+
+    public void RegisterSingleton<TService>(TService instance)
+    {
+        _singletons[typeof(TService)] = instance!;
+    }
+
+    public void RegisterSingleton<TService>() where TService : class
+    {
+        _factories[typeof(TService)] = sp =>
+            _singletons[typeof(TService)] = sp.CreateInstance(typeof(TService), new HashSet<Type>());
+    }
+
+    public void RegisterTransient<TService>() where TService : class
+    {
+        _factories[typeof(TService)] = sp => sp.CreateInstance(typeof(TService), new HashSet<Type>());
+    }
+
+    public void RegisterFactory<TService>(Func<ServiceProvider, TService> factory)
+    {
+        _factories[typeof(TService)] = sp => factory(sp);
+    }
+
+    public TService Resolve<TService>() => (TService)Resolve(typeof(TService), new HashSet<Type>());
+
+    public object Resolve(Type type) => Resolve(type, new HashSet<Type>());
+
+    private object Resolve(Type type, HashSet<Type> callStack)
+    {
+        if (_singletons.TryGetValue(type, out var singleton))
+            return singleton;
+
+        if (_factories.TryGetValue(type, out var factory))
+            return factory(this);
+
+        return CreateInstance(type, callStack);
+    }
+
+    private object CreateInstance(Type type, HashSet<Type> callStack)
+    {
+        if (!callStack.Add(type))
+            throw new InvalidOperationException($"Circular dependency detected for type: {type.FullName}");
+
+        var constructor = type.GetConstructors()
+            .OrderByDescending(c => c.GetParameters().Length)
+            .FirstOrDefault();
+
+        if (constructor == null)
+            throw new InvalidOperationException($"No public constructor found for {type.FullName}");
+
+        var parameters = constructor.GetParameters()
+            .Select(p => Resolve(p.ParameterType, callStack))
+            .ToArray();
+
+        callStack.Remove(type);
+        return constructor.Invoke(parameters);
+    }
+}
+
+
+---
+
+改善内容のまとめ
+
+循環依存チェック：callStack により同一型の再入を検出。
+
+拡張可能なファクトリ登録：RegisterFactory<TService>(Func<ServiceProvider, TService>) により、カスタムファクトリでコンテナへのアクセスが可能。
+
+
+
+---
+
+必要であれば、スレッドセーフ化やスコープ管理 (Scoped) もこの構成に組み込めます。追加でご希望があればお知らせください。
+
 
 
 
