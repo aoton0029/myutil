@@ -1,3 +1,172 @@
+WinForms で EventBus と EventHandlerManager を使って、メインフォームでのテキスト更新やトースト通知を実現する実装例を以下に示します。
+
+
+---
+
+1. 共通イベント定義
+
+public class TextUpdateEventArgs : EventArgs
+{
+    public string TargetControlName { get; }
+    public string NewText { get; }
+
+    public TextUpdateEventArgs(string targetControlName, string newText)
+    {
+        TargetControlName = targetControlName;
+        NewText = newText;
+    }
+}
+
+public class ToastNotificationEventArgs : EventArgs
+{
+    public string Message { get; }
+
+    public ToastNotificationEventArgs(string message)
+    {
+        Message = message;
+    }
+}
+
+
+---
+
+2. EventBus / EventHandlerManager
+
+public class EventBus
+{
+    private readonly Dictionary<Type, List<Delegate>> _handlers = new();
+
+    public void Subscribe<TEventArgs>(EventHandler<TEventArgs> handler)
+        where TEventArgs : EventArgs
+    {
+        if (!_handlers.TryGetValue(typeof(TEventArgs), out var list))
+        {
+            list = new List<Delegate>();
+            _handlers[typeof(TEventArgs)] = list;
+        }
+
+        list.Add(handler);
+    }
+
+    public void Unsubscribe<TEventArgs>(EventHandler<TEventArgs> handler)
+        where TEventArgs : EventArgs
+    {
+        if (_handlers.TryGetValue(typeof(TEventArgs), out var list))
+        {
+            list.Remove(handler);
+        }
+    }
+
+    public void Publish<TEventArgs>(object sender, TEventArgs e)
+        where TEventArgs : EventArgs
+    {
+        if (_handlers.TryGetValue(typeof(TEventArgs), out var list))
+        {
+            foreach (var handler in list.Cast<EventHandler<TEventArgs>>())
+            {
+                handler?.Invoke(sender, e);
+            }
+        }
+    }
+}
+
+
+---
+
+3. メインフォームの実装
+
+public partial class MainForm : Form
+{
+    private readonly EventBus _eventBus;
+
+    public MainForm(EventBus eventBus)
+    {
+        InitializeComponent();
+        _eventBus = eventBus;
+
+        _eventBus.Subscribe<TextUpdateEventArgs>(OnTextUpdateRequested);
+        _eventBus.Subscribe<ToastNotificationEventArgs>(OnToastNotificationRequested);
+    }
+
+    private void OnTextUpdateRequested(object? sender, TextUpdateEventArgs e)
+    {
+        if (Controls.Find(e.TargetControlName, true).FirstOrDefault() is Label label)
+        {
+            label.Text = e.NewText;
+        }
+    }
+
+    private void OnToastNotificationRequested(object? sender, ToastNotificationEventArgs e)
+    {
+        ShowToast(e.Message);
+    }
+
+    private void ShowToast(string message)
+    {
+        // 簡易例: ラベルでトースト風の通知表示
+        Label toast = new Label
+        {
+            Text = message,
+            AutoSize = true,
+            BackColor = Color.Black,
+            ForeColor = Color.White,
+            Location = new Point(Width / 2, Height - 50),
+            BorderStyle = BorderStyle.FixedSingle
+        };
+
+        Controls.Add(toast);
+        Timer timer = new Timer { Interval = 2000 };
+        timer.Tick += (s, ev) =>
+        {
+            Controls.Remove(toast);
+            toast.Dispose();
+            timer.Stop();
+        };
+        timer.Start();
+    }
+}
+
+
+---
+
+4. 他のコンポーネントからのイベント発行
+
+public class SampleComponent
+{
+    private readonly EventBus _eventBus;
+
+    public SampleComponent(EventBus eventBus)
+    {
+        _eventBus = eventBus;
+    }
+
+    public void DoSomething()
+    {
+        _eventBus.Publish(this, new TextUpdateEventArgs("labelStatus", "更新されました"));
+        _eventBus.Publish(this, new ToastNotificationEventArgs("処理が完了しました"));
+    }
+}
+
+
+---
+
+拡張案
+
+イベント発行をコマンドパターンにすることで非同期制御やログ記録を追加可能。
+
+トースト通知にアニメーションや表示位置オプションを追加。
+
+IEvent インターフェースを導入して汎用性を強化。
+
+
+
+---
+
+必要であれば、DI対応やServiceProviderとの統合例も出せます。続けますか？
+
+
+
+
 WinFormsなどでイベントバスを使う際に、イベントの登録や解除を適切に管理するクラス構成は、以下のように構築できます。
 
 
