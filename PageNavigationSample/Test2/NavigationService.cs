@@ -6,14 +6,25 @@ using System.Threading.Tasks;
 
 namespace PageNavigationSample.Test2
 {
+    interface IPage 
+    {
+        void OnPageShown(NavigationContext context);
+        void OnPageLeave(NavigationContext context);
+    }
+
+    interface IDecideNavigation
+    {
+        Type DecideNextPage(NavigationContext context);
+    }
+
+
     public class NavigationFlowService
     {
         private readonly Control _host;
+        private UserControl _currentPage;
         private readonly ServiceProvider _provider;
         private readonly Stack<UserControl> _history = new();
-
         public NavigationContext CurrentContext { get; private set; } = new();
-        private INavigationResultHandler? _resultHandler;
 
         public NavigationFlowService(Control host, ServiceProvider provider)
         {
@@ -21,9 +32,8 @@ namespace PageNavigationSample.Test2
             _provider = provider;
         }
 
-        public void Start<TStartPage>(INavigationResultHandler? resultHandler = null) where TStartPage : UserControl
+        public void Start<TStartPage>() where TStartPage : UserControl
         {
-            _resultHandler = resultHandler;
             _history.Clear();
             NavigateToPage(typeof(TStartPage), null);
         }
@@ -60,6 +70,9 @@ namespace PageNavigationSample.Test2
 
         public void GoBack()
         {
+            if (_currentPage is IPage p_leave)
+                p_leave.OnPageLeave(CurrentContext);
+
             if (_history.Count > 0)
             {
                 var prev = _history.Pop();
@@ -67,36 +80,39 @@ namespace PageNavigationSample.Test2
                 _host.Controls.Add(prev);
                 prev.Dock = DockStyle.Fill;
 
-                if (prev is IShown aware)
-                    aware.OnShown(CurrentContext);
+                _currentPage = prev;
+
+                if (prev is IPage aware)
+                    aware.OnPageShown(CurrentContext);
             }
         }
+
 
         public void Cancel(object? reason = null)
         {
             _host.Controls.Clear();
             _history.Clear();
-            _resultHandler?.OnNavigationResult(NavigationResult.Cancelled(reason));
         }
 
         public void Complete(object? data = null)
         {
             _host.Controls.Clear();
             _history.Clear();
-            _resultHandler?.OnNavigationResult(NavigationResult.Completed(data));
         }
 
         private void NavigateToPage(Type type, NavigationContext? context)
         {
+            if (_currentPage is IPage p_laeve) p_laeve.OnPageLeave(CurrentContext);
+
             var page = (UserControl)_provider.Resolve(type);
+            
             _host.Controls.Clear();
             _host.Controls.Add(page);
             page.Dock = DockStyle.Fill;
 
             CurrentContext = context ?? new NavigationContext { CurrentPage = type };
 
-            if (page is IShown aware)
-                aware.OnShown(CurrentContext);
+            if (page is IPage p_shown) p_shown.OnPageShown(CurrentContext);
         }
     }
 
