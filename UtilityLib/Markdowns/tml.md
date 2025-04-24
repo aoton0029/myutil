@@ -1,3 +1,175 @@
+ありがとうございます。以下に、RegistFormData 全体を Boxの親子関係（Packageをまたぐ）を含めてスナップショット／復元 できるような設計例を提示します。
+
+
+---
+
+✅ 前提構造のおさらい
+
+RegistFormData : ISnapshotable を継承し、List<Package> を保持。
+
+Package : ISnapshotable を継承し、List<Box> を保持。
+
+Box : HierarchyBase + ISnapshotable を継承し、List<SerialNo> を保持。
+
+Box の親子関係は複数の Package をまたぐ。
+
+
+
+---
+
+✅ Snapshotモデル
+
+public class RegistFormSnapshot
+{
+    public string? Name { get; set; }
+    public List<PackageSnapshot> Packages { get; set; } = new();
+}
+
+public class PackageSnapshot
+{
+    public string? Name { get; set; }
+    public List<BoxSnapshot> Boxes { get; set; } = new();
+}
+
+public class BoxSnapshot
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public List<SerialNo> SerialNos { get; set; } = new();
+    public int? ParentId { get; set; } // Box間階層関係（Package間をまたぐ）
+}
+
+
+---
+
+✅ 実装例
+
+RegistFormData
+
+public class RegistFormData : ISnapshotable<RegistFormSnapshot>
+{
+    public string Name { get; set; } = "";
+    public List<Package> Packages { get; set; } = new();
+
+    public RegistFormSnapshot CreateSnapshot()
+    {
+        return new RegistFormSnapshot
+        {
+            Name = this.Name,
+            Packages = Packages.Select(p => p.CreateSnapshot()).ToList()
+        };
+    }
+
+    public void RestoreFromSnapshot(RegistFormSnapshot snapshot)
+    {
+        Name = snapshot.Name ?? "";
+        Packages.Clear();
+        var allBoxMap = new Dictionary<int, Box>();
+
+        foreach (var packageSnap in snapshot.Packages)
+        {
+            var package = new Package();
+            package.RestoreFromSnapshot(packageSnap, allBoxMap);
+            Packages.Add(package);
+        }
+
+        // 親子構造を再構築
+        foreach (var box in allBoxMap.Values)
+        {
+            if (box.ParentBoxId is int parentId && allBoxMap.TryGetValue(parentId, out var parent))
+            {
+                parent.AddChild(box);
+            }
+        }
+    }
+}
+
+
+---
+
+Package
+
+public class Package : ISnapshotable<PackageSnapshot>
+{
+    public string Name { get; set; } = "";
+    public List<Box> Boxes { get; set; } = new();
+
+    public PackageSnapshot CreateSnapshot()
+    {
+        return new PackageSnapshot
+        {
+            Name = this.Name,
+            Boxes = Boxes.Select(b => b.CreateSnapshot()).ToList()
+        };
+    }
+
+    // Boxの親子関係の再構築はRegistFormDataでまとめて行う
+    public void RestoreFromSnapshot(PackageSnapshot snapshot, Dictionary<int, Box> boxMap)
+    {
+        Name = snapshot.Name ?? "";
+        Boxes.Clear();
+        foreach (var boxSnap in snapshot.Boxes)
+        {
+            var box = new Box();
+            box.RestoreFromSnapshot(boxSnap);
+            Boxes.Add(box);
+            boxMap[box.Id] = box;
+        }
+    }
+}
+
+
+---
+
+Box
+
+public class Box : HierarchicalBase, ISnapshotable<BoxSnapshot>
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public List<SerialNo> SerialNos { get; set; } = new();
+
+    public int? ParentBoxId { get; set; } // スナップショット時に保持用
+
+    public BoxSnapshot CreateSnapshot()
+    {
+        return new BoxSnapshot
+        {
+            Id = this.Id,
+            Name = this.Name,
+            SerialNos = this.SerialNos.Select(sn => sn).ToList(),
+            ParentId = (HierarchicalParent as Box)?.Id
+        };
+    }
+
+    public void RestoreFromSnapshot(BoxSnapshot snapshot)
+    {
+        Id = snapshot.Id;
+        Name = snapshot.Name ?? "";
+        SerialNos = snapshot.SerialNos?.ToList() ?? new List<SerialNo>();
+        ParentBoxId = snapshot.ParentId; // 一時保持（再構築時に使う）
+    }
+}
+
+
+---
+
+✅ 保存／復元（例）
+
+// スナップショット保存
+var snapshot = registFormData.CreateSnapshot();
+var json = JsonSerializer.Serialize(snapshot);
+File.WriteAllText("regist_snapshot.json", json);
+
+// 復元
+var loadedJson = File.ReadAllText("regist_snapshot.json");
+var loadedSnapshot = JsonSerializer.Deserialize<RegistFormSnapshot>(loadedJson)!;
+var newRegistFormData = new Regist
+
+
+
+
+
 了解です！
 ISnapShotable<T> を前提に、Undo / Redo 機能付きのスナップショット履歴管理クラス SnapshotManager<T> を提案します。
 
