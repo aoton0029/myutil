@@ -1,3 +1,167 @@
+了解です！Box.Id および SavedParentId を int から Guid に変更し、ユニーク性とより安全な識別を保証します。
+以下に修正済みのコードを提示します。
+
+
+---
+
+✅ Box クラス（Guid 対応）
+
+public class Box : HierarchicalBase, ISnapshotable<Box>
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public List<string> SerialNos { get; set; } = new();
+
+    // スナップショット用に親のIDを保持
+    public Guid? SavedParentId { get; private set; }
+
+    public Box CreateSnapshot()
+    {
+        var copy = new Box
+        {
+            Id = this.Id, // 明示的にコピー
+            SerialNos = new List<string>(this.SerialNos),
+        };
+
+        if (this.HierarchicalParent is Box parentBox)
+        {
+            copy.SavedParentId = parentBox.Id;
+        }
+
+        return copy;
+    }
+
+    public void RestoreFromSnapshot(Box snapshot)
+    {
+        this.Id = snapshot.Id;
+        this.SerialNos = new List<string>(snapshot.SerialNos);
+        this.SavedParentId = snapshot.SavedParentId;
+    }
+
+    public override string ToString() => $"Box(Id={Id})";
+}
+
+
+---
+
+✅ RegistFormData（Boxの階層再構築）
+
+public class RegistFormData : ISnapshotable<RegistFormData>
+{
+    public string Name { get; set; } = "";
+    public List<Package> Packages { get; set; } = new();
+
+    public RegistFormData CreateSnapshot()
+    {
+        var copy = new RegistFormData
+        {
+            Name = this.Name,
+            Packages = Packages.Select(p => p.CreateSnapshot()).ToList()
+        };
+
+        // IDマップで階層構造再構築
+        var allBoxes = copy.Packages.SelectMany(p => p.Boxes).ToList();
+        var boxMap = allBoxes.ToDictionary(b => b.Id);
+
+        foreach (var box in allBoxes)
+        {
+            if (box.SavedParentId is Guid parentId &&
+                boxMap.TryGetValue(parentId, out var parent))
+            {
+                box.TrySetParent(parent, out _);
+            }
+        }
+
+        return copy;
+    }
+
+    public void RestoreFromSnapshot(RegistFormData snapshot)
+    {
+        Name = snapshot.Name;
+        Packages = snapshot.Packages.Select(p => p.CreateSnapshot()).ToList();
+
+        var allBoxes = Packages.SelectMany(p => p.Boxes).ToList();
+        var boxMap = allBoxes.ToDictionary(b => b.Id);
+
+        foreach (var box in allBoxes)
+        {
+            if (box.SavedParentId is Guid parentId &&
+                boxMap.TryGetValue(parentId, out var parent))
+            {
+                box.TrySetParent(parent, out _);
+            }
+        }
+    }
+}
+
+
+---
+
+✅ Package クラス（変更なし）
+
+public class Package : ISnapshotable<Package>
+{
+    public string Name { get; set; } = "";
+    public List<Box> Boxes { get; set; } = new();
+
+    public Package CreateSnapshot()
+    {
+        return new Package
+        {
+            Name = this.Name,
+            Boxes = Boxes.Select(b => b.CreateSnapshot()).ToList()
+        };
+    }
+
+    public void RestoreFromSnapshot(Package snapshot)
+    {
+        Name = snapshot.Name;
+        Boxes = snapshot.Boxes.Select(b => b.CreateSnapshot()).ToList();
+    }
+}
+
+
+---
+
+✅ Snapshot / 復元 利用例
+
+var boxA = new Box();
+var boxB = new Box();
+var boxC = new Box();
+
+boxB.TrySetParent(boxA, out _);
+boxC.TrySetParent(boxB, out _);
+
+var pkg1 = new Package { Boxes = new List<Box> { boxA } };
+var pkg2 = new Package { Boxes = new List<Box> { boxB, boxC } };
+
+var data = new RegistFormData
+{
+    Name = "登録A",
+    Packages = new List<Package> { pkg1, pkg2 }
+};
+
+var snap = data.CreateSnapshot();
+var restored = new RegistFormData();
+restored.RestoreFromSnapshot(snap);
+
+
+---
+
+✅ 拡張案（必要なら）
+
+JSON 永続化：JsonSerializer.Serialize(data.CreateSnapshot())
+
+BoxSerialNumberMap を構築して高速参照
+
+Box.FindById(Guid id) のようなユーティリティメソッド
+
+
+必要であれば JSON 保存・復元コードも用意しますか？
+
+
+
+
+
 了解しました！
 ISnapshotable<T> の RestoreFromSnapshot(T snapshot) は 引数に Dictionary を持たず、単一のスナップショットオブジェクトのみを受け取る、という前提に基づいて、以下のように設計を調整します。
 
