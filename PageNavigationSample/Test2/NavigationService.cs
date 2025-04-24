@@ -123,11 +123,11 @@ namespace PageNavigationSample.Test2
 
         public void GoNext<T>(params object[] aTempData) where T : UserControl
         {
-            Type? from = _currentPage == null ? null : _currentPage.GetType();
+            Type? from = _currentPage?.GetType();
             Type default_to = typeof(T);
 
             Context.TempData = aTempData;
-            Context.PrevPage = null;
+            Context.PrevPage = _history.Count > 0 ? _history.Peek() : null;
             Context.CurrentPage = from;
             Context.DefaultNextPage = default_to;
             Context.NextPage = default_to;
@@ -146,7 +146,19 @@ namespace PageNavigationSample.Test2
         public void GoPrev(params object[] aTempData)
         {
             if (_history.Count <= 1) { return; }
-            
+            Type from = _history.Pop(); // 現在のページ
+            Type to = _history.Peek();  // 一つ前のページ
+
+            Context.TempData = aTempData;
+            Context.PrevPage = from;
+            Context.CurrentPage = to;
+            Context.DefaultNextPage = null;
+            Context.NextPage = to;
+
+            UserControl uc_from = _currentPage;
+            UserControl uc_to = (UserControl)_provider.Resolve(to);
+
+            InternalNavigateTo(uc_from, uc_to, prev, from, to);
         }
 
 
