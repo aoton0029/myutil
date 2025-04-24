@@ -1,3 +1,124 @@
+ナビゲーションフローの拡張と改善がしやすい良い設計になっています。以下の点を踏まえて、拡張・改善案と修正案を提案します。
+
+
+---
+
+✅ 不足している/改善すべき点
+
+1. GoNext<T> / GoPrev 内の変数未定義
+
+InternalNavigateTo(uc_from, uc_to, prev, from, to);
+
+このままだと uc_from, uc_to, prev, from, to が定義されていないため ビルドエラーになります。
+
+2. GoPrev が履歴だけ使っているが、実際の前ページに戻っていない
+
+
+---
+
+🔧 修正案：GoNext / GoPrev 実装
+
+public void GoNext<T>(params object[] aTempData) where T : UserControl
+{
+    var from = _currentPage?.GetType();
+    var to = typeof(T);
+    var prev = _history.Count > 0 ? _history.Peek() : null;
+
+    Context.TempData = aTempData;
+    Context.DefaultNextPage = to;
+    Context.NextPage = to;
+
+    var uc_from = _currentPage;
+    var uc_to = (UserControl)_provider.Resolve(to);
+
+    _history.Push(to);
+    InternalNavigateTo(uc_from, uc_to, prev, from, to);
+}
+
+public void GoPrev(params object[] aTempData)
+{
+    if (_history.Count <= 1) return;
+
+    _history.Pop(); // 現在のページを捨てる
+    var to = _history.Peek(); // 一つ前を取得
+
+    var from = _currentPage?.GetType();
+    var prev = _history.Count > 1 ? _history.ToArray()[1] : null;
+
+    Context.TempData = aTempData;
+    Context.DefaultNextPage = to;
+    Context.NextPage = to;
+
+    var uc_from = _currentPage;
+    var uc_to = (UserControl)_provider.Resolve(to);
+
+    InternalNavigateTo(uc_from, uc_to, prev, from, to);
+}
+
+
+---
+
+💡 拡張案
+
+1. INavigationResult でキャンセル／完了後の制御を明確に
+
+OnCancel / OnComplete の戻り値が bool だけだと拡張しづらいため、以下のような構造体にすると今後の拡張が簡単です：
+
+public struct NavigationResult
+{
+    public bool ShouldClose;
+    public Type? RedirectToPage;
+    public object[]? TempData;
+}
+
+2. 戻れるページかどうか判定用プロパティ追加
+
+public bool CanGoBack => _history.Count > 1;
+
+3. 履歴全削除／途中から戻る（Undo風）のメソッド
+
+public void GoBackTo<TTarget>() where TTarget : UserControl
+{
+    while (_history.Count > 1)
+    {
+        var type = _history.Pop();
+        if (type == typeof(TTarget))
+        {
+            GoNext<TTarget>();
+            return;
+        }
+    }
+}
+
+
+---
+
+✅ まとめ
+
+◾ 修正ポイント
+
+GoNext, GoPrev で未定義変数を使っている → 適切に Resolve して InternalNavigateTo に渡す。
+
+履歴スタックを適切に活用するよう修正。
+
+
+◾ 拡張案
+
+NavigationResult による制御強化
+
+CanGoBack プロパティ
+
+履歴を利用した GoBackTo<T>()
+
+
+
+---
+
+必要であれば、このナビゲーションに INavigationGuard 的な条件付き遷移（確認ダイアログなど）を追加する案も提示できます。興味ありますか？
+
+
+
+
 改良版 RegisterFormNavigationService
 
 現在のページ型・遷移先のページ型・シェアデータを受け取る 条件分岐ルール を設定し、戻る際にも適用できるように RegisterFormNavigationService を拡張します。
