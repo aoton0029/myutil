@@ -20,7 +20,7 @@ namespace PageNavigationSample.Test2
 
         private void btnPrev_Click(object sender, EventArgs e)
         {
-            _nav.GoBack();
+            _nav.GoPrev();
 
         }
 

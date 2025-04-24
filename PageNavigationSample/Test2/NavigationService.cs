@@ -3,9 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PageNavigationSample.Test2
 {
+    public class NavigationContext
+    {
+        public Type? PrevPage { get; set; }
+        public Type? CurrentPage { get; set; }
+        public Type? DefaultNextPage { get; set; }
+        public Type? NextPage { get; set; }
+        public object[] TempData { get; set; }
+        public Dictionary<string, object> SharedData { get; set; } = new();
+
+        public T? Get<T>(string key)
+        {
+            return SharedData.TryGetValue(key, out var value) ? (T?)value : default;
+        }
+
+        public void Set<T>(string key, T value)
+        {
+            SharedData[key] = value!;
+        }
+    }
+
     interface IPage 
     {
         void OnPageShown(NavigationContext context);
@@ -17,102 +38,110 @@ namespace PageNavigationSample.Test2
         Type DecideNextPage(NavigationContext context);
     }
 
-
-    public class NavigationFlowService
+    public class NavigationService
     {
-        private readonly Control _host;
-        private UserControl _currentPage;
-        private readonly ServiceProvider _provider;
-        private readonly Stack<UserControl> _history = new();
-        public NavigationContext CurrentContext { get; private set; } = new();
+        protected readonly Control _container;
+        protected UserControl _currentPage;
+        protected readonly ServiceProvider _provider;
 
-        public NavigationFlowService(Control host, ServiceProvider provider)
+        public NavigationContext Context { get; private set; } = new();
+
+        public delegate void NavigationEventHandler(NavigationContext context);
+        public NavigationEventHandler PreNavigationEvent;
+        public NavigationEventHandler PostNavigationEvent;
+
+        public NavigationService(Control host, ServiceProvider provider)
         {
-            _host = host;
+            _container = host;
             _provider = provider;
+        }
+
+        public void NavigateTo<T>(params object[] aTempData)
+        {
+            Type? from = _currentPage == null ? null : _currentPage.GetType();
+            Type default_to = typeof(T);
+
+            Context.TempData = aTempData;
+            Context.PrevPage = null;
+            Context.CurrentPage = from;
+            Context.DefaultNextPage = default_to;
+            Context.NextPage = default_to;
+
+            Type to = _currentPage is IDecideNavigation decider
+                        ? decider.DecideNextPage(Context)
+                        : default_to;
+
+            UserControl uc_from = _currentPage;
+            UserControl uc_to = (UserControl)_provider.Resolve(to);
+            InternalNavigateTo(uc_from, uc_to, null, from, to);
+        }
+
+        protected void InternalNavigateTo(UserControl uc_from, UserControl uc_to, Type? prev, Type? from, Type? to)
+        {
+            Context.PrevPage = prev;
+            Context.CurrentPage = from;
+            Context.NextPage = to;
+
+            PreNavigationEvent?.Invoke(Context);
+
+            if (uc_from is IPage p_from) p_from.OnPageLeave(Context);
+
+            Context.PrevPage = from;
+            Context.CurrentPage = to;
+            Context.DefaultNextPage = null;
+            Context.NextPage = null;
+
+            _container.Controls.Clear();
+            uc_to.Dock = DockStyle.Fill;
+            _container.Controls.Add(uc_to);
+
+
+            if (uc_to is IPage p_to) p_to.OnPageShown(Context);
+
+            PostNavigationEvent?.Invoke(Context);
+        }
+    }
+
+    public class NavigationFlowService : NavigationService
+    {
+        private readonly Stack<Type> _history = new();
+
+        public Action<NavigationContext, bool> OnCancel;
+        public Action<NavigationContext, bool> OnComplete;
+
+        public NavigationFlowService(Control host, ServiceProvider provider, Action<NavigationContext, bool> aOnCancel, Action<NavigationContext, bool> aOnComplete) : base(host, provider)
+        {
+            OnCancel = aOnCancel;
+            OnComplete = aOnComplete;
         }
 
         public void Start<TStartPage>() where TStartPage : UserControl
         {
             _history.Clear();
-            NavigateToPage(typeof(TStartPage), null);
+
         }
 
-        public void GoNext<TDefaultNextPage>(object? parameter = null) where TDefaultNextPage : UserControl
+        public void GoNext<T>(params object[] aTempData) where T : UserControl
         {
-            if (_host.Controls.Count == 0) return;
-
-            var currentPage = _host.Controls[0];
-            var currentType = currentPage.GetType();
-            var defaultNext = typeof(TDefaultNextPage);
-
-            var context = new NavigationContext
-            {
-                CurrentPage = currentType,
-                DefaultNextPage = defaultNext,
-                Parameter = parameter,
-                SharedData = CurrentContext.SharedData
-            };
-
-            var nextPage = currentPage is INextPageDecider decider
-                ? decider.DecideNextPage(context)
-                : defaultNext;
-
-            if (nextPage == null)
-            {
-                Complete(null);
-                return;
-            }
-
-            _history.Push((UserControl)currentPage);
-            NavigateToPage(nextPage, context);
-        }
-
-        public void GoBack()
-        {
-            if (_currentPage is IPage p_leave)
-                p_leave.OnPageLeave(CurrentContext);
-
-            if (_history.Count > 0)
-            {
-                var prev = _history.Pop();
-                _host.Controls.Clear();
-                _host.Controls.Add(prev);
-                prev.Dock = DockStyle.Fill;
-
-                _currentPage = prev;
-
-                if (prev is IPage aware)
-                    aware.OnPageShown(CurrentContext);
-            }
-        }
-
-
-        public void Cancel(object? reason = null)
-        {
-            _host.Controls.Clear();
-            _history.Clear();
-        }
-
-        public void Complete(object? data = null)
-        {
-            _host.Controls.Clear();
-            _history.Clear();
-        }
-
-        private void NavigateToPage(Type type, NavigationContext? context)
-        {
-            if (_currentPage is IPage p_laeve) p_laeve.OnPageLeave(CurrentContext);
-
-            var page = (UserControl)_provider.Resolve(type);
             
-            _host.Controls.Clear();
-            _host.Controls.Add(page);
-            page.Dock = DockStyle.Fill;
+        }
 
-            CurrentContext = context ?? new NavigationContext { CurrentPage = type };
+        public void GoPrev(params object[] aTempData)
+        {
 
-            if (page is IPage p_shown) p_shown.OnPageShown(CurrentContext);
+        }
+
+
+        public void Cancel(params object[] aTempData)
+        {
+            _container.Controls.Clear();
+            _history.Clear();
+        }
+
+        public void Complete(params object[] aTempData)
+        {
+            _container.Controls.Clear();
+            _history.Clear();
         }
     }
 
