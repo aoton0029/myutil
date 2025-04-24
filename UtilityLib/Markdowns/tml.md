@@ -1,3 +1,168 @@
+了解しました！
+ISnapshotable<T> の RestoreFromSnapshot(T snapshot) は 引数に Dictionary を持たず、単一のスナップショットオブジェクトのみを受け取る、という前提に基づいて、以下のように設計を調整します。
+
+
+---
+
+✅ 対応方針
+
+RestoreFromSnapshot() は自分のデータだけ復元（親子リンクは対象外）
+
+親子関係（SetParent）の復元は、RegistFormData側で別途処理
+
+Boxの親子関係を復元するために、RegistFormDataが2パス方式で処理：
+
+1. すべての Box を復元（RestoreFromSnapshot()）
+
+
+2. IDマップを作成し、SetParent を再構築
+
+
+
+
+
+---
+
+✅ 修正後の各クラス実装
+
+ISnapshotable<T>（変更なし）
+
+public interface ISnapshotable<T>
+{
+    T CreateSnapshot();
+    void RestoreFromSnapshot(T snapshot);
+}
+
+
+---
+
+RegistFormData
+
+public class RegistFormData : ISnapshotable<RegistFormDataSnapshot>
+{
+    public string Name { get; set; } = "";
+    public List<Package> Packages { get; set; } = new();
+
+    public RegistFormDataSnapshot CreateSnapshot()
+    {
+        return new RegistFormDataSnapshot
+        {
+            Name = this.Name,
+            Packages = Packages.Select(p => p.CreateSnapshot()).ToList()
+        };
+    }
+
+    public void RestoreFromSnapshot(RegistFormDataSnapshot snapshot)
+    {
+        Name = snapshot.Name;
+        Packages.Clear();
+
+        var boxMap = new Dictionary<int, Box>();
+
+        // 1. Boxの生成と復元
+        foreach (var packageSnap in snapshot.Packages)
+        {
+            var package = new Package();
+            Packages.Add(package);
+            package.RestoreFromSnapshot(packageSnap);
+
+            foreach (var box in package.Boxes)
+            {
+                boxMap[box.Id] = box;
+            }
+        }
+
+        // 2. 階層の再構築
+        foreach (var packageSnap in snapshot.Packages)
+        {
+            foreach (var boxSnap in packageSnap.Boxes)
+            {
+                if (boxSnap.ParentBoxId is int parentId &&
+                    boxMap.TryGetValue(boxSnap.Id, out var child) &&
+                    boxMap.TryGetValue(parentId, out var parent))
+                {
+                    if (child is IModifiableHierarchical mod)
+                        mod.SetParent(parent);
+                }
+            }
+        }
+    }
+}
+
+
+---
+
+Package
+
+public class Package : ISnapshotable<PackageSnapshot>
+{
+    public string Name { get; set; } = "";
+    public List<Box> Boxes { get; set; } = new();
+
+    public PackageSnapshot CreateSnapshot()
+    {
+        return new PackageSnapshot
+        {
+            Name = this.Name,
+            Boxes = Boxes.Select(b => b.CreateSnapshot()).ToList()
+        };
+    }
+
+    public void RestoreFromSnapshot(PackageSnapshot snapshot)
+    {
+        Name = snapshot.Name;
+        Boxes.Clear();
+
+        foreach (var boxSnap in snapshot.Boxes)
+        {
+            var box = new Box();
+            box.RestoreFromSnapshot(boxSnap);
+            Boxes.Add(box);
+        }
+    }
+}
+
+
+---
+
+Box
+
+public class Box : HierarchicalBase, ISnapshotable<BoxSnapshot>
+{
+    public int Id { get; set; }
+    public List<string> SerialNos { get; set; } = new();
+
+    public BoxSnapshot CreateSnapshot()
+    {
+        return new BoxSnapshot
+        {
+            Id = this.Id,
+            SerialNos = this.SerialNos.ToList(),
+            ParentBoxId = this.HierarchicalParent is Box parent ? parent.Id : null
+        };
+    }
+
+    public void RestoreFromSnapshot(BoxSnapshot snapshot)
+    {
+        this.Id = snapshot.Id;
+        this.SerialNos = snapshot.SerialNos.ToList();
+        // 親子リンクは外部で処理
+    }
+}
+
+
+---
+
+✅ まとめ：分離された役割
+
+
+---
+
+この分離で、ISnapshotable<T> の契約を守りながら柔軟な復元が可能になります。
+必要であれば、この階層全体のスナップショット保存／読み込み機能（JSON/XML）も統合できます。どうしますか？
+
+
+
 以下は、SerialNoのリストを元に「箱（Box）」へシリアルを振り分けるマネージャークラスのC# WinForms向け実装例です。
 
 
