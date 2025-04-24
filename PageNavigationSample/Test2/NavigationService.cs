@@ -106,42 +106,70 @@ namespace PageNavigationSample.Test2
     {
         private readonly Stack<Type> _history = new();
 
-        public Action<NavigationContext, bool> OnCancel;
-        public Action<NavigationContext, bool> OnComplete;
+        public Func<NavigationContext, bool> OnCancel;
+        public Func<NavigationContext, bool> OnComplete;
 
-        public NavigationFlowService(Control host, ServiceProvider provider, Action<NavigationContext, bool> aOnCancel, Action<NavigationContext, bool> aOnComplete) : base(host, provider)
+        public NavigationFlowService(Control host, ServiceProvider provider, Func<NavigationContext, bool> aOnCancel, Func<NavigationContext, bool> aOnComplete) : base(host, provider)
         {
             OnCancel = aOnCancel;
             OnComplete = aOnComplete;
         }
 
-        public void Start<TStartPage>() where TStartPage : UserControl
+        public void Start<T>() where T : UserControl
         {
             _history.Clear();
-
+            GoNext<T>();
         }
 
         public void GoNext<T>(params object[] aTempData) where T : UserControl
         {
-            
+            Type? from = _currentPage == null ? null : _currentPage.GetType();
+            Type default_to = typeof(T);
+
+            Context.TempData = aTempData;
+            Context.PrevPage = null;
+            Context.CurrentPage = from;
+            Context.DefaultNextPage = default_to;
+            Context.NextPage = default_to;
+
+            Type to = _currentPage is IDecideNavigation decider
+                        ? decider.DecideNextPage(Context)
+                        : default_to;
+
+            UserControl uc_from = _currentPage;
+            UserControl uc_to = (UserControl)_provider.Resolve(to);
+
+            _history.Push(typeof(T));
+            InternalNavigateTo(uc_from, uc_to, prev, from, to);
         }
 
         public void GoPrev(params object[] aTempData)
         {
-
+            if (_history.Count <= 1) { return; }
+            
         }
 
 
         public void Cancel(params object[] aTempData)
         {
-            _container.Controls.Clear();
-            _history.Clear();
+            Context.TempData = aTempData;
+            bool? b = OnCancel(Context);
+            if(b.HasValue && b.Value)
+            {
+                _container.Controls.Clear();
+                _history.Clear();
+            }
         }
 
         public void Complete(params object[] aTempData)
         {
-            _container.Controls.Clear();
-            _history.Clear();
+            Context.TempData = aTempData;
+            bool? b = OnComplete(Context);
+            if (b.HasValue && b.Value)
+            {
+                _container.Controls.Clear();
+                _history.Clear();
+            }
         }
     }
 
