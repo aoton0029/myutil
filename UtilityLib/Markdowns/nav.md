@@ -1,3 +1,113 @@
+では NavigationResult を導入し、OnCancel / OnComplete からの戻り値として使えるように拡張します。
+
+
+---
+
+✅ NavigationResult 構造体の定義
+
+public struct NavigationResult
+{
+    public bool ShouldClose { get; set; }               // ナビゲーションを終了して画面を閉じるか
+    public Type? RedirectToPage { get; set; }           // 終了後、遷移すべきページ（nullで何もしない）
+    public object[]? TempData { get; set; }             // 次ページへ渡すデータ（RedirectToPageがある場合）
+
+    public static NavigationResult Close() => new() { ShouldClose = true };
+    public static NavigationResult None() => new() { ShouldClose = false };
+    public static NavigationResult Redirect<T>(params object[] data) => new()
+    {
+        RedirectToPage = typeof(T),
+        TempData = data
+    };
+}
+
+
+---
+
+✅ NavigationFlowService に組み込み
+
+OnCancel / OnComplete の型を変更
+
+public Func<NavigationContext, NavigationResult> OnCancel;
+public Func<NavigationContext, NavigationResult> OnComplete;
+
+Cancel メソッドの修正
+
+public void Cancel(params object[] aTempData)
+{
+    Context.TempData = aTempData;
+    var result = OnCancel(Context);
+
+    if (result.ShouldClose)
+    {
+        _container.Controls.Clear();
+        _history.Clear();
+    }
+
+    if (result.RedirectToPage != null)
+    {
+        var uc_from = _currentPage;
+        var uc_to = (UserControl)_provider.Resolve(result.RedirectToPage);
+        InternalNavigateTo(uc_from, uc_to, _currentPage?.GetType(), _currentPage?.GetType(), result.RedirectToPage);
+    }
+}
+
+Complete メソッドの修正
+
+public void Complete(params object[] aTempData)
+{
+    Context.TempData = aTempData;
+    var result = OnComplete(Context);
+
+    if (result.ShouldClose)
+    {
+        _container.Controls.Clear();
+        _history.Clear();
+    }
+
+    if (result.RedirectToPage != null)
+    {
+        var uc_from = _currentPage;
+        var uc_to = (UserControl)_provider.Resolve(result.RedirectToPage);
+        InternalNavigateTo(uc_from, uc_to, _currentPage?.GetType(), _currentPage?.GetType(), result.RedirectToPage);
+    }
+}
+
+
+---
+
+✅ 使用例（呼び出し側）
+
+var flow = new NavigationFlowService(host, provider,
+    context =>
+    {
+        // Cancel 時に確認ダイアログなどを出す
+        var result = MessageBox.Show("キャンセルしてもよいですか？", "確認", MessageBoxButtons.YesNo);
+        return result == DialogResult.Yes ? NavigationResult.Close() : NavigationResult.None();
+    },
+    context =>
+    {
+        // Complete 時に別画面へリダイレクトも可能
+        return NavigationResult.Redirect<FinishPage>("タスク完了しました");
+    });
+
+
+---
+
+拡張案
+
+NavigationResult に ErrorMessage や ShouldShowDialog を追加して、エラー制御や UI 表示と統合も可能。
+
+RedirectToPage が null のときは ShouldClose = true でも 再確認 を要求するオプションを追加してもよいです。
+
+
+
+---
+
+他にも、INavigationGuard インターフェースで OnPageLeave をキャンセル可能にするなどのルール制御も追加可能です。続けて見たいですか？
+
+
+
+
 ナビゲーションフローの拡張と改善がしやすい良い設計になっています。以下の点を踏まえて、拡張・改善案と修正案を提案します。
 
 
