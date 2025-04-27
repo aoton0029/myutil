@@ -10,14 +10,4 @@ namespace PageNavigationSample.Test2
     {
         Type? DecideNextPage(NavigationContext context);
     }
-
-    public interface IShown
-    {
-        void OnShown(NavigationContext context);
-    }
-
-    public interface INavigationResultHandler
-    {
-        void OnNavigationResult(NavigationResult result);
-    }
 }

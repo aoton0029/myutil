@@ -4,7 +4,7 @@
 ---
 
 ✅ NavigationResult 構造体の定義
-
+```
 public struct NavigationResult
 {
     public bool ShouldClose { get; set; }               // ナビゲーションを終了して画面を閉じるか
@@ -19,19 +19,19 @@ public struct NavigationResult
         TempData = data
     };
 }
-
+```
 
 ---
 
 ✅ NavigationFlowService に組み込み
 
 OnCancel / OnComplete の型を変更
-
+```
 public Func<NavigationContext, NavigationResult> OnCancel;
 public Func<NavigationContext, NavigationResult> OnComplete;
-
+```
 Cancel メソッドの修正
-
+```
 public void Cancel(params object[] aTempData)
 {
     Context.TempData = aTempData;
@@ -50,9 +50,9 @@ public void Cancel(params object[] aTempData)
         InternalNavigateTo(uc_from, uc_to, _currentPage?.GetType(), _currentPage?.GetType(), result.RedirectToPage);
     }
 }
-
+```
 Complete メソッドの修正
-
+```
 public void Complete(params object[] aTempData)
 {
     Context.TempData = aTempData;
@@ -71,12 +71,13 @@ public void Complete(params object[] aTempData)
         InternalNavigateTo(uc_from, uc_to, _currentPage?.GetType(), _currentPage?.GetType(), result.RedirectToPage);
     }
 }
-
+```
 
 ---
 
 ✅ 使用例（呼び出し側）
 
+```
 var flow = new NavigationFlowService(host, provider,
     context =>
     {
@@ -89,7 +90,7 @@ var flow = new NavigationFlowService(host, provider,
         // Complete 時に別画面へリダイレクトも可能
         return NavigationResult.Redirect<FinishPage>("タスク完了しました");
     });
-
+```
 
 ---
 
@@ -127,7 +128,7 @@ InternalNavigateTo(uc_from, uc_to, prev, from, to);
 ---
 
 🔧 修正案：GoNext / GoPrev 実装
-
+```
 public void GoNext<T>(params object[] aTempData) where T : UserControl
 {
     var from = _currentPage?.GetType();
@@ -164,7 +165,7 @@ public void GoPrev(params object[] aTempData)
 
     InternalNavigateTo(uc_from, uc_to, prev, from, to);
 }
-
+```
 
 ---
 
@@ -250,7 +251,7 @@ Previous() でも条件分岐を適用し、特定の画面をスキップ可能
 ---
 
 改良後の RegisterFormNavigationService
-
+```
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -354,19 +355,19 @@ public class RegisterFormNavigationService : NavigationService
         return null;
     }
 }
-
+```
 
 ---
 
 使用例
 
 (1) 画面の登録
-
+```
 _navigationService.RegisterStep<Step1Page>();
 _navigationService.RegisterStep<RegistrationPage>();
 _navigationService.RegisterStep<ConfirmationPage>();
 _navigationService.RegisterStep<CompletePage>();
-
+```
 
 ---
 
@@ -374,13 +375,13 @@ _navigationService.RegisterStep<CompletePage>();
 
 登録ページ (RegistrationPage) を通過後、すでに登録済みならスキップ
 
-
+```
 _navigationService.RegisterNavigationRule<Step1Page, RegistrationPage>((sharedData) =>
 {
     bool isRegistered = (bool)_navigationService.GetData("IsRegistered");
     return isRegistered ? typeof(ConfirmationPage) : typeof(RegistrationPage);
 });
-
+```
 
 ---
 

@@ -34,87 +34,128 @@
             btnLast = new Button();
             btnNext = new Button();
             lblPageInfo = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            cmbPageSize = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
             // 
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            tableLayoutPanel1.SetColumnSpan(dataGridView1, 7);
             dataGridView1.Location = new Point(3, 3);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(638, 464);
+            dataGridView1.Size = new Size(976, 506);
             dataGridView1.TabIndex = 0;
             // 
             // btnFirst
             // 
-            btnFirst.Anchor = AnchorStyles.Bottom;
+            btnFirst.Dock = DockStyle.Fill;
             btnFirst.Font = new Font("メイリオ", 14.25F);
-            btnFirst.Location = new Point(3, 473);
+            btnFirst.Location = new Point(395, 515);
             btnFirst.Name = "btnFirst";
-            btnFirst.Size = new Size(117, 51);
+            btnFirst.Size = new Size(92, 51);
             btnFirst.TabIndex = 1;
             btnFirst.Text = "First";
             btnFirst.UseVisualStyleBackColor = true;
+            btnFirst.Click += btnFirst_Click;
             // 
             // btnPrev
             // 
-            btnPrev.Anchor = AnchorStyles.Bottom;
+            btnPrev.Dock = DockStyle.Fill;
             btnPrev.Font = new Font("メイリオ", 14.25F);
-            btnPrev.Location = new Point(126, 473);
+            btnPrev.Location = new Point(493, 515);
             btnPrev.Name = "btnPrev";
-            btnPrev.Size = new Size(117, 51);
+            btnPrev.Size = new Size(92, 51);
             btnPrev.TabIndex = 2;
             btnPrev.Text = "Prev";
             btnPrev.UseVisualStyleBackColor = true;
+            btnPrev.Click += btnPrev_Click;
             // 
             // btnLast
             // 
-            btnLast.Anchor = AnchorStyles.Bottom;
+            btnLast.Dock = DockStyle.Fill;
             btnLast.Font = new Font("メイリオ", 14.25F);
-            btnLast.Location = new Point(525, 473);
+            btnLast.Location = new Point(885, 515);
             btnLast.Name = "btnLast";
-            btnLast.Size = new Size(117, 51);
+            btnLast.Size = new Size(94, 51);
             btnLast.TabIndex = 4;
             btnLast.Text = "Last";
             btnLast.UseVisualStyleBackColor = true;
+            btnLast.Click += btnLast_Click;
             // 
             // btnNext
             // 
-            btnNext.Anchor = AnchorStyles.Bottom;
+            btnNext.Dock = DockStyle.Fill;
             btnNext.Font = new Font("メイリオ", 14.25F);
-            btnNext.Location = new Point(402, 473);
+            btnNext.Location = new Point(787, 515);
             btnNext.Name = "btnNext";
-            btnNext.Size = new Size(117, 51);
+            btnNext.Size = new Size(92, 51);
             btnNext.TabIndex = 3;
             btnNext.Text = "Next";
             btnNext.UseVisualStyleBackColor = true;
+            btnNext.Click += btnNext_Click;
             // 
             // lblPageInfo
             // 
-            lblPageInfo.Anchor = AnchorStyles.Bottom;
             lblPageInfo.BorderStyle = BorderStyle.FixedSingle;
+            lblPageInfo.Dock = DockStyle.Fill;
             lblPageInfo.Font = new Font("メイリオ", 14.25F);
-            lblPageInfo.Location = new Point(249, 473);
+            lblPageInfo.Location = new Point(591, 515);
+            lblPageInfo.Margin = new Padding(3);
             lblPageInfo.Name = "lblPageInfo";
-            lblPageInfo.Size = new Size(147, 51);
+            lblPageInfo.Size = new Size(190, 51);
             lblPageInfo.TabIndex = 5;
             lblPageInfo.Text = "label1";
             lblPageInfo.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 7;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.Controls.Add(dataGridView1, 0, 0);
+            tableLayoutPanel1.Controls.Add(btnLast, 6, 1);
+            tableLayoutPanel1.Controls.Add(lblPageInfo, 4, 1);
+            tableLayoutPanel1.Controls.Add(btnNext, 5, 1);
+            tableLayoutPanel1.Controls.Add(btnFirst, 2, 1);
+            tableLayoutPanel1.Controls.Add(btnPrev, 3, 1);
+            tableLayoutPanel1.Controls.Add(cmbPageSize, 1, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.Size = new Size(982, 569);
+            tableLayoutPanel1.TabIndex = 6;
+            // 
+            // cmbPageSize
+            // 
+            cmbPageSize.Dock = DockStyle.Fill;
+            cmbPageSize.FormattingEnabled = true;
+            cmbPageSize.Location = new Point(199, 515);
+            cmbPageSize.Name = "cmbPageSize";
+            cmbPageSize.Size = new Size(190, 23);
+            cmbPageSize.TabIndex = 6;
             // 
             // UcItemDataGrid
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lblPageInfo);
-            Controls.Add(btnLast);
-            Controls.Add(btnNext);
-            Controls.Add(btnPrev);
-            Controls.Add(btnFirst);
-            Controls.Add(dataGridView1);
+            Controls.Add(tableLayoutPanel1);
             Name = "UcItemDataGrid";
-            Size = new Size(644, 527);
+            Size = new Size(982, 569);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -126,5 +167,7 @@
         private Button btnLast;
         private Button btnNext;
         private Label lblPageInfo;
+        private TableLayoutPanel tableLayoutPanel1;
+        private ComboBox cmbPageSize;
     }
 }
