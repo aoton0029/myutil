@@ -40,8 +40,9 @@
             // 
             // panel1
             // 
+            panel1.BackColor = Color.Gainsboro;
             panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Location = new Point(371, 82);
+            panel1.Location = new Point(371, 85);
             panel1.Name = "panel1";
             panel1.Size = new Size(939, 654);
             panel1.TabIndex = 13;
@@ -52,7 +53,7 @@
             button6.FlatStyle = FlatStyle.Flat;
             button6.Font = new Font("メイリオ", 21.75F);
             button6.ForeColor = Color.White;
-            button6.Location = new Point(41, 632);
+            button6.Location = new Point(41, 635);
             button6.Name = "button6";
             button6.Size = new Size(299, 104);
             button6.TabIndex = 12;
@@ -65,7 +66,7 @@
             button5.FlatStyle = FlatStyle.Flat;
             button5.Font = new Font("メイリオ", 21.75F);
             button5.ForeColor = Color.White;
-            button5.Location = new Point(41, 522);
+            button5.Location = new Point(41, 525);
             button5.Name = "button5";
             button5.Size = new Size(299, 104);
             button5.TabIndex = 11;
@@ -78,7 +79,7 @@
             button4.FlatStyle = FlatStyle.Flat;
             button4.Font = new Font("メイリオ", 21.75F);
             button4.ForeColor = Color.White;
-            button4.Location = new Point(41, 412);
+            button4.Location = new Point(41, 415);
             button4.Name = "button4";
             button4.Size = new Size(299, 104);
             button4.TabIndex = 10;
@@ -91,7 +92,7 @@
             button3.FlatStyle = FlatStyle.Flat;
             button3.Font = new Font("メイリオ", 21.75F);
             button3.ForeColor = Color.White;
-            button3.Location = new Point(41, 302);
+            button3.Location = new Point(41, 305);
             button3.Name = "button3";
             button3.Size = new Size(299, 104);
             button3.TabIndex = 9;
@@ -104,7 +105,7 @@
             button2.FlatStyle = FlatStyle.Flat;
             button2.Font = new Font("メイリオ", 21.75F);
             button2.ForeColor = Color.White;
-            button2.Location = new Point(41, 192);
+            button2.Location = new Point(41, 195);
             button2.Name = "button2";
             button2.Size = new Size(299, 104);
             button2.TabIndex = 8;
@@ -117,7 +118,7 @@
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("メイリオ", 21.75F);
             button1.ForeColor = Color.White;
-            button1.Location = new Point(41, 82);
+            button1.Location = new Point(41, 85);
             button1.Name = "button1";
             button1.Size = new Size(299, 104);
             button1.TabIndex = 7;
@@ -138,6 +139,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
             Controls.Add(ucItemHeader1);
             Controls.Add(panel1);
             Controls.Add(button6);
