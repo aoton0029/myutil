@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace SearchAppSample.Models.SearchConditions
 {
-    class SrchCondChuban
+    public class SrchCondChuban
     {
+        public int? OrderKeyNo { get; set; } = null;
+
+        public string OrderSheetNo { get; set; } = string.Empty;
+
+        public int? GroupNo { get; set; } = null;
+
     }
 }

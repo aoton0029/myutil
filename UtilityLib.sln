@@ -33,8 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectSample", "ProjectSample\ProjectSample.csproj", "{6F713A59-6533-4260-9E85-829B72624DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchAppSample", "SearchAppSample\SearchAppSample.csproj", "{C65827BB-D257-4637-A3D9-3C73CA8252DF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,10 +99,6 @@ Global
 		{6F713A59-6533-4260-9E85-829B72624DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F713A59-6533-4260-9E85-829B72624DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F713A59-6533-4260-9E85-829B72624DC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C65827BB-D257-4637-A3D9-3C73CA8252DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C65827BB-D257-4637-A3D9-3C73CA8252DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C65827BB-D257-4637-A3D9-3C73CA8252DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C65827BB-D257-4637-A3D9-3C73CA8252DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

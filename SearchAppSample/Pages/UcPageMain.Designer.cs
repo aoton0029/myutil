@@ -28,102 +28,102 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
-            button6 = new Button();
-            button5 = new Button();
-            button4 = new Button();
-            button3 = new Button();
-            button2 = new Button();
-            button1 = new Button();
+            pnlMain = new Panel();
+            btnPN = new Button();
+            btnBN = new Button();
+            btnSN = new Button();
+            btnKatamei = new Button();
+            btnChuban = new Button();
+            btnKouban = new Button();
             ucItemHeader1 = new SearchAppSample.Items.UcItemHeader();
             SuspendLayout();
             // 
-            // panel1
+            // pnlMain
             // 
-            panel1.BackColor = Color.Gainsboro;
-            panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Location = new Point(371, 85);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(939, 654);
-            panel1.TabIndex = 13;
+            pnlMain.BackColor = Color.Gainsboro;
+            pnlMain.BorderStyle = BorderStyle.FixedSingle;
+            pnlMain.Location = new Point(371, 85);
+            pnlMain.Name = "pnlMain";
+            pnlMain.Size = new Size(939, 654);
+            pnlMain.TabIndex = 13;
             // 
-            // button6
+            // btnPN
             // 
-            button6.BackColor = Color.SteelBlue;
-            button6.FlatStyle = FlatStyle.Flat;
-            button6.Font = new Font("メイリオ", 21.75F);
-            button6.ForeColor = Color.White;
-            button6.Location = new Point(41, 635);
-            button6.Name = "button6";
-            button6.Size = new Size(299, 104);
-            button6.TabIndex = 12;
-            button6.Text = "▶ P/Nから検索";
-            button6.UseVisualStyleBackColor = false;
+            btnPN.BackColor = Color.SteelBlue;
+            btnPN.FlatStyle = FlatStyle.Flat;
+            btnPN.Font = new Font("メイリオ", 21.75F);
+            btnPN.ForeColor = Color.White;
+            btnPN.Location = new Point(41, 635);
+            btnPN.Name = "btnPN";
+            btnPN.Size = new Size(299, 104);
+            btnPN.TabIndex = 12;
+            btnPN.Text = "▶ P/Nから検索";
+            btnPN.UseVisualStyleBackColor = false;
             // 
-            // button5
+            // btnBN
             // 
-            button5.BackColor = Color.SteelBlue;
-            button5.FlatStyle = FlatStyle.Flat;
-            button5.Font = new Font("メイリオ", 21.75F);
-            button5.ForeColor = Color.White;
-            button5.Location = new Point(41, 525);
-            button5.Name = "button5";
-            button5.Size = new Size(299, 104);
-            button5.TabIndex = 11;
-            button5.Text = "▶ B/Nから検索";
-            button5.UseVisualStyleBackColor = false;
+            btnBN.BackColor = Color.SteelBlue;
+            btnBN.FlatStyle = FlatStyle.Flat;
+            btnBN.Font = new Font("メイリオ", 21.75F);
+            btnBN.ForeColor = Color.White;
+            btnBN.Location = new Point(41, 525);
+            btnBN.Name = "btnBN";
+            btnBN.Size = new Size(299, 104);
+            btnBN.TabIndex = 11;
+            btnBN.Text = "▶ B/Nから検索";
+            btnBN.UseVisualStyleBackColor = false;
             // 
-            // button4
+            // btnSN
             // 
-            button4.BackColor = Color.SteelBlue;
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.Font = new Font("メイリオ", 21.75F);
-            button4.ForeColor = Color.White;
-            button4.Location = new Point(41, 415);
-            button4.Name = "button4";
-            button4.Size = new Size(299, 104);
-            button4.TabIndex = 10;
-            button4.Text = "▶ S/Nから検索";
-            button4.UseVisualStyleBackColor = false;
+            btnSN.BackColor = Color.SteelBlue;
+            btnSN.FlatStyle = FlatStyle.Flat;
+            btnSN.Font = new Font("メイリオ", 21.75F);
+            btnSN.ForeColor = Color.White;
+            btnSN.Location = new Point(41, 415);
+            btnSN.Name = "btnSN";
+            btnSN.Size = new Size(299, 104);
+            btnSN.TabIndex = 10;
+            btnSN.Text = "▶ S/Nから検索";
+            btnSN.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // btnKatamei
             // 
-            button3.BackColor = Color.SteelBlue;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.Font = new Font("メイリオ", 21.75F);
-            button3.ForeColor = Color.White;
-            button3.Location = new Point(41, 305);
-            button3.Name = "button3";
-            button3.Size = new Size(299, 104);
-            button3.TabIndex = 9;
-            button3.Text = "▶ 型名から検索";
-            button3.UseVisualStyleBackColor = false;
+            btnKatamei.BackColor = Color.SteelBlue;
+            btnKatamei.FlatStyle = FlatStyle.Flat;
+            btnKatamei.Font = new Font("メイリオ", 21.75F);
+            btnKatamei.ForeColor = Color.White;
+            btnKatamei.Location = new Point(41, 305);
+            btnKatamei.Name = "btnKatamei";
+            btnKatamei.Size = new Size(299, 104);
+            btnKatamei.TabIndex = 9;
+            btnKatamei.Text = "▶ 型名から検索";
+            btnKatamei.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // btnChuban
             // 
-            button2.BackColor = Color.SteelBlue;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("メイリオ", 21.75F);
-            button2.ForeColor = Color.White;
-            button2.Location = new Point(41, 195);
-            button2.Name = "button2";
-            button2.Size = new Size(299, 104);
-            button2.TabIndex = 8;
-            button2.Text = "▶ 注番から検索";
-            button2.UseVisualStyleBackColor = false;
+            btnChuban.BackColor = Color.SteelBlue;
+            btnChuban.FlatStyle = FlatStyle.Flat;
+            btnChuban.Font = new Font("メイリオ", 21.75F);
+            btnChuban.ForeColor = Color.White;
+            btnChuban.Location = new Point(41, 195);
+            btnChuban.Name = "btnChuban";
+            btnChuban.Size = new Size(299, 104);
+            btnChuban.TabIndex = 8;
+            btnChuban.Text = "▶ 注番から検索";
+            btnChuban.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // btnKouban
             // 
-            button1.BackColor = Color.SteelBlue;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("メイリオ", 21.75F);
-            button1.ForeColor = Color.White;
-            button1.Location = new Point(41, 85);
-            button1.Name = "button1";
-            button1.Size = new Size(299, 104);
-            button1.TabIndex = 7;
-            button1.Text = "▶ 工番から検索";
-            button1.UseVisualStyleBackColor = false;
+            btnKouban.BackColor = Color.SteelBlue;
+            btnKouban.FlatStyle = FlatStyle.Flat;
+            btnKouban.Font = new Font("メイリオ", 21.75F);
+            btnKouban.ForeColor = Color.White;
+            btnKouban.Location = new Point(41, 85);
+            btnKouban.Name = "btnKouban";
+            btnKouban.Size = new Size(299, 104);
+            btnKouban.TabIndex = 7;
+            btnKouban.Text = "▶ 工番から検索";
+            btnKouban.UseVisualStyleBackColor = false;
             // 
             // ucItemHeader1
             // 
@@ -133,7 +133,7 @@
             ucItemHeader1.Name = "ucItemHeader1";
             ucItemHeader1.Size = new Size(1350, 33);
             ucItemHeader1.TabIndex = 14;
-            ucItemHeader1.Title = "Title";
+            ucItemHeader1.Title = "検索";
             // 
             // UcPageMain
             // 
@@ -141,13 +141,13 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(ucItemHeader1);
-            Controls.Add(panel1);
-            Controls.Add(button6);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(pnlMain);
+            Controls.Add(btnPN);
+            Controls.Add(btnBN);
+            Controls.Add(btnSN);
+            Controls.Add(btnKatamei);
+            Controls.Add(btnChuban);
+            Controls.Add(btnKouban);
             Name = "UcPageMain";
             Size = new Size(1350, 780);
             ResumeLayout(false);
@@ -155,13 +155,13 @@
 
         #endregion
 
-        private Panel panel1;
-        private Button button6;
-        private Button button5;
-        private Button button4;
-        private Button button3;
-        private Button button2;
-        private Button button1;
+        private Panel pnlMain;
+        private Button btnPN;
+        private Button btnBN;
+        private Button btnSN;
+        private Button btnKatamei;
+        private Button btnChuban;
+        private Button btnKouban;
         private Items.UcItemHeader ucItemHeader1;
     }
 }

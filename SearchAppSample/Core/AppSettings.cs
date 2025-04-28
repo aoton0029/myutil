@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SearchAppSample.Models.SearchConditions
+namespace SearchAppSample.Core
 {
-    public class SrchCondBN
+    public class AppSettings
     {
-        public string BN { get; set; } = string.Empty;
-
-
+        public int MaxSearchResults { get; set; } = 10;
     }
 }

@@ -1,5 +1,164 @@
+了解です。「一気に戻る」とは、**指定ページまで一気に戻り、そのページを表示し、それ以降の履歴はすべて破棄する**という動作ですね。  
+以下のように強制的に**対象ページをトップにして**遷移するメソッドを用意できます。
+
+---
+
+## ✅ メソッド名案
+
+```csharp
+public void JumpBackTo<TTarget>(params object[] aTempData) where TTarget : UserControl
+```
+
+---
+
+## ✅ 実装（履歴を削って一気に戻る）
+
+```csharp
+public void JumpBackTo<TTarget>(params object[] aTempData) where TTarget : UserControl
+{
+    Type targetType = typeof(TTarget);
+
+    if (!_history.Contains(targetType))
+        return;
+
+    // 対象が出てくるまで全部削除（対象は除く）
+    while (_history.Count > 0 && _history.Peek() != targetType)
+    {
+        _history.Pop();
+    }
+
+    if (_history.Count == 0)
+        return;
+
+    // 遷移処理
+    var from = _currentPage?.GetType();
+    var to = targetType;
+
+    var uc_from = _currentPage;
+    var uc_to = (UserControl)_provider.Resolve(to);
+
+    Context.TempData = aTempData;
+    Context.DefaultNextPage = to;
+    Context.NextPage = to;
+
+    InternalNavigateTo(uc_from, uc_to, null, from, to);
+}
+```
+
+---
+
+## ✅ 使用例
+
+```csharp
+// 途中ページをすっ飛ばして、StartPage にジャンプバックする
+navigationFlowService.JumpBackTo<StartPage>("戻る理由などを渡す");
+```
+
+---
+
+## 🔁 違いの整理
+
+| メソッド名         | 動作                                         |
+|------------------|--------------------------------------------|
+| `GoPrev()`       | 1つ前に戻る                                 |
+| `GoBackTo<T>()`  | 指定ページまで戻る（途中ページ残す）         |
+| `JumpBackTo<T>()`| 指定ページまで一気に戻る（途中ページすべて破棄）|
+
+---
+
+## 💡拡張案
+
+- `JumpBackTo<T>(..., bool includeTarget = true)` として、対象ページも履歴から除外するオプション。
+- `JumpBackTo(Type targetType)` のオーバーロードを作り、動的な型指定に対応。
+- 戻る前に「保存されていない変更があります。戻ってもよいですか？」のようなガードを入れたい場合は、`INavigationGuard` インターフェースでページ側にキャンセル権限を持たせると良いです。
+
+---
+
+必要であれば、「今どこにいるか」「履歴をUIに表示する」「ページタイトルやアイコンを持たせる」なども拡張できます！続けますか？
+
 では NavigationResult を導入し、OnCancel / OnComplete からの戻り値として使えるように拡張します。
 
+
+対象ページ（特定の `UserControl`）まで「バック」する機能を、現在の `NavigationFlowService` に追加する方法を以下に示します。
+
+---
+
+## ✅ 目的
+
+- ナビゲーション履歴 `_history` にスタックされているページのうち、指定したページ `TTarget` が見つかるまで戻る。
+- 見つかったらそのページへ遷移し、それ以降の履歴を破棄する。
+
+---
+
+## ✅ 実装例：`GoBackTo<TTarget>()`
+
+```csharp
+public void GoBackTo<TTarget>(params object[] aTempData) where TTarget : UserControl
+{
+    Type targetType = typeof(TTarget);
+
+    if (_history.Count <= 1 || !_history.Contains(targetType))
+        return;
+
+    // 戻る対象が見つかるまでPopする（直近のTTargetまで）
+    while (_history.Count > 0)
+    {
+        var popped = _history.Pop();
+
+        if (popped == targetType)
+        {
+            _history.Push(popped); // TTargetは戻す（表示対象なので）
+            var from = _currentPage?.GetType();
+            var to = targetType;
+
+            var uc_from = _currentPage;
+            var uc_to = (UserControl)_provider.Resolve(to);
+
+            Context.TempData = aTempData;
+            Context.DefaultNextPage = to;
+            Context.NextPage = to;
+
+            InternalNavigateTo(uc_from, uc_to, null, from, to);
+            return;
+        }
+    }
+}
+```
+
+---
+
+## ✅ 使用例
+
+```csharp
+// ユーザーが設定画面に遷移した後、フォーム入力完了後に最初の入力画面へ戻る場合など
+navigationFlowService.GoBackTo<StartInputPage>();
+```
+
+---
+
+## ✅ 拡張ポイント（任意）
+
+1. **履歴の中に同一ページが複数ある場合の動作切り替え**（最初の一致か最後の一致か）。
+2. **見つからなかった場合の通知（イベントや戻り値）**。
+3. **ナビゲーション履歴を一覧で取得する機能**（デバッグやログ用）。
+
+---
+
+## ✅ 補足：履歴可視化（オプション）
+
+履歴のデバッグ用に以下のようなメソッドもあると便利です：
+
+```csharp
+public IEnumerable<Type> GetHistorySnapshot()
+{
+    return _history.Reverse(); // 先頭が最初に遷移したページ
+}
+```
+
+---
+
+必要であれば、**履歴の状態を保存・復元**（セッション引き継ぎやスナップショット的活用）する仕組みも組み込めます。  
+関心ありますか？
 
 ---
 

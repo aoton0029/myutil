@@ -1,3 +1,98 @@
+了解です。  
+**SQL Server** に **SqlClient**（たとえば `SqlConnection` ＋ `SqlCommand`）を使って生の **SQL文** を送り、  
+**ページネーション**（データの「ページごと取得」）をしたい、ということですね。
+
+この場合、SQL文の中で「どこから何件取得するか」を制御する必要があります。  
+標準的なやり方は、
+
+- **`OFFSET` と `FETCH NEXT`** を使う方法（SQL Server 2012以降推奨）
+- または古いやり方で **ROW_NUMBER()** を使って絞り込む方法
+
+があります。
+
+---
+
+### 【基本形】OFFSET/FETCHを使ったSQL文例
+
+```sql
+SELECT *
+FROM YourTable
+ORDER BY CreatedAt DESC
+OFFSET (@PageNumber - 1) * @PageSize ROWS
+FETCH NEXT @PageSize ROWS ONLY;
+```
+
+ここで、
+
+- `@PageNumber` … ページ番号（1始まり）
+- `@PageSize` … 1ページあたり件数
+- `ORDER BY` … **必須**（ないとOFFSET/FETCHが使えない）
+
+です。
+
+---
+
+### 【C#サンプル】SqlClientで書くとこんな感じ
+
+```csharp
+using (var connection = new SqlConnection(connectionString))
+using (var command = new SqlCommand(@"
+    SELECT *
+    FROM YourTable
+    ORDER BY CreatedAt DESC
+    OFFSET (@PageNumber - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+", connection))
+{
+    command.Parameters.AddWithValue("@PageNumber", pageNumber);
+    command.Parameters.AddWithValue("@PageSize", pageSize);
+
+    connection.Open();
+    using (var reader = command.ExecuteReader())
+    {
+        while (reader.Read())
+        {
+            // データを読み取る
+        }
+    }
+}
+```
+
+---
+
+### 【注意点】
+
+- 必ず **ORDER BY** を書く必要があります。（OFFSET/FETCHは順序がないとダメ）
+- ID順、作成日時順など「一意になるカラム」で並べた方がよいです。
+- 総件数を知りたい場合は別途 `SELECT COUNT(*) FROM YourTable` を実行します。
+
+---
+
+### 【拡張案】
+
+この基本形をベースに、さらに発展させるなら：
+
+- **動的にORDER BY列を変えられる**（ただしSQL Injection対策必須）
+- **WHERE条件を動的に付加する**（検索＋ページング）
+- **トランザクション管理やタイムアウト設定**も含めた汎用メソッドにする
+- **非同期版（`ExecuteReaderAsync`）にする**
+- **パラメータバインドで型指定**（`Add("@param", SqlDbType.Int).Value = xxx`みたいに厳格にする）
+
+などが考えられます。
+
+---
+
+要望に応じて、
+
+- **汎用ページネーションサービスクラス**
+- **動的WHERE句・ORDER句を組み立てる仕組み**
+- **DataTableやList<T>に変換する方法**
+
+みたいなものも作れます！  
+作りたい方向性、さらに教えてもらえますか？  
+たとえば「フィルターも付けたい」とか「ヘルパー関数にまとめたい」とか。
+
+
 了解です！Box.Id および SavedParentId を int から Guid に変更し、ユニーク性とより安全な識別を保証します。
 以下に修正済みのコードを提示します。
 

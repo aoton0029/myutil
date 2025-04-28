@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SearchAppSample.Models.SearchConditions
 {
-    class SrchCondSN
+    public class SrchCondSN
     {
+        public string SN { get; set; } = string.Empty;
     }
 }
