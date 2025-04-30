@@ -1,3 +1,111 @@
+WinForms で CheckBoxGroup を実装したい場合、「複数のカスタムチェックボックスをグループとして管理する」仕組みを作成します。以下の2パターンに分けられます。
+
+
+---
+
+■ パターン1：複数選択可（通常のチェックボックス）
+
+→ 複数をチェック可能で、選択された項目を取得できるようにする。
+
+■ パターン2：単一選択（ラジオボタン風）
+
+→ チェックできるのは1つだけ。
+
+
+---
+
+■ サンプル実装（単一選択モード付き CheckBoxGroup）
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+public class CheckBoxGroup<T> where T : CheckBox
+{
+    private readonly List<T> _checkBoxes = new();
+    private bool _singleSelection;
+
+    public CheckBoxGroup(bool singleSelection = false)
+    {
+        _singleSelection = singleSelection;
+    }
+
+    public void Add(T checkBox)
+    {
+        _checkBoxes.Add(checkBox);
+        checkBox.CheckedChanged += CheckBox_CheckedChanged;
+    }
+
+    public void Remove(T checkBox)
+    {
+        _checkBoxes.Remove(checkBox);
+        checkBox.CheckedChanged -= CheckBox_CheckedChanged;
+    }
+
+    private void CheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_singleSelection && ((CheckBox)sender).Checked)
+        {
+            foreach (var cb in _checkBoxes.Where(cb => cb != sender))
+            {
+                cb.Checked = false;
+            }
+        }
+    }
+
+    public IEnumerable<T> CheckedItems => _checkBoxes.Where(cb => cb.Checked);
+
+    public void Clear()
+    {
+        foreach (var cb in _checkBoxes)
+            cb.Checked = false;
+    }
+
+    public void SetSingleSelection(bool enable)
+    {
+        _singleSelection = enable;
+    }
+}
+
+
+---
+
+■ 使用例（先ほどの RoundedButtonCheckBox と併用）
+
+var checkbox1 = new RoundedButtonCheckBox { Text = "A", Location = new Point(20, 20), Size = new Size(80, 40) };
+var checkbox2 = new RoundedButtonCheckBox { Text = "B", Location = new Point(110, 20), Size = new Size(80, 40) };
+var checkbox3 = new RoundedButtonCheckBox { Text = "C", Location = new Point(200, 20), Size = new Size(80, 40) };
+
+this.Controls.AddRange(new Control[] { checkbox1, checkbox2, checkbox3 });
+
+var group = new CheckBoxGroup<RoundedButtonCheckBox>(singleSelection: true);
+group.Add(checkbox1);
+group.Add(checkbox2);
+group.Add(checkbox3);
+
+
+---
+
+■ 拡張案
+
+グループ選択変更イベント（例：OnSelectionChanged）
+
+選択状態をバインドできる ViewModel 連携
+
+CheckBoxGroup 自体を UserControl 化してまとめて配置可能に
+
+Text や Tag で選択状態取得メソッド
+
+
+
+---
+
+ご希望があれば、複数選択版の UserControl や MVVM 連携例も提示できます。どちらの用途（単一 or 複数選択）を主に想定されていますか？
+
+
+
+
 WinFormsで「角丸のカスタムチェックボックス」を「ボタンのような見た目と動作」で実装するには、以下のようなカスタムコントロールを作成します。
 
 
