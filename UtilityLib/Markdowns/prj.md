@@ -1,3 +1,147 @@
+以下に、単一選択モード（ラジオボタン風）と選択状態の初期設定に対応した DynamicCheckBoxList の拡張版を提示します。
+
+
+---
+
+1. プロパティ追加と内部修正
+
+public partial class DynamicCheckBoxList : UserControl
+{
+    private FlowLayoutPanel _panel = new FlowLayoutPanel();
+    private List<CheckBox> _checkBoxes = new List<CheckBox>();
+
+    public DynamicCheckBoxList()
+    {
+        InitializeComponent();
+        _panel.Dock = DockStyle.Fill;
+        _panel.AutoScroll = true;
+        _panel.WrapContents = true;
+        _panel.FlowDirection = FlowDirection.TopDown;
+        Controls.Add(_panel);
+    }
+
+    [Category("Behavior")]
+    public bool SingleSelection { get; set; } = false;
+
+    [Category("Appearance")]
+    public Font CheckBoxFont { get; set; } = SystemFonts.DefaultFont;
+
+    [Category("Appearance")]
+    public Color CheckBoxForeColor { get; set; } = SystemColors.ControlText;
+
+    [Category("Appearance")]
+    public Color CheckBoxBackColor { get; set; } = SystemColors.Control;
+
+    public void SetItems(IEnumerable<CheckBoxItem> items, IEnumerable<string>? initiallyCheckedIds = null)
+    {
+        _panel.Controls.Clear();
+        _checkBoxes.Clear();
+
+        var checkedIdsSet = initiallyCheckedIds != null ? new HashSet<string>(initiallyCheckedIds) : null;
+
+        foreach (var item in items)
+        {
+            var cb = new CheckBox
+            {
+                Text = item.DisplayName,
+                Font = this.CheckBoxFont,
+                ForeColor = this.CheckBoxForeColor,
+                BackColor = this.CheckBoxBackColor,
+                AutoSize = true,
+                Margin = new Padding(5),
+                Tag = item.Id
+            };
+
+            if (checkedIdsSet?.Contains(item.Id) == true)
+                cb.Checked = true;
+
+            cb.CheckedChanged += CheckBox_CheckedChanged;
+            _panel.Controls.Add(cb);
+            _checkBoxes.Add(cb);
+        }
+    }
+
+    private void CheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        if (!SingleSelection || !(sender is CheckBox changedCb) || !changedCb.Checked)
+            return;
+
+        foreach (var cb in _checkBoxes)
+        {
+            if (cb != changedCb)
+                cb.Checked = false;
+        }
+    }
+
+    public IEnumerable<string> GetCheckedIds()
+    {
+        foreach (var cb in _checkBoxes)
+        {
+            if (cb.Checked && cb.Tag is string id)
+                yield return id;
+        }
+    }
+
+    public IEnumerable<CheckBoxItem> GetCheckedItems()
+    {
+        foreach (var cb in _checkBoxes)
+        {
+            if (cb.Checked && cb.Tag is string id)
+                yield return new CheckBoxItem(id, cb.Text);
+        }
+    }
+
+    public void SetCheckedIds(IEnumerable<string> ids)
+    {
+        var idSet = new HashSet<string>(ids);
+
+        foreach (var cb in _checkBoxes)
+        {
+            if (cb.Tag is string id)
+                cb.Checked = idSet.Contains(id);
+        }
+    }
+}
+
+
+---
+
+2. 使用例
+
+var items = new[]
+{
+    new CheckBoxItem("id1", "選択肢A"),
+    new CheckBoxItem("id2", "選択肢B"),
+    new CheckBoxItem("id3", "選択肢C")
+};
+
+var checkBoxList = new DynamicCheckBoxList
+{
+    Dock = DockStyle.Fill,
+    SingleSelection = true // ← 単一選択モードを有効化
+};
+
+checkBoxList.SetItems(items, new[] { "id2" }); // 初期選択あり
+this.Controls.Add(checkBoxList);
+
+
+---
+
+拡張案
+
+SelectionChangedイベントで外部に選択変更通知
+
+SelectedIdプロパティ（単一選択時）追加
+
+MultiColumnLayout設定（カラム数やレイアウト変更）
+
+
+必要に応じてこれらも組み込み可能です。追加のご希望はありますか？
+
+
+
+
+
 Project や WaveformSequence の変更通知は、以下のように INotifyPropertyChanged + イベントバスの Publish を組み合わせると、編集検知と画面通知を一元管理できます。
 
 
