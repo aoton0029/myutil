@@ -1,3 +1,112 @@
+WinFormsで「角丸のカスタムチェックボックス」を「ボタンのような見た目と動作」で実装するには、以下のようなカスタムコントロールを作成します。
+
+
+---
+
+■ 概要
+
+CheckBox を継承して FlatStyle = Flat に設定
+
+描画をカスタム（OnPaint をオーバーライド）
+
+チェック状態で色・テキスト変化
+
+GraphicsPath で角丸描画
+
+
+
+---
+
+■ サンプルコード（C# / WinForms）
+
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+
+public class RoundedButtonCheckBox : CheckBox
+{
+    public int CornerRadius { get; set; } = 10;
+    public Color CheckedBackColor { get; set; } = Color.DodgerBlue;
+    public Color UncheckedBackColor { get; set; } = Color.LightGray;
+    public Color BorderColor { get; set; } = Color.Gray;
+
+    public RoundedButtonCheckBox()
+    {
+        this.Appearance = Appearance.Button;
+        this.FlatStyle = FlatStyle.Flat;
+        this.FlatAppearance.BorderSize = 0;
+        this.TextAlign = ContentAlignment.MiddleCenter;
+        this.AutoSize = false;
+    }
+
+    protected override void OnPaint(PaintEventArgs pevent)
+    {
+        pevent.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        Rectangle rect = this.ClientRectangle;
+
+        using (GraphicsPath path = RoundedRect(rect, CornerRadius))
+        using (Brush backBrush = new SolidBrush(this.Checked ? CheckedBackColor : UncheckedBackColor))
+        using (Pen borderPen = new Pen(BorderColor, 1))
+        {
+            pevent.Graphics.FillPath(backBrush, path);
+            pevent.Graphics.DrawPath(borderPen, path);
+        }
+
+        TextRenderer.DrawText(pevent.Graphics, this.Text, this.Font, rect, this.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+    }
+
+    private GraphicsPath RoundedRect(Rectangle bounds, int radius)
+    {
+        int dia = radius * 2;
+        GraphicsPath path = new GraphicsPath();
+        path.AddArc(bounds.X, bounds.Y, dia, dia, 180, 90);
+        path.AddArc(bounds.Right - dia, bounds.Y, dia, dia, 270, 90);
+        path.AddArc(bounds.Right - dia, bounds.Bottom - dia, dia, dia, 0, 90);
+        path.AddArc(bounds.X, bounds.Bottom - dia, dia, dia, 90, 90);
+        path.CloseFigure();
+        return path;
+    }
+}
+
+
+---
+
+■ 使用例
+
+フォームに貼り付けて使う：
+
+var roundedCheckbox = new RoundedButtonCheckBox
+{
+    Text = "選択",
+    Size = new Size(100, 40),
+    Location = new Point(30, 30)
+};
+this.Controls.Add(roundedCheckbox);
+
+
+---
+
+■ 拡張案
+
+MouseOver時の色変更 (OnMouseEnter, OnMouseLeave)
+
+Imageを表示できるプロパティ追加
+
+CheckBoxGroupのような動作（ラジオ風）
+
+Animation付き角丸切り替え（Timer利用）
+
+
+
+---
+
+拡張したい機能やデザイン（アイコン入り・アニメーション付きなど）があれば教えてください。
+
+
+
+
+
 以下に、単一選択モード（ラジオボタン風）と選択状態の初期設定に対応した DynamicCheckBoxList の拡張版を提示します。
 
 
