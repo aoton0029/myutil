@@ -1,3 +1,195 @@
+検索条件画面 → 検索結果画面に遷移し、結果画面でページネーションを行うWinForms + Behaviorパターンに基づく設計フローを、以下のように整理します。
+
+
+---
+
+■ 全体構成フロー
+
+[SearchConditionControl] ← 検索条件入力
+         |
+         | （検索ボタンクリック）
+         v
+[SearchResultControl] ← 検索結果表示 + ページネーション
+
+
+---
+
+1. 共通インターフェース設計
+
+検索条件モデル
+
+public class SearchCondition
+{
+    public string Keyword { get; set; }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 20;
+}
+
+
+---
+
+検索結果モデル
+
+public class PagedResult<T>
+{
+    public List<T> Items { get; set; } = new();
+    public int TotalCount { get; set; }
+    public int PageSize { get; set; }
+    public int CurrentPage { get; set; }
+
+    public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
+}
+
+
+---
+
+検索コンテキストインターフェース（共通）
+
+public interface ISearchService<T>
+{
+    PagedResult<T> Search(SearchCondition condition);
+}
+
+
+---
+
+2. 検索条件画面（SearchConditionControl）
+
+public partial class SearchConditionControl : UserControl
+{
+    public event Action<SearchCondition>? SearchRequested;
+
+    public SearchConditionControl()
+    {
+        InitializeComponent();
+        btnSearch.Click += (s, e) =>
+        {
+            var condition = new SearchCondition
+            {
+                Keyword = txtKeyword.Text,
+                PageNumber = 1
+            };
+            SearchRequested?.Invoke(condition);
+        };
+    }
+}
+
+
+---
+
+3. 検索結果画面（SearchResultControl）
+
+public partial class SearchResultControl : UserControl
+{
+    private SearchCondition _currentCondition = new();
+    private readonly ISearchService<object> _searchService;
+
+    public SearchResultControl(ISearchService<object> searchService)
+    {
+        InitializeComponent();
+        _searchService = searchService;
+
+        btnPrev.Click += (s, e) => ChangePage(-1);
+        btnNext.Click += (s, e) => ChangePage(1);
+    }
+
+    public void LoadResult(SearchCondition condition)
+    {
+        _currentCondition = condition;
+        var result = _searchService.Search(_currentCondition);
+
+        dgvResults.DataSource = result.Items;
+        lblPageInfo.Text = $"{result.CurrentPage}/{result.TotalPages}";
+
+        btnPrev.Enabled = result.CurrentPage > 1;
+        btnNext.Enabled = result.CurrentPage < result.TotalPages;
+    }
+
+    private void ChangePage(int delta)
+    {
+        _currentCondition.PageNumber += delta;
+        LoadResult(_currentCondition);
+    }
+}
+
+
+---
+
+4. ナビゲーションの統合（例：Formに組み込む）
+
+public partial class MainForm : Form
+{
+    private readonly ISearchService<object> _searchService = new DummySearchService();
+
+    public MainForm()
+    {
+        InitializeComponent();
+
+        var searchConditionControl = new SearchConditionControl();
+        searchConditionControl.SearchRequested += condition =>
+        {
+            var resultControl = new SearchResultControl(_searchService);
+            resultControl.LoadResult(condition);
+            ShowControl(resultControl);
+        };
+
+        ShowControl(searchConditionControl);
+    }
+
+    private void ShowControl(UserControl control)
+    {
+        this.Controls.Clear();
+        control.Dock = DockStyle.Fill;
+        this.Controls.Add(control);
+    }
+}
+
+
+---
+
+5. ダミーサービスの例（後で本物に差し替え）
+
+public class DummySearchService : ISearchService<object>
+{
+    public PagedResult<object> Search(SearchCondition condition)
+    {
+        var all = Enumerable.Range(1, 100).Select(i => new { ID = i, Name = $"Item {i}" }).ToList();
+        var items = all.Skip((condition.PageNumber - 1) * condition.PageSize).Take(condition.PageSize).ToList();
+
+        return new PagedResult<object>
+        {
+            Items = items,
+            TotalCount = all.Count,
+            PageSize = condition.PageSize,
+            CurrentPage = condition.PageNumber
+        };
+    }
+}
+
+
+---
+
+拡張案
+
+ページ番号入力（直接ジャンプ）
+
+条件保持／再利用
+
+非同期検索とローディング表示
+
+DataGridViewへの列定義抽象化
+
+
+
+---
+
+必要に応じて、ページサイズ変更や絞り込み条件の追加、INavigationService対応なども追加可能です。
+この構成をベースに、さらに拡張したいポイントはありますか？（例：MVVM風にしたい、戻るボタンで前条件に戻りたい、など）
+
+
+
+
+
 了解です。  
 **SQL Server** に **SqlClient**（たとえば `SqlConnection` ＋ `SqlCommand`）を使って生の **SQL文** を送り、  
 **ページネーション**（データの「ページごと取得」）をしたい、ということですね。
