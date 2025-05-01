@@ -1,3 +1,137 @@
+DataGridView の列定義を抽象化することで、結果データの型に依存せず、画面コードを汎用化・再利用可能にすることができます。
+
+以下に、WinFormsにおける 列定義の抽象化構造 + 適用例 を提示します。
+
+
+---
+
+■ 抽象化の方針
+
+1. 列定義を表すモデル（ColumnDefinition）を作成
+
+
+2. 列のバインディング方法をラムダ式などで定義
+
+
+3. 抽象化された構造を使って DataGridView に列を動的生成
+
+
+
+
+---
+
+1. 列定義モデルの定義
+
+public class ColumnDefinition<T>
+{
+    public string HeaderText { get; set; } = "";
+    public Func<T, object?> ValueSelector { get; set; } = _ => null;
+    public int Width { get; set; } = 100;
+}
+
+
+---
+
+2. ヘルパーで DataGridView に列をバインド
+
+public static class DataGridViewHelper
+{
+    public static void BindData<T>(DataGridView grid, List<T> data, List<ColumnDefinition<T>> columns)
+    {
+        grid.Columns.Clear();
+        grid.AutoGenerateColumns = false;
+
+        foreach (var colDef in columns)
+        {
+            var column = new DataGridViewTextBoxColumn
+            {
+                HeaderText = colDef.HeaderText,
+                Width = colDef.Width
+            };
+            grid.Columns.Add(column);
+        }
+
+        grid.Rows.Clear();
+        foreach (var item in data)
+        {
+            var rowValues = columns.Select(c => c.ValueSelector(item)).ToArray();
+            grid.Rows.Add(rowValues);
+        }
+    }
+}
+
+
+---
+
+3. 使用例（匿名型にも対応）
+
+public void ShowResult(List<object> items)
+{
+    var columns = new List<ColumnDefinition<object>>
+    {
+        new ColumnDefinition<object>
+        {
+            HeaderText = "ID",
+            ValueSelector = x => x.GetType().GetProperty("ID")?.GetValue(x),
+            Width = 50
+        },
+        new ColumnDefinition<object>
+        {
+            HeaderText = "Name",
+            ValueSelector = x => x.GetType().GetProperty("Name")?.GetValue(x),
+            Width = 150
+        }
+    };
+
+    DataGridViewHelper.BindData(dgvResults, items, columns);
+}
+
+
+---
+
+4. ジェネリック対応で強型もサポート
+
+型が確定している場合はこう書けます：
+
+var typedItems = Enumerable.Range(1, 10)
+    .Select(i => new MyResult { ID = i, Name = $"Item {i}" })
+    .ToList();
+
+var columns = new List<ColumnDefinition<MyResult>>
+{
+    new ColumnDefinition<MyResult> { HeaderText = "ID", ValueSelector = x => x.ID },
+    new ColumnDefinition<MyResult> { HeaderText = "Name", ValueSelector = x => x.Name }
+};
+
+DataGridViewHelper.BindData(dgvResults, typedItems, columns);
+
+
+---
+
+拡張案
+
+DataGridViewLinkColumn 対応（IsLink プロパティを ColumnDefinition に追加）
+
+ButtonColumn, ImageColumn の抽象化対応
+
+セルクリック時のイベントを抽象化
+
+ソート対応：IComparer<T> を ColumnDefinition に追加
+
+表示フォーマット用 string Format(object value) 追加
+
+
+
+---
+
+上記を導入すれば、画面側は「データと列定義を渡すだけ」で済むようになります。
+必要であれば、リンク付き列・ボタン列対応の拡張 ColumnDefinition 実装も追加できます。どの機能を優先したいですか？
+
+
+
+
+
+
 検索条件画面 → 検索結果画面に遷移し、結果画面でページネーションを行うWinForms + Behaviorパターンに基づく設計フローを、以下のように整理します。
 
 
