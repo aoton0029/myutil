@@ -1,3 +1,153 @@
+DataGridView に ボタン列を抽象化して対応する構造を以下のように拡張できます。
+
+
+---
+
+■ 1. 拡張版 ColumnDefinition<T> 設計
+
+public enum ColumnType
+{
+    Text,
+    Button
+}
+
+public class ColumnDefinition<T>
+{
+    public string HeaderText { get; set; } = "";
+    public Func<T, object?>? ValueSelector { get; set; }
+    public int Width { get; set; } = 100;
+    public ColumnType ColumnType { get; set; } = ColumnType.Text;
+
+    // ボタン押下時のアクション（ColumnType = Button のとき）
+    public Action<T>? OnButtonClick { get; set; }
+}
+
+
+---
+
+■ 2. ヘルパーの改良（ボタン列処理対応）
+
+public static class DataGridViewHelper
+{
+    public static void BindData<T>(DataGridView grid, List<T> data, List<ColumnDefinition<T>> columns)
+    {
+        grid.Columns.Clear();
+        grid.AutoGenerateColumns = false;
+
+        // 列追加
+        foreach (var colDef in columns)
+        {
+            DataGridViewColumn column;
+            if (colDef.ColumnType == ColumnType.Button)
+            {
+                column = new DataGridViewButtonColumn
+                {
+                    HeaderText = colDef.HeaderText,
+                    UseColumnTextForButtonValue = false,
+                    Width = colDef.Width
+                };
+            }
+            else
+            {
+                column = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = colDef.HeaderText,
+                    Width = colDef.Width
+                };
+            }
+
+            grid.Columns.Add(column);
+        }
+
+        // 行追加
+        grid.Rows.Clear();
+        foreach (var item in data)
+        {
+            var values = columns.Select(c =>
+                c.ColumnType == ColumnType.Button ? "実行" : c.ValueSelector?.Invoke(item)
+            ).ToArray();
+            grid.Rows.Add(values);
+        }
+
+        // イベント設定（ボタン用）
+        grid.CellContentClick -= OnCellContentClick;
+        grid.CellContentClick += OnCellContentClick;
+
+        void OnCellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            var colDef = columns[e.ColumnIndex];
+            if (colDef.ColumnType == ColumnType.Button)
+            {
+                var item = data[e.RowIndex];
+                colDef.OnButtonClick?.Invoke(item);
+            }
+        }
+    }
+}
+
+
+---
+
+■ 3. 使用例（ボタン列つき）
+
+public class MyResult
+{
+    public int ID { get; set; }
+    public string Name { get; set; } = "";
+}
+
+var data = Enumerable.Range(1, 10)
+    .Select(i => new MyResult { ID = i, Name = $"Item {i}" })
+    .ToList();
+
+var columns = new List<ColumnDefinition<MyResult>>
+{
+    new ColumnDefinition<MyResult>
+    {
+        HeaderText = "ID",
+        ValueSelector = x => x.ID
+    },
+    new ColumnDefinition<MyResult>
+    {
+        HeaderText = "Name",
+        ValueSelector = x => x.Name
+    },
+    new ColumnDefinition<MyResult>
+    {
+        HeaderText = "操作",
+        ColumnType = ColumnType.Button,
+        OnButtonClick = item => MessageBox.Show($"ID: {item.ID} を選択")
+    }
+};
+
+DataGridViewHelper.BindData(dgvResults, data, columns);
+
+
+---
+
+拡張案
+
+UseColumnTextForButtonValue に true/false の切り替えサポート
+
+ボタンラベルを Func<T, string> にすることで、アイテムごとにボタン名変更
+
+他列と共通のクリックイベント管理（デリゲート登録の抽象化）
+
+行・列全体のクリック管理に拡張する RowDefinition の設計
+
+
+
+---
+
+ボタンの見た目やデザイン、複数ボタンの埋め込みなど、さらなる拡張も可能です。
+複数ボタンやボタンアイコン表示なども追加しますか？
+
+
+
+
+
 DataGridView の列定義を抽象化することで、結果データの型に依存せず、画面コードを汎用化・再利用可能にすることができます。
 
 以下に、WinFormsにおける 列定義の抽象化構造 + 適用例 を提示します。
