@@ -192,4 +192,21 @@ namespace UtilityLib.Threadings
 
         T m_result;
     }
+
+    internal static class DisposableHelper
+    {
+        /// <summary>  
+        /// Disposes the given disposable object and sets the reference to null.  
+        /// </summary>  
+        /// <typeparam name="T">The type of the disposable object.</typeparam>  
+        /// <param name="disposable">The disposable object to dispose.</param>  
+        public static void Dispose<T>(ref T disposable) where T : class, IDisposable
+        {
+            if (disposable != null)
+            {
+                disposable.Dispose();
+                disposable = null;
+            }
+        }
+    }
 }

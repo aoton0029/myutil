@@ -38,10 +38,10 @@ namespace UtilityLib.Models
             RaisePropertyChanged(propertyName);
 
             // Undo/Redo 登録
-            _undoStack.Push(() => {
-                field = oldValue;
-                RaisePropertyChanged(propertyName);
-            });
+            //_undoStack.Push(() => {
+            //    field = oldValue;
+            //    RaisePropertyChanged(propertyName);
+            //});
             _redoStack.Clear(); // redoは上書き
         }
 

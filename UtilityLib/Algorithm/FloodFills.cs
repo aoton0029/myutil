@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UtilityLib.Algorithm
 {
-    internal class FloodFill
+    internal class FloodFills
     {
         static void Main()
         {

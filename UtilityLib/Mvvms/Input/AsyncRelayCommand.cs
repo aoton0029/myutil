@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace UtilityLib.Mvvms.Input
 {
@@ -220,7 +221,7 @@ namespace UtilityLib.Mvvms.Input
 
                 static async void MonitorTask(AsyncRelayCommand @this, Task task)
                 {
-                    await task.GetAwaitableWithoutEndValidation();
+                    //await task.GetAwaitableWithoutEndValidation();
 
                     if (ReferenceEquals(@this.executionTask, task))
                     {
@@ -540,7 +541,7 @@ namespace UtilityLib.Mvvms.Input
 
                 static async void MonitorTask(AsyncRelayCommand<T> @this, Task task)
                 {
-                    await task.GetAwaitableWithoutEndValidation();
+                    //await task.GetAwaitableWithoutEndValidation();
 
                     if (ReferenceEquals(@this.executionTask, task))
                     {

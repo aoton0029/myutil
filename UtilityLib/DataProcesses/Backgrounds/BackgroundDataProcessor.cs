@@ -9,7 +9,7 @@ namespace UtilityLib.DataProcesses.Backgrounds
 {
     public class BackgroundDataProcessor : BackgroundService
     {
-        private readonly Channel<DataWithKey> _channel = new();
+        private readonly System.Threading.Channels.Channel<DataWithKey> _channel;
         private readonly ConcurrentDictionary<string, KeySpecificDataProcessor> _dataProcessors = new();
         private readonly BackgroundDataProcessorMonitor _monitor;
         private readonly object _processorsLock = new();
@@ -21,7 +21,7 @@ namespace UtilityLib.DataProcesses.Backgrounds
 
         public void ScheduleProcessingData(DataWithKey data)
         {
-            _channel.Write(data);
+            _channel.Writer.TryWrite(data);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -32,7 +32,7 @@ namespace UtilityLib.DataProcesses.Backgrounds
             {
                 try
                 {
-                    var data = _channel.Read(stoppingToken);
+                    var data = await _channel.Reader.ReadAsync(stoppingToken);
 
                     lock (_processorsLock)
                     {

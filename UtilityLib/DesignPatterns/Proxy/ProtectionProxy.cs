@@ -48,16 +48,6 @@ namespace UtilityLib.DesignPatterns.Proxy
         }
     }
 
-    // 使用例
-    class Program
-    {
-        static void Main()
-        {
-            IDataAccess adminAccess = new ProtectionProxy("Admin");
-            IDataAccess userAccess = new ProtectionProxy("User");
-
-            adminAccess.AccessData(); // 許可される
-            userAccess.AccessData();  // 拒否される
-        }
-    }
+   
+    
 }

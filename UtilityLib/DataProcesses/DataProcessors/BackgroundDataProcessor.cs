@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using UtilityLib.DataProcesses.Backgrounds;
 
 namespace UtilityLib.DataProcesses
 {
@@ -152,6 +153,23 @@ namespace UtilityLib.DataProcesses
             }
 
             private readonly record struct MonitoringTask(Task Task, CancellationTokenSource CancellationTokenSource);
+        }
+        
+    }
+
+    public static class SemaphoreSlimExtensions
+    {
+        public static async Task<bool> WaitWithCancellation(this SemaphoreSlim semaphore, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await semaphore.WaitAsync(cancellationToken);
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
         }
     }
 }

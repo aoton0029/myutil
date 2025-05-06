@@ -55,18 +55,4 @@ namespace UtilityLib.DesignPatterns.Proxy
         }
     }
 
-    // 使用例
-    class Program
-    {
-        static void Main()
-        {
-            IImage image1 = new ProxyImage("photo1.jpg");
-            IImage image2 = new ProxyImage("photo2.jpg");
-
-            // 画像は初回アクセス時にロードされる
-            image1.Display();
-            Console.WriteLine("----------------");
-            image1.Display(); // 2回目以降はロードしない
-        }
-    }
 }

@@ -55,6 +55,11 @@ namespace UtilityLib.DataProcesses
             }
         }
 
+        internal void Write(Backgrounds.DataWithKey data)
+        {
+            throw new NotImplementedException();
+        }
+
         // チャネルが閉じていて、データもないか確認
         public bool IsCompleted
         {
