@@ -1,31 +1,31 @@
-# C# ƒvƒƒWƒFƒNƒgŠÇ—ƒVƒXƒeƒ€‚ÌİŒv
+ï»¿# C# ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆç®¡ç†ã‚·ã‚¹ãƒ†ãƒ ã®è¨­è¨ˆ
 
-‚¨–â‚¢‡‚í‚¹‚¢‚½‚¾‚¢‚½ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌİŒv‚É‚Â‚¢‚ÄAŠeƒNƒ‰ƒX‚Ì–ğŠ„‚ÆƒNƒ‰ƒXİŒv‚ğ’ñˆÄ‚µ‚Ü‚·B
+ãŠå•ã„åˆã‚ã›ã„ãŸã ã„ãŸã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®è¨­è¨ˆã«ã¤ã„ã¦ã€å„ã‚¯ãƒ©ã‚¹ã®å½¹å‰²ã¨ã‚¯ãƒ©ã‚¹è¨­è¨ˆã‚’ææ¡ˆã—ã¾ã™ã€‚
 
-## ŠeƒNƒ‰ƒX‚Ì–ğŠ„
+## å„ã‚¯ãƒ©ã‚¹ã®å½¹å‰²
 
-1. **Project** - ƒvƒƒWƒFƒNƒgƒf[ƒ^ƒ‚ƒfƒ‹
-   - ƒvƒƒWƒFƒNƒg‚ÌÀÛ‚Ìƒf[ƒ^‚Æó‘Ô‚ğ•Û
-   - ƒtƒ@ƒCƒ‹ƒpƒXA–¼‘OA“à—e‚È‚Ç‚ÌŠî–{î•ñ‚ğŠÇ—
+1. **Project** - ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ‡ãƒ¼ã‚¿ãƒ¢ãƒ‡ãƒ«
+   - ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å®Ÿéš›ã®ãƒ‡ãƒ¼ã‚¿ã¨çŠ¶æ…‹ã‚’ä¿æŒ
+   - ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€åå‰ã€å†…å®¹ãªã©ã®åŸºæœ¬æƒ…å ±ã‚’ç®¡ç†
 
-2. **ProjectContext** - ƒvƒƒWƒFƒNƒgó‘ÔŠÇ—
-   - ’PˆêƒvƒƒWƒFƒNƒg‚Ì•ÒWó‘Ô‚ğ’ÇÕ
-   - •ÏX’Ê’mƒƒJƒjƒYƒ€‚ğ’ñ‹Ÿ
-   - –¢•Û‘¶‚Ì•ÏX‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğŠÇ—
+2. **ProjectContext** - ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆçŠ¶æ…‹ç®¡ç†
+   - å˜ä¸€ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ç·¨é›†çŠ¶æ…‹ã‚’è¿½è·¡
+   - å¤‰æ›´é€šçŸ¥ãƒ¡ã‚«ãƒ‹ã‚ºãƒ ã‚’æä¾›
+   - æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’ç®¡ç†
 
-3. **ProjectService** - ƒvƒƒWƒFƒNƒg‘€ìƒT[ƒrƒX
-   - ƒtƒ@ƒCƒ‹‘€ìi•Û‘¶A“Ç‚İ‚İj‚ğ’S“–
-   - SaveASave AsAOpen‚ÌÀ‘•‚ğ’ñ‹Ÿ
-   - ƒvƒƒWƒFƒNƒg‚Ì‰i‘±‰»‚ÆƒVƒŠƒAƒ‰ƒCƒYˆ—‚ğs‚¤
+3. **ProjectService** - ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæ“ä½œã‚µãƒ¼ãƒ“ã‚¹
+   - ãƒ•ã‚¡ã‚¤ãƒ«æ“ä½œï¼ˆä¿å­˜ã€èª­ã¿è¾¼ã¿ï¼‰ã‚’æ‹…å½“
+   - Saveã€Save Asã€Openã®å®Ÿè£…ã‚’æä¾›
+   - ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®æ°¸ç¶šåŒ–ã¨ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºå‡¦ç†ã‚’è¡Œã†
 
-4. **AppContext** - ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‘S‘Ì‚ÌƒRƒ“ƒeƒLƒXƒg
-   - Œ»İƒAƒNƒeƒBƒu‚ÈProjectContext‚ğŠÇ—
-   - ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‘S‘Ì‚Ìó‘Ô‚ğ•Û
-   - ƒT[ƒrƒX‚Ì“o˜^‚Ææ“¾‚Ìd‘g‚İ‚ğ’ñ‹Ÿ
+4. **AppContext** - ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+   - ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªProjectContextã‚’ç®¡ç†
+   - ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®çŠ¶æ…‹ã‚’ä¿æŒ
+   - ã‚µãƒ¼ãƒ“ã‚¹ã®ç™»éŒ²ã¨å–å¾—ã®ä»•çµ„ã¿ã‚’æä¾›
 
-## ƒNƒ‰ƒXİŒv
+## ã‚¯ãƒ©ã‚¹è¨­è¨ˆ
 
-ˆÈ‰º‚É‚»‚ê‚¼‚ê‚ÌƒNƒ‰ƒX‚ÌÚ×İŒv‚ğ’ñˆÄ‚µ‚Ü‚·F
+ä»¥ä¸‹ã«ãã‚Œãã‚Œã®ã‚¯ãƒ©ã‚¹ã®è©³ç´°è¨­è¨ˆã‚’ææ¡ˆã—ã¾ã™ï¼š
 
 ```csharp name=Project.cs
 using System;
@@ -35,17 +35,17 @@ using System.Runtime.CompilerServices;
 namespace ProjectManagement
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒg‚Ìƒf[ƒ^‚Æó‘Ô‚ğ•\‚·ƒ‚ƒfƒ‹ƒNƒ‰ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ‡ãƒ¼ã‚¿ã¨çŠ¶æ…‹ã‚’è¡¨ã™ãƒ¢ãƒ‡ãƒ«ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class Project : INotifyPropertyChanged
     {
         private string _name;
         private string _filePath;
-        private object _content; // ÀÛ‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚É‰‚¶‚ÄŒ^‚ğ•ÏX
+        private object _content; // å®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«å¿œã˜ã¦å‹ã‚’å¤‰æ›´
         private bool _isDirty;
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg–¼
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå
         /// </summary>
         public string Name
         {
@@ -54,7 +54,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚Ìƒtƒ@ƒCƒ‹ƒpƒXi–¢•Û‘¶‚Ìê‡‚Ínullj
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ï¼ˆæœªä¿å­˜ã®å ´åˆã¯nullï¼‰
         /// </summary>
         public string FilePath
         {
@@ -63,7 +63,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚Ì“à—e
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å†…å®¹
         /// </summary>
         public object Content
         {
@@ -72,7 +72,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// –¢•Û‘¶‚Ì•ÏX‚ª‚ ‚é‚©‚Ç‚¤‚©
+        /// æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹ã‹ã©ã†ã‹
         /// </summary>
         public bool IsDirty
         {
@@ -81,9 +81,9 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
-        /// <param name="name">ƒvƒƒWƒFƒNƒg–¼</param>
+        /// <param name="name">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå</param>
         public Project(string name = "New Project")
         {
             _name = name;
@@ -118,7 +118,7 @@ using System.ComponentModel;
 namespace ProjectManagement
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒg‚Ìó‘Ô‚ğŠÇ—‚·‚éƒRƒ“ƒeƒLƒXƒgƒNƒ‰ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚¯ãƒ©ã‚¹
     /// </summary>
     public class ProjectContext : IDisposable
     {
@@ -126,7 +126,7 @@ namespace ProjectManagement
         private bool _isModified = false;
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ
         /// </summary>
         public Project Project
         {
@@ -135,7 +135,7 @@ namespace ProjectManagement
             {
                 if (_project != null)
                 {
-                    // ŒÃ‚¢ƒvƒƒWƒFƒNƒg‚ÌƒCƒxƒ“ƒgw“Ç‚ğ‰ğœ
+                    // å¤ã„ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ™ãƒ³ãƒˆè³¼èª­ã‚’è§£é™¤
                     _project.PropertyChanged -= Project_PropertyChanged;
                 }
 
@@ -143,14 +143,14 @@ namespace ProjectManagement
 
                 if (_project != null)
                 {
-                    // V‚µ‚¢ƒvƒƒWƒFƒNƒg‚ÌƒCƒxƒ“ƒgw“Ç
+                    // æ–°ã—ã„ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ™ãƒ³ãƒˆè³¼èª­
                     _project.PropertyChanged += Project_PropertyChanged;
                 }
             }
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ª•ÏX‚³‚ê‚½‚©‚Ç‚¤‚©
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãŒå¤‰æ›´ã•ã‚ŒãŸã‹ã©ã†ã‹
         /// </summary>
         public bool IsModified
         {
@@ -166,33 +166,33 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚Ì•ÏXó‘Ô‚ª•Ï‚í‚Á‚½‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å¤‰æ›´çŠ¶æ…‹ãŒå¤‰ã‚ã£ãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler ModifiedChanged;
 
         /// <summary>
-        /// V‚µ‚¢ƒvƒƒWƒFƒNƒg‚ÅƒRƒ“ƒeƒLƒXƒg‚ğ‰Šú‰»
+        /// æ–°ã—ã„ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã§ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’åˆæœŸåŒ–
         /// </summary>
-        /// <param name="project">ƒvƒƒWƒFƒNƒg</param>
+        /// <param name="project">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ</param>
         public ProjectContext(Project project)
         {
             Project = project ?? throw new ArgumentNullException(nameof(project));
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ÌƒvƒƒpƒeƒB‚ª•ÏX‚³‚ê‚½‚Ìˆ—
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã®å‡¦ç†
         /// </summary>
         private void Project_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Project.Content))
             {
-                // ƒRƒ“ƒeƒ“ƒc‚ª•ÏX‚³‚ê‚½‚çƒvƒƒWƒFƒNƒg‚ğ•ÏXó‘Ô‚É‚·‚é
+                // ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ãŒå¤‰æ›´ã•ã‚ŒãŸã‚‰ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’å¤‰æ›´çŠ¶æ…‹ã«ã™ã‚‹
                 MarkAsModified();
             }
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•ÏXó‘Ô‚Æ‚µ‚Äƒ}[ƒN
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’å¤‰æ›´çŠ¶æ…‹ã¨ã—ã¦ãƒãƒ¼ã‚¯
         /// </summary>
         public void MarkAsModified()
         {
@@ -201,7 +201,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ–¢•ÏXó‘Ô‚Æ‚µ‚Äƒ}[ƒNi•Û‘¶Œã‚È‚Çj
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’æœªå¤‰æ›´çŠ¶æ…‹ã¨ã—ã¦ãƒãƒ¼ã‚¯ï¼ˆä¿å­˜å¾Œãªã©ï¼‰
         /// </summary>
         public void MarkAsUnmodified()
         {
@@ -210,7 +210,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒŠƒ\[ƒX‚Ì‰ğ•ú
+        /// ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
         /// </summary>
         public void Dispose()
         {
@@ -232,7 +232,7 @@ using System.Text.Json;
 namespace ProjectManagement
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒg‚Ìƒtƒ@ƒCƒ‹‘€ì‚ğ’S“–‚·‚éƒT[ƒrƒXƒNƒ‰ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«æ“ä½œã‚’æ‹…å½“ã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class ProjectService
     {
@@ -244,10 +244,10 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
-        /// <param name="name">ƒvƒƒWƒFƒNƒg–¼</param>
-        /// <returns>ì¬‚³‚ê‚½ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</returns>
+        /// <param name="name">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå</param>
+        /// <returns>ä½œæˆã•ã‚ŒãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</returns>
         public ProjectContext CreateNew(string name = "New Project")
         {
             var project = new Project(name);
@@ -255,10 +255,10 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>ŠJ‚¢‚½ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>é–‹ã„ãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</returns>
         public async Task<ProjectContext> OpenAsync(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -288,10 +288,10 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
         /// </summary>
-        /// <param name="context">•Û‘¶‚·‚éƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</param>
-        /// <returns>•Û‘¶ƒ^ƒXƒN</returns>
+        /// <param name="context">ä¿å­˜ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
+        /// <returns>ä¿å­˜ã‚¿ã‚¹ã‚¯</returns>
         public async Task SaveAsync(ProjectContext context)
         {
             if (context == null)
@@ -307,11 +307,11 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Ê–¼‚Å•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
         /// </summary>
-        /// <param name="context">•Û‘¶‚·‚éƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</param>
-        /// <param name="filePath">•Û‘¶æƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>•Û‘¶ƒ^ƒXƒN</returns>
+        /// <param name="context">ä¿å­˜ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
+        /// <param name="filePath">ä¿å­˜å…ˆãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>ä¿å­˜ã‚¿ã‚¹ã‚¯</returns>
         public async Task SaveAsAsync(ProjectContext context, string filePath)
         {
             if (context == null)
@@ -327,7 +327,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğw’è‚³‚ê‚½ƒtƒ@ƒCƒ‹‚É•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
         /// </summary>
         private async Task SaveToFileAsync(ProjectContext context, string filePath)
         {
@@ -344,17 +344,17 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚É–¢•Û‘¶‚Ì•ÏX‚ª‚ ‚éê‡A•Û‘¶‚·‚é‚©‚Ç‚¤‚©Šm”F
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹å ´åˆã€ä¿å­˜ã™ã‚‹ã‹ã©ã†ã‹ç¢ºèª
         /// </summary>
-        /// <returns>‘±s‰Â”\‚©itrue=‘±s‰Â”\Afalse=‘€ìƒLƒƒƒ“ƒZƒ‹j</returns>
+        /// <returns>ç¶šè¡Œå¯èƒ½ã‹ï¼ˆtrue=ç¶šè¡Œå¯èƒ½ã€false=æ“ä½œã‚­ãƒ£ãƒ³ã‚»ãƒ«ï¼‰</returns>
         public async Task<bool> ConfirmSaveIfModifiedAsync()
         {
             var currentContext = _appContext.CurrentProjectContext;
             if (currentContext == null || !currentContext.IsModified)
                 return true;
 
-            // ÀÛ‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚ÍUI‚©‚çŠm”Fƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
-            // ‚±‚±‚Å‚ÍƒRƒ“ƒ\[ƒ‹ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ‘z’è‚µ‚½ŠÈˆÕÀ‘•
+            // å®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã¯UIã‹ã‚‰ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
+            // ã“ã“ã§ã¯ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’æƒ³å®šã—ãŸç°¡æ˜“å®Ÿè£…
 
             Console.WriteLine($"Project '{currentContext.Project.Name}' has unsaved changes. Save?");
             Console.WriteLine("1: Yes");
@@ -370,7 +370,7 @@ namespace ProjectManagement
                     {
                         if (string.IsNullOrEmpty(currentContext.Project.FilePath))
                         {
-                            // ÀÛ‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚Íƒtƒ@ƒCƒ‹‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
+                            // å®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã¯ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
                             Console.WriteLine("Enter file path for saving:");
                             string path = Console.ReadLine();
                             if (string.IsNullOrEmpty(path))
@@ -407,7 +407,7 @@ using System.Threading.Tasks;
 namespace ProjectManagement
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‘S‘Ì‚ÌƒRƒ“ƒeƒLƒXƒg‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class AppContext
     {
@@ -415,7 +415,7 @@ namespace ProjectManagement
         private readonly ProjectService _projectService;
 
         /// <summary>
-        /// Œ»İƒAƒNƒeƒBƒu‚ÈƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg
+        /// ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
         /// </summary>
         public ProjectContext CurrentProjectContext
         {
@@ -424,7 +424,7 @@ namespace ProjectManagement
             {
                 if (_currentProjectContext != null)
                 {
-                    // ŒÃ‚¢ƒRƒ“ƒeƒLƒXƒg‚ÌƒCƒxƒ“ƒgw“Ç‚ğ‰ğœ
+                    // å¤ã„ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ã‚¤ãƒ™ãƒ³ãƒˆè³¼èª­ã‚’è§£é™¤
                     _currentProjectContext.ModifiedChanged -= ProjectContext_ModifiedChanged;
                     _currentProjectContext.Dispose();
                 }
@@ -433,17 +433,17 @@ namespace ProjectManagement
 
                 if (_currentProjectContext != null)
                 {
-                    // V‚µ‚¢ƒRƒ“ƒeƒLƒXƒg‚ÌƒCƒxƒ“ƒgw“Ç
+                    // æ–°ã—ã„ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ã‚¤ãƒ™ãƒ³ãƒˆè³¼èª­
                     _currentProjectContext.ModifiedChanged += ProjectContext_ModifiedChanged;
                 }
 
-                // ƒ^ƒCƒgƒ‹ƒo[‚È‚ÇAƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìó‘ÔXV
+                // ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãªã©ã€ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹æ›´æ–°
                 UpdateApplicationState();
             }
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒ^ƒCƒgƒ‹
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒˆãƒ«
         /// </summary>
         public string ApplicationTitle
         {
@@ -459,12 +459,12 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ó‘Ô‚ª•ÏX‚³‚ê‚½‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler ApplicationStateChanged;
 
         /// <summary>
-        /// AppContext‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// AppContextã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
         public AppContext()
         {
@@ -472,7 +472,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìó‘Ô‚ğXV
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ã‚’æ›´æ–°
         /// </summary>
         private void UpdateApplicationState()
         {
@@ -480,7 +480,7 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚Ì•ÏXó‘Ô‚ª•Ï‚í‚Á‚½‚Ìˆ—
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å¤‰æ›´çŠ¶æ…‹ãŒå¤‰ã‚ã£ãŸæ™‚ã®å‡¦ç†
         /// </summary>
         private void ProjectContext_ModifiedChanged(object sender, EventArgs e)
         {
@@ -490,9 +490,9 @@ namespace ProjectManagement
         #region Menu Commands
 
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public async Task<bool> NewProjectAsync()
         {
             if (!await _projectService.ConfirmSaveIfModifiedAsync())
@@ -503,10 +503,10 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public async Task<bool> OpenProjectAsync(string filePath)
         {
             if (!await _projectService.ConfirmSaveIfModifiedAsync())
@@ -525,9 +525,9 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚ğ•Û‘¶
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
         /// </summary>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public async Task<bool> SaveProjectAsync()
         {
             if (CurrentProjectContext == null)
@@ -537,7 +537,7 @@ namespace ProjectManagement
             {
                 if (string.IsNullOrEmpty(CurrentProjectContext.Project.FilePath))
                 {
-                    // ƒpƒX‚ª‚È‚¢ê‡‚ÍSaveAs‚É“]‘—
+                    // ãƒ‘ã‚¹ãŒãªã„å ´åˆã¯SaveAsã«è»¢é€
                     return await SaveProjectAsAsync(null);
                 }
                 else
@@ -555,10 +555,10 @@ namespace ProjectManagement
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚ğ•Ê–¼‚Å•Û‘¶
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒXinull‚Ìê‡‚Íƒ_ƒCƒAƒƒO‚ğ•\¦j</param>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ï¼ˆnullã®å ´åˆã¯ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºï¼‰</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public async Task<bool> SaveProjectAsAsync(string filePath)
         {
             if (CurrentProjectContext == null)
@@ -568,7 +568,7 @@ namespace ProjectManagement
             {
                 if (string.IsNullOrEmpty(filePath))
                 {
-                    // ÀÛ‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚Íƒtƒ@ƒCƒ‹‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
+                    // å®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã¯ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
                     Console.WriteLine("Enter file path for saving:");
                     filePath = Console.ReadLine();
                     
@@ -611,7 +611,7 @@ namespace ProjectManagement
                 Console.Title = appContext.ApplicationTitle;
             };
 
-            // ‰ŠúƒvƒƒWƒFƒNƒgì¬
+            // åˆæœŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
             await appContext.NewProjectAsync();
 
             bool running = true;
@@ -658,7 +658,7 @@ namespace ProjectManagement
                         }
                         break;
                     case "0":
-                        // I—¹‘O‚É–¢•Û‘¶‚Ì•ÏX‚ğŠm”F
+                        // çµ‚äº†å‰ã«æœªä¿å­˜ã®å¤‰æ›´ã‚’ç¢ºèª
                         if (await new ProjectService(appContext).ConfirmSaveIfModifiedAsync())
                         {
                             running = false;
@@ -676,54 +676,54 @@ namespace ProjectManagement
 }
 ```
 
-## d‘g‚İ‚Ìà–¾
+## ä»•çµ„ã¿ã®èª¬æ˜
 
-1. **•ÒWó‘Ô‚Ìƒ‚ƒjƒ^ƒŠƒ“ƒO**:
-   - `Project`ƒNƒ‰ƒX‚Í`INotifyPropertyChanged`‚ğÀ‘•‚µAƒvƒƒpƒeƒB•ÏX’Ê’m‚ğ’ñ‹Ÿ
-   - `ProjectContext`‚Í`Project`‚Ì•ÏX‚ğŠÄ‹‚µA`IsModified`ƒtƒ‰ƒO‚ğŠÇ—
-   - `AppContext`‚ÍƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒ^ƒCƒgƒ‹‚É•ÏXó‘Ô(*)‚ğ•\¦
+1. **ç·¨é›†çŠ¶æ…‹ã®ãƒ¢ãƒ‹ã‚¿ãƒªãƒ³ã‚°**:
+   - `Project`ã‚¯ãƒ©ã‚¹ã¯`INotifyPropertyChanged`ã‚’å®Ÿè£…ã—ã€ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å¤‰æ›´é€šçŸ¥ã‚’æä¾›
+   - `ProjectContext`ã¯`Project`ã®å¤‰æ›´ã‚’ç›£è¦–ã—ã€`IsModified`ãƒ•ãƒ©ã‚°ã‚’ç®¡ç†
+   - `AppContext`ã¯ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒˆãƒ«ã«å¤‰æ›´çŠ¶æ…‹(*)ã‚’è¡¨ç¤º
 
-2. **Save‹@”\**:
-   - •Û‘¶æƒpƒX‚ªŠù‚É‚ ‚éê‡‚Í`ProjectService.SaveAsync`‚Å“¯‚¶êŠ‚É•Û‘¶
-   - •Û‘¶ó‘Ô‚ğƒŠƒZƒbƒg‚µ‚Ä`IsModified = false`‚Éİ’è
+2. **Saveæ©Ÿèƒ½**:
+   - ä¿å­˜å…ˆãƒ‘ã‚¹ãŒæ—¢ã«ã‚ã‚‹å ´åˆã¯`ProjectService.SaveAsync`ã§åŒã˜å ´æ‰€ã«ä¿å­˜
+   - ä¿å­˜çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¦`IsModified = false`ã«è¨­å®š
 
-3. **Save As‹@”\**:
-   - V‚µ‚¢ƒpƒX‚ğw’è‚µ‚Ä`ProjectService.SaveAsAsync`‚Å•Û‘¶
-   - V‚µ‚¢ƒtƒ@ƒCƒ‹ƒpƒX‚Æ–¼‘O‚ğİ’è‚µA•Û‘¶ó‘Ô‚ğƒŠƒZƒbƒg
+3. **Save Asæ©Ÿèƒ½**:
+   - æ–°ã—ã„ãƒ‘ã‚¹ã‚’æŒ‡å®šã—ã¦`ProjectService.SaveAsAsync`ã§ä¿å­˜
+   - æ–°ã—ã„ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã¨åå‰ã‚’è¨­å®šã—ã€ä¿å­˜çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
 
-4. **Open‹@”\**:
-   - Šù‘¶ƒvƒƒWƒFƒNƒg‚É–¢•Û‘¶‚Ì•ÏX‚ª‚ ‚éê‡A•Û‘¶Šm”F‚ğs‚¤
-   - ƒtƒ@ƒCƒ‹‚©‚çƒvƒƒWƒFƒNƒg‚ğƒfƒVƒŠƒAƒ‰ƒCƒY‚µ‚ÄV‚µ‚¢`ProjectContext`‚ğì¬
+4. **Openæ©Ÿèƒ½**:
+   - æ—¢å­˜ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹å ´åˆã€ä¿å­˜ç¢ºèªã‚’è¡Œã†
+   - ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºã—ã¦æ–°ã—ã„`ProjectContext`ã‚’ä½œæˆ
 
-5. **ƒNƒ‰ƒXŠÔ‚Ì˜AŒg**:
-   - `AppContext`‚ªƒAƒvƒŠƒP[ƒVƒ‡ƒ“‘S‘Ì‚Ìó‘Ô‚ğŠÇ—
-   - `ProjectService`‚ªƒtƒ@ƒCƒ‹‘€ì‚ğ’S“–
-   - `ProjectContext`‚ª’PˆêƒvƒƒWƒFƒNƒg‚Ì•ÒWó‘Ô‚ğŠÇ—
-   - `Project`‚ªƒf[ƒ^ƒ‚ƒfƒ‹‚Æ‚µ‚Ä‹@”\
+5. **ã‚¯ãƒ©ã‚¹é–“ã®é€£æº**:
+   - `AppContext`ãŒã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®çŠ¶æ…‹ã‚’ç®¡ç†
+   - `ProjectService`ãŒãƒ•ã‚¡ã‚¤ãƒ«æ“ä½œã‚’æ‹…å½“
+   - `ProjectContext`ãŒå˜ä¸€ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ç·¨é›†çŠ¶æ…‹ã‚’ç®¡ç†
+   - `Project`ãŒãƒ‡ãƒ¼ã‚¿ãƒ¢ãƒ‡ãƒ«ã¨ã—ã¦æ©Ÿèƒ½
 
-‚±‚ÌİŒvƒpƒ^[ƒ“‚ÍAƒNƒŠ[ƒ“ƒA[ƒLƒeƒNƒ`ƒƒ‚ÌŒ´‘¥‚É]‚Á‚Ä‚¨‚èAŠÖS‚Ì•ª—£‚ª“KØ‚És‚í‚ê‚Ä‚¢‚Ü‚·B‚Ü‚½AMVVMƒpƒ^[ƒ“‚Æ‚Ì“‡‚à—eˆÕ‚Å‚·B
+ã“ã®è¨­è¨ˆãƒ‘ã‚¿ãƒ¼ãƒ³ã¯ã€ã‚¯ãƒªãƒ¼ãƒ³ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã®åŸå‰‡ã«å¾“ã£ã¦ãŠã‚Šã€é–¢å¿ƒã®åˆ†é›¢ãŒé©åˆ‡ã«è¡Œã‚ã‚Œã¦ã„ã¾ã™ã€‚ã¾ãŸã€MVVMãƒ‘ã‚¿ãƒ¼ãƒ³ã¨ã®çµ±åˆã‚‚å®¹æ˜“ã§ã™ã€‚
 
 
 ---
 
-# ”Ä—p“I‚ÈƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒx[ƒX‚Ö‚ÌŠg’£
+# æ±ç”¨çš„ãªã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ™ãƒ¼ã‚¹ã¸ã®æ‹¡å¼µ
 
-`2025-05-12 12:49:09 UTC` ‚É‚²ˆË—Š‚¢‚½‚¾‚¢‚½A’ñˆÄ‚µ‚½ƒNƒ‰ƒX\‘¢‚ğ”Ä—p“I‚ÈƒAƒvƒŠ‚Ìƒx[ƒX‚Æ‚µ‚ÄŠg’£‚·‚é•û–@‚ğ‚²’ñˆÄ‚µ‚Ü‚·B
+`2025-05-12 12:49:09 UTC` ã«ã”ä¾é ¼ã„ãŸã ã„ãŸã€ææ¡ˆã—ãŸã‚¯ãƒ©ã‚¹æ§‹é€ ã‚’æ±ç”¨çš„ãªã‚¢ãƒ—ãƒªã®ãƒ™ãƒ¼ã‚¹ã¨ã—ã¦æ‹¡å¼µã™ã‚‹æ–¹æ³•ã‚’ã”ææ¡ˆã—ã¾ã™ã€‚
 
-## Šg’£‚ÌŠî–{•ûj
+## æ‹¡å¼µã®åŸºæœ¬æ–¹é‡
 
-Šù‘¶‚Ì\‘¢iAppContextAProjectAProjectContextAProjectServicej‚ğŠî”Õ‚Æ‚µ‚ÄAˆÈ‰º‚ÌŠÏ“_‚©‚çŠg’£‚µ‚Ü‚·F
+æ—¢å­˜ã®æ§‹é€ ï¼ˆAppContextã€Projectã€ProjectContextã€ProjectServiceï¼‰ã‚’åŸºç›¤ã¨ã—ã¦ã€ä»¥ä¸‹ã®è¦³ç‚¹ã‹ã‚‰æ‹¡å¼µã—ã¾ã™ï¼š
 
-1. **ˆË‘¶«’“üiDIj‚Ì“±“ü**
-2. **ƒvƒ‰ƒOƒCƒ“ƒVƒXƒeƒ€**
-3. **ƒ}ƒ‹ƒ`ƒhƒLƒ…ƒƒ“ƒg‘Î‰**
-4. **ƒRƒ}ƒ“ƒhƒpƒ^[ƒ“‚ÌÀ‘•**
-5. **ƒe[ƒ}‚Æ‘Û‰»**
-6. **ƒƒMƒ“ƒO‚ÆƒGƒ‰[ˆ—**
+1. **ä¾å­˜æ€§æ³¨å…¥ï¼ˆDIï¼‰ã®å°å…¥**
+2. **ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ **
+3. **ãƒãƒ«ãƒãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆå¯¾å¿œ**
+4. **ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ã®å®Ÿè£…**
+5. **ãƒ†ãƒ¼ãƒã¨å›½éš›åŒ–**
+6. **ãƒ­ã‚®ãƒ³ã‚°ã¨ã‚¨ãƒ©ãƒ¼å‡¦ç†**
 
-## Šg’£‚µ‚½ƒNƒ‰ƒXİŒv
+## æ‹¡å¼µã—ãŸã‚¯ãƒ©ã‚¹è¨­è¨ˆ
 
-### 1. ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÆDI‚Ì“±“ü
+### 1. ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã¨DIã®å°å…¥
 
 ```csharp name=Interfaces/IProject.cs
 using System.ComponentModel;
@@ -731,7 +731,7 @@ using System.ComponentModel;
 namespace AppFramework.Interfaces
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒgƒf[ƒ^ƒ‚ƒfƒ‹‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ‡ãƒ¼ã‚¿ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IProject : INotifyPropertyChanged
     {
@@ -751,7 +751,7 @@ using System.Threading.Tasks;
 namespace AppFramework.Interfaces
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IProjectContext : IDisposable
     {
@@ -772,7 +772,7 @@ using System.Collections.Generic;
 namespace AppFramework.Interfaces
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒg‘€ìƒT[ƒrƒX‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæ“ä½œã‚µãƒ¼ãƒ“ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IProjectService
     {
@@ -787,7 +787,7 @@ namespace AppFramework.Interfaces
 }
 ```
 
-### 2. ˆË‘¶«’“üƒRƒ“ƒeƒi
+### 2. ä¾å­˜æ€§æ³¨å…¥ã‚³ãƒ³ãƒ†ãƒŠ
 
 ```csharp name=Services/DependencyContainer.cs
 using System;
@@ -798,7 +798,7 @@ using AppFramework.Interfaces;
 namespace AppFramework.Services
 {
     /// <summary>
-    /// ˆË‘¶«’“üƒRƒ“ƒeƒi‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+    /// ä¾å­˜æ€§æ³¨å…¥ã‚³ãƒ³ãƒ†ãƒŠã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class DependencyContainer
     {
@@ -812,11 +812,11 @@ namespace AppFramework.Services
         }
 
         /// <summary>
-        /// ƒfƒtƒHƒ‹ƒg‚ÌƒT[ƒrƒXİ’è
+        /// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚µãƒ¼ãƒ“ã‚¹è¨­å®š
         /// </summary>
         private void ConfigureServices(IServiceCollection services)
         {
-            // ƒRƒAƒT[ƒrƒX‚Ì“o˜^
+            // ã‚³ã‚¢ã‚µãƒ¼ãƒ“ã‚¹ã®ç™»éŒ²
             services.AddSingleton<IAppContext, AppContext>();
             services.AddSingleton<ILogService, LogService>();
             services.AddSingleton<ISettingsService, SettingsService>();
@@ -825,12 +825,12 @@ namespace AppFramework.Services
             services.AddSingleton<ICommandManager, CommandManager>();
             services.AddSingleton<IPluginManager, PluginManager>();
             
-            // ƒvƒƒWƒFƒNƒgŠÖ˜A‚ÌƒT[ƒrƒX‚Íƒvƒ‰ƒOƒCƒ“‰»‚·‚é‚±‚Æ‚à‰Â”\
+            // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆé–¢é€£ã®ã‚µãƒ¼ãƒ“ã‚¹ã¯ãƒ—ãƒ©ã‚°ã‚¤ãƒ³åŒ–ã™ã‚‹ã“ã¨ã‚‚å¯èƒ½
             services.AddTransient<IProjectService, ProjectService>();
         }
 
         /// <summary>
-        /// ƒT[ƒrƒX‚Ì’Ç‰Á“o˜^
+        /// ã‚µãƒ¼ãƒ“ã‚¹ã®è¿½åŠ ç™»éŒ²
         /// </summary>
         public void RegisterService<TService, TImplementation>() 
             where TImplementation : class, TService 
@@ -840,7 +840,7 @@ namespace AppFramework.Services
         }
 
         /// <summary>
-        /// ƒT[ƒrƒXƒvƒƒoƒCƒ_[‚Ìƒrƒ‹ƒh
+        /// ã‚µãƒ¼ãƒ“ã‚¹ãƒ—ãƒ­ãƒã‚¤ãƒ€ãƒ¼ã®ãƒ“ãƒ«ãƒ‰
         /// </summary>
         public void BuildServiceProvider()
         {
@@ -848,7 +848,7 @@ namespace AppFramework.Services
         }
 
         /// <summary>
-        /// ƒT[ƒrƒX‚Ìæ“¾
+        /// ã‚µãƒ¼ãƒ“ã‚¹ã®å–å¾—
         /// </summary>
         public T GetService<T>() where T : class
         {
@@ -862,7 +862,7 @@ namespace AppFramework.Services
 }
 ```
 
-### 3. Šg’£‚µ‚½AppContext
+### 3. æ‹¡å¼µã—ãŸAppContext
 
 ```csharp name=AppContext.cs
 using System;
@@ -875,7 +875,7 @@ using AppFramework.Services;
 namespace AppFramework
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‘S‘Ì‚ÌƒRƒ“ƒeƒLƒXƒg‚ğŠÇ—‚·‚éŠg’£ƒNƒ‰ƒX
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ç®¡ç†ã™ã‚‹æ‹¡å¼µã‚¯ãƒ©ã‚¹
     /// </summary>
     public class AppContext : IAppContext
     {
@@ -883,17 +883,17 @@ namespace AppFramework
         private readonly ILogService _logService;
         private readonly ISettingsService _settingsService;
         
-        // ƒ}ƒ‹ƒ`ƒhƒLƒ…ƒƒ“ƒg‘Î‰‚Ì‚½‚ß‚ÌƒvƒƒWƒFƒNƒgƒRƒŒƒNƒVƒ‡ƒ“
+        // ãƒãƒ«ãƒãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆå¯¾å¿œã®ãŸã‚ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
         private ObservableCollection<IProjectContext> _projectContexts = new ObservableCollection<IProjectContext>();
         private IProjectContext _activeProjectContext;
 
         /// <summary>
-        /// ŠJ‚¢‚Ä‚¢‚é‚·‚×‚Ä‚ÌƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg
+        /// é–‹ã„ã¦ã„ã‚‹ã™ã¹ã¦ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
         /// </summary>
         public ReadOnlyObservableCollection<IProjectContext> ProjectContexts { get; }
 
         /// <summary>
-        /// Œ»İƒAƒNƒeƒBƒu‚ÈƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg
+        /// ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
         /// </summary>
         public IProjectContext ActiveProjectContext
         {
@@ -921,7 +921,7 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒ^ƒCƒgƒ‹
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒˆãƒ«
         /// </summary>
         public string ApplicationTitle
         {
@@ -937,17 +937,17 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ó‘Ô‚ª•ÏX‚³‚ê‚½‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler ApplicationStateChanged;
         
         /// <summary>
-        /// ƒAƒNƒeƒBƒu‚ÈƒvƒƒWƒFƒNƒg‚ª•ÏX‚³‚ê‚½‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler ActiveProjectChanged;
 
         /// <summary>
-        /// AppContext‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// AppContextã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
         public AppContext(DependencyContainer container)
         {
@@ -957,7 +957,7 @@ namespace AppFramework
             
             ProjectContexts = new ReadOnlyObservableCollection<IProjectContext>(_projectContexts);
             
-            // ƒvƒ‰ƒOƒCƒ“‚Ì“Ç‚İ‚İ
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®èª­ã¿è¾¼ã¿
             var pluginManager = _container.GetService<IPluginManager>();
             pluginManager.LoadPlugins();
             
@@ -965,7 +965,7 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìó‘Ô‚ğXV
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ã‚’æ›´æ–°
         /// </summary>
         private void UpdateApplicationState()
         {
@@ -973,26 +973,26 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚Ì•ÏXó‘Ô‚ª•Ï‚í‚Á‚½‚Ìˆ—
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å¤‰æ›´çŠ¶æ…‹ãŒå¤‰ã‚ã£ãŸæ™‚ã®å‡¦ç†
         /// </summary>
         private void ProjectContext_ModifiedChanged(object sender, EventArgs e)
         {
             UpdateApplicationState();
         }
 
-        #region ƒvƒƒWƒFƒNƒgŠÇ—
+        #region ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆç®¡ç†
 
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
         public async Task<IProjectContext> NewProjectAsync(string projectType = null)
         {
             try
             {
-                // ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚Ìæ“¾
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã®å–å¾—
                 IProjectService projectService = GetProjectService(projectType);
                 
-                // V‹KƒvƒƒWƒFƒNƒgì¬
+                // æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
                 var context = projectService.CreateNew();
                 AddProjectContext(context);
                 
@@ -1007,23 +1007,23 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
         /// </summary>
         public async Task<IProjectContext> OpenProjectAsync(string filePath)
         {
             try
             {
-                // ƒtƒ@ƒCƒ‹Šg’£q‚©‚çƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚ğ”»’f
+                // ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­ã‹ã‚‰ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã‚’åˆ¤æ–­
                 string extension = System.IO.Path.GetExtension(filePath).ToLowerInvariant();
                 
-                // ‘Î‰‚·‚éƒT[ƒrƒX‚ğŒŸõ
+                // å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’æ¤œç´¢
                 IProjectService projectService = FindProjectServiceForExtension(extension);
                 if (projectService == null)
                 {
                     throw new NotSupportedException($"Unsupported file extension: {extension}");
                 }
                 
-                // ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
                 var context = await projectService.OpenAsync(filePath);
                 AddProjectContext(context);
                 
@@ -1038,7 +1038,7 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Â‚¶‚é
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‰ã˜ã‚‹
         /// </summary>
         public async Task<bool> CloseProjectAsync(IProjectContext context)
         {
@@ -1047,10 +1047,10 @@ namespace AppFramework
 
             try
             {
-                // –¢•Û‘¶‚Ì•ÏX‚ª‚ ‚éê‡A•Û‘¶‚·‚é‚©Šm”F
+                // æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹å ´åˆã€ä¿å­˜ã™ã‚‹ã‹ç¢ºèª
                 if (context.IsModified)
                 {
-                    // ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚ğæ“¾
+                    // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
                     IProjectService projectService = GetProjectService(context.Project.ProjectType);
                     
                     bool canClose = await projectService.ConfirmSaveIfModifiedAsync(context);
@@ -1058,7 +1058,7 @@ namespace AppFramework
                         return false;
                 }
                 
-                // ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg‚ğíœ
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’å‰Šé™¤
                 RemoveProjectContext(context);
                 context.Dispose();
                 
@@ -1073,7 +1073,7 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚ğ•Û‘¶
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
         /// </summary>
         public async Task<bool> SaveProjectAsync(IProjectContext context = null)
         {
@@ -1083,12 +1083,12 @@ namespace AppFramework
 
             try
             {
-                // ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚ğæ“¾
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
                 IProjectService projectService = GetProjectService(context.Project.ProjectType);
                 
                 if (string.IsNullOrEmpty(context.Project.FilePath))
                 {
-                    // ƒpƒX‚ª‚È‚¢ê‡‚ÍSaveAs‚É“]‘—
+                    // ãƒ‘ã‚¹ãŒãªã„å ´åˆã¯SaveAsã«è»¢é€
                     return await SaveProjectAsAsync(context, null);
                 }
                 else
@@ -1108,7 +1108,7 @@ namespace AppFramework
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚ğ•Ê–¼‚Å•Û‘¶
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
         /// </summary>
         public async Task<bool> SaveProjectAsAsync(IProjectContext context = null, string filePath = null)
         {
@@ -1118,13 +1118,13 @@ namespace AppFramework
 
             try
             {
-                // ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚ğæ“¾
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
                 IProjectService projectService = GetProjectService(context.Project.ProjectType);
                 
                 if (string.IsNullOrEmpty(filePath))
                 {
-                    // ÀÛ‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚Íƒtƒ@ƒCƒ‹‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
-                    // ‚±‚Ì•”•ª‚Íƒvƒ‰ƒbƒgƒtƒH[ƒ€ˆË‘¶‚Ì‚½‚ßAƒCƒ“ƒ^[ƒtƒF[ƒX‚ğ‰î‚µ‚ÄŒÄ‚Ño‚·
+                    // å®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã¯ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+                    // ã“ã®éƒ¨åˆ†ã¯ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ä¾å­˜ã®ãŸã‚ã€ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã‚’ä»‹ã—ã¦å‘¼ã³å‡ºã™
                     var dialogService = _container.GetService<IDialogService>();
                     var fileInfo = await dialogService.ShowSaveFileDialogAsync(
                         "Save Project As",
@@ -1151,7 +1151,7 @@ namespace AppFramework
         }
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg‚ğƒRƒŒƒNƒVƒ‡ƒ“‚É’Ç‰Á
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã«è¿½åŠ 
         /// </summary>
         private void AddProjectContext(IProjectContext context)
         {
@@ -1160,7 +1160,7 @@ namespace AppFramework
         }
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg‚ğƒRƒŒƒNƒVƒ‡ƒ“‚©‚çíœ
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã‹ã‚‰å‰Šé™¤
         /// </summary>
         private void RemoveProjectContext(IProjectContext context)
         {
@@ -1174,17 +1174,17 @@ namespace AppFramework
         }
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚ğæ“¾
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
         /// </summary>
         private IProjectService GetProjectService(string projectType)
         {
-            // ƒfƒtƒHƒ‹ƒg‚ÌƒvƒƒWƒFƒNƒgƒT[ƒrƒX‚ğæ“¾
+            // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
             var defaultService = _container.GetService<IProjectService>();
             
             if (string.IsNullOrEmpty(projectType))
                 return defaultService;
             
-            // ƒvƒ‰ƒOƒCƒ“‚©‚çƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚ğŒŸõ
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‹ã‚‰ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’æ¤œç´¢
             var pluginManager = _container.GetService<IPluginManager>();
             var service = pluginManager.GetProjectService(projectType);
             
@@ -1192,16 +1192,16 @@ namespace AppFramework
         }
         
         /// <summary>
-        /// ƒtƒ@ƒCƒ‹Šg’£q‚É‘Î‰‚·‚éƒvƒƒWƒFƒNƒgƒT[ƒrƒX‚ğŒŸõ
+        /// ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­ã«å¯¾å¿œã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚µãƒ¼ãƒ“ã‚¹ã‚’æ¤œç´¢
         /// </summary>
         private IProjectService FindProjectServiceForExtension(string extension)
         {
-            // ƒfƒtƒHƒ‹ƒg‚ÌƒT[ƒrƒX‚ğŠm”F
+            // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚µãƒ¼ãƒ“ã‚¹ã‚’ç¢ºèª
             var defaultService = _container.GetService<IProjectService>();
             if (defaultService.SupportedFileExtensions.Contains(extension))
                 return defaultService;
             
-            // ƒvƒ‰ƒOƒCƒ“‚©‚ç‘Î‰‚·‚éƒT[ƒrƒX‚ğŒŸõ
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‹ã‚‰å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’æ¤œç´¢
             var pluginManager = _container.GetService<IPluginManager>();
             return pluginManager.GetProjectServiceForExtension(extension);
         }
@@ -1211,7 +1211,7 @@ namespace AppFramework
 }
 ```
 
-### 4. ƒRƒ}ƒ“ƒhƒpƒ^[ƒ“‚Ì“±“ü
+### 4. ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ã®å°å…¥
 
 ```csharp name=Commands/CommandBase.cs
 using System;
@@ -1220,7 +1220,7 @@ using System.Windows.Input;
 namespace AppFramework.Commands
 {
     /// <summary>
-    /// ƒRƒ}ƒ“ƒh‚ÌŠî–{ƒNƒ‰ƒX
+    /// ã‚³ãƒãƒ³ãƒ‰ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
     /// </summary>
     public abstract class CommandBase : ICommand
     {
@@ -1258,7 +1258,7 @@ using System;
 namespace AppFramework.Commands
 {
     /// <summary>
-    /// ”Ä—p“I‚ÈƒRƒ}ƒ“ƒhÀ‘•
+    /// æ±ç”¨çš„ãªã‚³ãƒãƒ³ãƒ‰å®Ÿè£…
     /// </summary>
     public class RelayCommand : CommandBase
     {
@@ -1287,7 +1287,7 @@ using AppFramework.Interfaces;
 namespace AppFramework.Services
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒRƒ}ƒ“ƒh‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class CommandManager : ICommandManager
     {
@@ -1298,7 +1298,7 @@ namespace AppFramework.Services
         public event EventHandler UndoRedoStateChanged;
         
         /// <summary>
-        /// ƒRƒ}ƒ“ƒh‚Ì“o˜^
+        /// ã‚³ãƒãƒ³ãƒ‰ã®ç™»éŒ²
         /// </summary>
         public void RegisterCommand(string commandName, CommandBase command)
         {
@@ -1312,7 +1312,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒRƒ}ƒ“ƒh‚Ìæ“¾
+        /// ã‚³ãƒãƒ³ãƒ‰ã®å–å¾—
         /// </summary>
         public CommandBase GetCommand(string commandName)
         {
@@ -1323,17 +1323,17 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// Undo‚ª‰Â”\‚©‚Ç‚¤‚©
+        /// UndoãŒå¯èƒ½ã‹ã©ã†ã‹
         /// </summary>
         public bool CanUndo => _undoStack.Count > 0;
         
         /// <summary>
-        /// Redo‚ª‰Â”\‚©‚Ç‚¤‚©
+        /// RedoãŒå¯èƒ½ã‹ã©ã†ã‹
         /// </summary>
         public bool CanRedo => _redoStack.Count > 0;
         
         /// <summary>
-        /// Undo‘€ì‚ÌÀs
+        /// Undoæ“ä½œã®å®Ÿè¡Œ
         /// </summary>
         public void Undo()
         {
@@ -1348,7 +1348,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// Redo‘€ì‚ÌÀs
+        /// Redoæ“ä½œã®å®Ÿè¡Œ
         /// </summary>
         public void Redo()
         {
@@ -1363,7 +1363,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// Undo‰Â”\‚ÈƒRƒ}ƒ“ƒh‚ÌÀs‚Æ‹L˜^
+        /// Undoå¯èƒ½ãªã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã¨è¨˜éŒ²
         /// </summary>
         public void ExecuteUndoableCommand(IUndoableCommand command)
         {
@@ -1377,7 +1377,7 @@ namespace AppFramework.Services
 }
 ```
 
-### 5. ƒvƒ‰ƒOƒCƒ“ƒVƒXƒeƒ€
+### 5. ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ 
 
 ```csharp name=Services/PluginManager.cs
 using System;
@@ -1391,7 +1391,7 @@ using AppFramework.Plugins;
 namespace AppFramework.Services
 {
     /// <summary>
-    /// ƒvƒ‰ƒOƒCƒ“‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+    /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class PluginManager : IPluginManager
     {
@@ -1411,7 +1411,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚Ìƒ[ƒh
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ãƒ­ãƒ¼ãƒ‰
         /// </summary>
         public void LoadPlugins()
         {
@@ -1445,7 +1445,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“ƒtƒ@ƒCƒ‹‚©‚çƒvƒ‰ƒOƒCƒ“‚ğƒ[ƒh
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ãƒ­ãƒ¼ãƒ‰
         /// </summary>
         private void LoadPluginFromFile(string filePath)
         {
@@ -1459,7 +1459,7 @@ namespace AppFramework.Services
                     plugin.Initialize(_container);
                     _plugins.Add(plugin);
                     
-                    // ƒvƒƒWƒFƒNƒgƒT[ƒrƒX‚Ì“o˜^
+                    // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚µãƒ¼ãƒ“ã‚¹ã®ç™»éŒ²
                     RegisterPluginProjectServices(plugin);
                     
                     _logService.Log(LogLevel.Info, $"Loaded plugin: {plugin.Name} v{plugin.Version}");
@@ -1468,7 +1468,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚ÌƒvƒƒWƒFƒNƒgƒT[ƒrƒX‚ğ“o˜^
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚µãƒ¼ãƒ“ã‚¹ã‚’ç™»éŒ²
         /// </summary>
         private void RegisterPluginProjectServices(IPlugin plugin)
         {
@@ -1480,7 +1480,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚É‘Î‰‚·‚éƒT[ƒrƒX‚ğæ“¾
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
         /// </summary>
         public IProjectService GetProjectService(string projectType)
         {
@@ -1488,7 +1488,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒtƒ@ƒCƒ‹Šg’£q‚É‘Î‰‚·‚éƒvƒƒWƒFƒNƒgƒT[ƒrƒX‚ğæ“¾
+        /// ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­ã«å¯¾å¿œã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚µãƒ¼ãƒ“ã‚¹ã‚’å–å¾—
         /// </summary>
         public IProjectService GetProjectServiceForExtension(string extension)
         {
@@ -1514,7 +1514,7 @@ using AppFramework.Services;
 namespace AppFramework.Plugins
 {
     /// <summary>
-    /// ƒvƒ‰ƒOƒCƒ“‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IPlugin
     {
@@ -1529,7 +1529,7 @@ namespace AppFramework.Plugins
 }
 ```
 
-### 6. ‚»‚Ì‘¼‚ÌƒT[ƒrƒX
+### 6. ãã®ä»–ã®ã‚µãƒ¼ãƒ“ã‚¹
 
 ```csharp name=Services/LogService.cs
 using System;
@@ -1539,7 +1539,7 @@ using AppFramework.Interfaces;
 namespace AppFramework.Services
 {
     /// <summary>
-    /// ƒƒOƒŒƒxƒ‹‚Ì—ñ‹“
+    /// ãƒ­ã‚°ãƒ¬ãƒ™ãƒ«ã®åˆ—æŒ™
     /// </summary>
     public enum LogLevel
     {
@@ -1551,7 +1551,7 @@ namespace AppFramework.Services
     }
     
     /// <summary>
-    /// ƒƒOo—Í‚ğŠÇ—‚·‚éƒT[ƒrƒX
+    /// ãƒ­ã‚°å‡ºåŠ›ã‚’ç®¡ç†ã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹
     /// </summary>
     public class LogService : ILogService
     {
@@ -1574,7 +1574,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// ƒƒO‚Ìo—Í
+        /// ãƒ­ã‚°ã®å‡ºåŠ›
         /// </summary>
         public void Log(LogLevel level, string message, Exception exception = null)
         {
@@ -1591,7 +1591,7 @@ namespace AppFramework.Services
                 {
                     File.AppendAllText(_logFilePath, logEntry + Environment.NewLine);
                     
-                    // “Á’è‚ÌƒŒƒxƒ‹ˆÈã‚ğƒRƒ“ƒ\[ƒ‹‚Éo—ÍiƒfƒoƒbƒO—pj
+                    // ç‰¹å®šã®ãƒ¬ãƒ™ãƒ«ä»¥ä¸Šã‚’ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã«å‡ºåŠ›ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
                     if (level >= LogLevel.Warning)
                     {
                         Console.WriteLine(logEntry);
@@ -1599,7 +1599,7 @@ namespace AppFramework.Services
                 }
                 catch
                 {
-                    // ƒƒOo—Í’†‚ÌƒGƒ‰[‚Í–³‹i–³ŒÀƒ‹[ƒv–h~j
+                    // ãƒ­ã‚°å‡ºåŠ›ä¸­ã®ã‚¨ãƒ©ãƒ¼ã¯ç„¡è¦–ï¼ˆç„¡é™ãƒ«ãƒ¼ãƒ—é˜²æ­¢ï¼‰
                 }
             }
         }
@@ -1617,7 +1617,7 @@ using AppFramework.Interfaces;
 namespace AppFramework.Services
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“İ’è‚ğŠÇ—‚·‚éƒT[ƒrƒX
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®šã‚’ç®¡ç†ã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹
     /// </summary>
     public class SettingsService : ISettingsService
     {
@@ -1640,7 +1640,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// İ’è‚Ì“Ç‚İ‚İ
+        /// è¨­å®šã®èª­ã¿è¾¼ã¿
         /// </summary>
         private void LoadSettings()
         {
@@ -1666,7 +1666,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// İ’è‚Ì•Û‘¶
+        /// è¨­å®šã®ä¿å­˜
         /// </summary>
         private void SaveSettings()
         {
@@ -1679,13 +1679,13 @@ namespace AppFramework.Services
                 }
                 catch
                 {
-                    // İ’è•Û‘¶ƒGƒ‰[‚Í–³‹
+                    // è¨­å®šä¿å­˜ã‚¨ãƒ©ãƒ¼ã¯ç„¡è¦–
                 }
             }
         }
         
         /// <summary>
-        /// İ’è’l‚Ìæ“¾
+        /// è¨­å®šå€¤ã®å–å¾—
         /// </summary>
         public T GetSetting<T>(string key, T defaultValue = default)
         {
@@ -1708,7 +1708,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// İ’è’l‚Ì•Û‘¶
+        /// è¨­å®šå€¤ã®ä¿å­˜
         /// </summary>
         public void SaveSetting<T>(string key, T value)
         {
@@ -1730,7 +1730,7 @@ using AppFramework.Interfaces;
 namespace AppFramework.Services
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒe[ƒ}‚ğŠÇ—‚·‚éƒT[ƒrƒX
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ†ãƒ¼ãƒã‚’ç®¡ç†ã™ã‚‹ã‚µãƒ¼ãƒ“ã‚¹
     /// </summary>
     public class ThemeService : IThemeService
     {
@@ -1746,7 +1746,7 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// Œ»İ‚Ìƒe[ƒ}
+        /// ç¾åœ¨ã®ãƒ†ãƒ¼ãƒ
         /// </summary>
         public string CurrentTheme
         {
@@ -1763,12 +1763,12 @@ namespace AppFramework.Services
         }
         
         /// <summary>
-        /// —˜—p‰Â”\‚Èƒe[ƒ}ˆê——
+        /// åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒä¸€è¦§
         /// </summary>
         public IEnumerable<string> AvailableThemes => new[] { "Light", "Dark", "Blue", "High Contrast" };
         
         /// <summary>
-        /// ƒe[ƒ}‚É‘Î‰‚·‚éƒŠƒ\[ƒXƒfƒBƒNƒVƒ‡ƒiƒŠ‚ğæ“¾
+        /// ãƒ†ãƒ¼ãƒã«å¯¾å¿œã™ã‚‹ãƒªã‚½ãƒ¼ã‚¹ãƒ‡ã‚£ã‚¯ã‚·ãƒ§ãƒŠãƒªã‚’å–å¾—
         /// </summary>
         public Uri GetThemeResourceUri(string themeName)
         {
@@ -1779,7 +1779,7 @@ namespace AppFramework.Services
 }
 ```
 
-### 7. À‘•—áFƒ‚ƒfƒ‹Šg’£‚Æƒvƒ‰ƒOƒCƒ“
+### 7. å®Ÿè£…ä¾‹ï¼šãƒ¢ãƒ‡ãƒ«æ‹¡å¼µã¨ãƒ—ãƒ©ã‚°ã‚¤ãƒ³
 
 ```csharp name=Models/TextDocumentProject.cs
 using System.ComponentModel;
@@ -1789,7 +1789,7 @@ using AppFramework.Interfaces;
 namespace AppFramework.Models
 {
     /// <summary>
-    /// ƒeƒLƒXƒgƒhƒLƒ…ƒƒ“ƒgƒvƒƒWƒFƒNƒgƒ‚ƒfƒ‹
+    /// ãƒ†ã‚­ã‚¹ãƒˆãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ¢ãƒ‡ãƒ«
     /// </summary>
     public class TextDocumentProject : IProject
     {
@@ -1859,7 +1859,7 @@ using AppFramework.Services;
 namespace AppFramework.Plugins
 {
     /// <summary>
-    /// ƒeƒLƒXƒgƒhƒLƒ…ƒƒ“ƒg—pƒvƒ‰ƒOƒCƒ“
+    /// ãƒ†ã‚­ã‚¹ãƒˆãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆç”¨ãƒ—ãƒ©ã‚°ã‚¤ãƒ³
     /// </summary>
     public class TextDocumentPlugin : IPlugin
     {
@@ -1872,14 +1872,14 @@ namespace AppFramework.Plugins
         
         public void Initialize(DependencyContainer container)
         {
-            // ƒvƒ‰ƒOƒCƒ“ŒÅ—L‚ÌƒT[ƒrƒX‚ğ“o˜^
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³å›ºæœ‰ã®ã‚µãƒ¼ãƒ“ã‚¹ã‚’ç™»éŒ²
             _textDocumentService = new TextDocumentService(container);
             container.RegisterService<ITextDocumentService, TextDocumentService>();
             
-            // ƒRƒ}ƒ“ƒh‚ğ“o˜^
+            // ã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²
             var commandManager = container.GetService<ICommandManager>();
             
-            // UIŠg’£ƒ|ƒCƒ“ƒgiÀÛ‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚Í“Á’è‚ÌUIƒtƒŒ[ƒ€ƒ[ƒN‚ÉˆË‘¶j
+            // UIæ‹¡å¼µãƒã‚¤ãƒ³ãƒˆï¼ˆå®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã¯ç‰¹å®šã®UIãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã«ä¾å­˜ï¼‰
             var uiExtensionService = container.GetService<IUIExtensionService>();
             if (uiExtensionService != null)
             {
@@ -1897,7 +1897,7 @@ namespace AppFramework.Plugins
     }
     
     /// <summary>
-    /// ƒeƒLƒXƒgƒhƒLƒ…ƒƒ“ƒg—pƒT[ƒrƒX
+    /// ãƒ†ã‚­ã‚¹ãƒˆãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆç”¨ã‚µãƒ¼ãƒ“ã‚¹
     /// </summary>
     public class TextDocumentService : IProjectService, ITextDocumentService
     {
@@ -1986,14 +1986,14 @@ namespace AppFramework.Plugins
             }
         }
         
-        // ƒeƒLƒXƒg“Á—L‚Ì‹@”\
+        // ãƒ†ã‚­ã‚¹ãƒˆç‰¹æœ‰ã®æ©Ÿèƒ½
         public void FormatText(IProjectContext context, TextFormatOptions options)
         {
             if (context.Project is TextDocumentProject textProject)
             {
                 string content = textProject.Content.ToString();
                 
-                // ƒtƒH[ƒ}ƒbƒgˆ—
+                // ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå‡¦ç†
                 if (options.TrimWhitespace)
                 {
                     content = content.Trim();
@@ -2022,58 +2022,58 @@ namespace AppFramework.Plugins
 }
 ```
 
-## Šg’£‚ÌÀ‘•ƒ|ƒCƒ“ƒg
+## æ‹¡å¼µã®å®Ÿè£…ãƒã‚¤ãƒ³ãƒˆ
 
-1. **”Ä—p«‚ÌŒüã**
-   - ƒCƒ“ƒ^[ƒtƒF[ƒX‚É‚æ‚é‘aŒ‹‡‚ÈİŒv
-   - ˆË‘¶«’“ü‚É‚æ‚éƒT[ƒrƒX‚ÌŠÇ—
-   - ƒvƒ‰ƒOƒCƒ“‚É‚æ‚é‹@”\Šg’£
+1. **æ±ç”¨æ€§ã®å‘ä¸Š**
+   - ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã«ã‚ˆã‚‹ç–çµåˆãªè¨­è¨ˆ
+   - ä¾å­˜æ€§æ³¨å…¥ã«ã‚ˆã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã®ç®¡ç†
+   - ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã«ã‚ˆã‚‹æ©Ÿèƒ½æ‹¡å¼µ
 
-2. **ƒ}ƒ‹ƒ`ƒhƒLƒ…ƒƒ“ƒg‘Î‰**
-   - •¡”ƒvƒƒWƒFƒNƒg‚Ì“¯ŠÇ—
-   - ƒAƒNƒeƒBƒu‚ÈƒvƒƒWƒFƒNƒg‚ÌØ‚è‘Ö‚¦
-   - ƒvƒƒWƒFƒNƒgƒRƒŒƒNƒVƒ‡ƒ“‚Ì’ñ‹Ÿ
+2. **ãƒãƒ«ãƒãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆå¯¾å¿œ**
+   - è¤‡æ•°ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®åŒæ™‚ç®¡ç†
+   - ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®åˆ‡ã‚Šæ›¿ãˆ
+   - ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®æä¾›
 
-3. **ƒRƒ}ƒ“ƒhƒpƒ^[ƒ““±“ü**
-   - ƒƒjƒ…[‘€ì‚ğ’ŠÛ‰»
-   - Undo/Redo‹@”\‚ÌÀ‘•
-   - ƒRƒ}ƒ“ƒh—š—ğ‚ÌŠÇ—
+3. **ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³å°å…¥**
+   - ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ“ä½œã‚’æŠ½è±¡åŒ–
+   - Undo/Redoæ©Ÿèƒ½ã®å®Ÿè£…
+   - ã‚³ãƒãƒ³ãƒ‰å±¥æ­´ã®ç®¡ç†
 
-4. **ƒvƒ‰ƒOƒCƒ“ƒVƒXƒeƒ€**
-   - “®“I‚Èƒvƒ‰ƒOƒCƒ“‚Ìƒ[ƒh
-   - Šg’£ƒ|ƒCƒ“ƒg‚Ì’ñ‹Ÿ
-   - V‚µ‚¢ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚Ì’Ç‰Á
+4. **ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ **
+   - å‹•çš„ãªãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ãƒ­ãƒ¼ãƒ‰
+   - æ‹¡å¼µãƒã‚¤ãƒ³ãƒˆã®æä¾›
+   - æ–°ã—ã„ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã®è¿½åŠ 
 
-5. **ŠeíƒT[ƒrƒX**
-   - ƒƒMƒ“ƒO‹@”\
-   - İ’èŠÇ—
-   - ƒe[ƒ}‚ÆƒXƒ^ƒCƒ‹İ’è
-   - ƒ_ƒCƒAƒƒOƒT[ƒrƒX
+5. **å„ç¨®ã‚µãƒ¼ãƒ“ã‚¹**
+   - ãƒ­ã‚®ãƒ³ã‚°æ©Ÿèƒ½
+   - è¨­å®šç®¡ç†
+   - ãƒ†ãƒ¼ãƒã¨ã‚¹ã‚¿ã‚¤ãƒ«è¨­å®š
+   - ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹
 
-‚±‚ÌƒA[ƒLƒeƒNƒ`ƒƒ‚ğg—p‚·‚é‚ÆA‚³‚Ü‚´‚Ü‚Èƒ^ƒCƒv‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚É“K—p‰Â”\‚È”Ä—p“I‚ÈƒtƒŒ[ƒ€ƒ[ƒN‚Æ‚È‚èA‹@”\‚ÌŠg’£‚à—eˆÕ‚É‚È‚è‚Ü‚·BŠî–{\‘¢‚ğ•Û‚¿‚È‚ª‚çA“Á’è‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒhƒƒCƒ“‚É‡‚í‚¹‚½ƒJƒXƒ^ƒ}ƒCƒY‚ª‰Â”\‚Å‚·B
+ã“ã®ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã‚’ä½¿ç”¨ã™ã‚‹ã¨ã€ã•ã¾ã–ã¾ãªã‚¿ã‚¤ãƒ—ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«é©ç”¨å¯èƒ½ãªæ±ç”¨çš„ãªãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã¨ãªã‚Šã€æ©Ÿèƒ½ã®æ‹¡å¼µã‚‚å®¹æ˜“ã«ãªã‚Šã¾ã™ã€‚åŸºæœ¬æ§‹é€ ã‚’ä¿ã¡ãªãŒã‚‰ã€ç‰¹å®šã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‰ãƒ¡ã‚¤ãƒ³ã«åˆã‚ã›ãŸã‚«ã‚¹ã‚¿ãƒã‚¤ã‚ºãŒå¯èƒ½ã§ã™ã€‚
 
 
 ---
 
 
-# ”Ä—p“I‚ÈƒfƒXƒNƒgƒbƒvƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒtƒŒ[ƒ€ƒ[ƒN‚Ö‚ÌŠg’£
+# æ±ç”¨çš„ãªãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã¸ã®æ‹¡å¼µ
 
-æ‚Ù‚Ç’ñˆÄ‚µ‚½ƒvƒƒWƒFƒNƒgŠÇ—ƒVƒXƒeƒ€‚ğA‚æ‚è”Ä—p“I‚ÈƒfƒXƒNƒgƒbƒvƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒx[ƒX‚Æ‚µ‚ÄŠg’£‚µ‚Ü‚·BˆÈ‰º‚Ì‹@”\‚ğ’Ç‰Á‚µ‚ÄAŒ˜˜S‚ÅŠg’£«‚Ì‚‚¢ƒtƒŒ[ƒ€ƒ[ƒN‚ğ\’z‚µ‚Ü‚µ‚å‚¤B
+å…ˆã»ã©ææ¡ˆã—ãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆç®¡ç†ã‚·ã‚¹ãƒ†ãƒ ã‚’ã€ã‚ˆã‚Šæ±ç”¨çš„ãªãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ™ãƒ¼ã‚¹ã¨ã—ã¦æ‹¡å¼µã—ã¾ã™ã€‚ä»¥ä¸‹ã®æ©Ÿèƒ½ã‚’è¿½åŠ ã—ã¦ã€å …ç‰¢ã§æ‹¡å¼µæ€§ã®é«˜ã„ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’æ§‹ç¯‰ã—ã¾ã—ã‚‡ã†ã€‚
 
-## Šg’£ƒA[ƒLƒeƒNƒ`ƒƒ‚ÌŠT—v
+## æ‹¡å¼µã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã®æ¦‚è¦
 
-1. **MVVM ƒpƒ^[ƒ“‚ÌŠ®‘SÀ‘•**
-2. **ˆË‘¶«’“üiDIj‚É‚æ‚éƒT[ƒrƒX‚ÌŠÇ—**
-3. **UI ƒtƒŒ[ƒ€ƒ[ƒNiWPFj‚Æ‚Ì“‡**
-4. **ƒRƒ}ƒ“ƒhƒpƒ^[ƒ“‚É‚æ‚éƒ†[ƒU[ƒAƒNƒVƒ‡ƒ“ˆ—**
-5. **İ’èŠÇ—‚Æ‰i‘±‰»**
-6. **ƒe[ƒ}‚ÆƒXƒ^ƒCƒ‹‚ÌƒTƒ|[ƒg**
-7. **ƒƒMƒ“ƒOƒVƒXƒeƒ€**
-8. **ƒvƒ‰ƒOƒCƒ“ƒA[ƒLƒeƒNƒ`ƒƒ**
+1. **MVVM ãƒ‘ã‚¿ãƒ¼ãƒ³ã®å®Œå…¨å®Ÿè£…**
+2. **ä¾å­˜æ€§æ³¨å…¥ï¼ˆDIï¼‰ã«ã‚ˆã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã®ç®¡ç†**
+3. **UI ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ï¼ˆWPFï¼‰ã¨ã®çµ±åˆ**
+4. **ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ã«ã‚ˆã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å‡¦ç†**
+5. **è¨­å®šç®¡ç†ã¨æ°¸ç¶šåŒ–**
+6. **ãƒ†ãƒ¼ãƒã¨ã‚¹ã‚¿ã‚¤ãƒ«ã®ã‚µãƒãƒ¼ãƒˆ**
+7. **ãƒ­ã‚®ãƒ³ã‚°ã‚·ã‚¹ãƒ†ãƒ **
+8. **ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£**
 
-## å—vƒNƒ‰ƒX‚ÌŠg’£
+## ä¸»è¦ã‚¯ãƒ©ã‚¹ã®æ‹¡å¼µ
 
-### AppContext ‚ÌŠg’£iƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒRƒAj
+### AppContext ã®æ‹¡å¼µï¼ˆã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ã‚¢ï¼‰
 
 ```csharp name=AppContext.cs
 using System;
@@ -2087,7 +2087,7 @@ using Microsoft.Extensions.Logging;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‘S‘Ì‚ÌƒRƒ“ƒeƒLƒXƒg‚ğŠÇ—‚·‚éŠg’£ƒNƒ‰ƒX
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ç®¡ç†ã™ã‚‹æ‹¡å¼µã‚¯ãƒ©ã‚¹
     /// </summary>
     public class AppContext : IDisposable
     {
@@ -2096,12 +2096,12 @@ namespace DesktopAppFramework
         private readonly ILogger<AppContext> _logger;
 
         /// <summary>
-        /// ˆË‘¶«’“üƒRƒ“ƒeƒi
+        /// ä¾å­˜æ€§æ³¨å…¥ã‚³ãƒ³ãƒ†ãƒŠ
         /// </summary>
         public IServiceProvider ServiceProvider => _serviceProvider;
 
         /// <summary>
-        /// Œ»İƒAƒNƒeƒBƒu‚ÈƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg
+        /// ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
         /// </summary>
         public ProjectContext CurrentProjectContext
         {
@@ -2126,7 +2126,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒ^ƒCƒgƒ‹
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒˆãƒ«
         /// </summary>
         public string ApplicationTitle
         {
@@ -2142,55 +2142,55 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// —˜—p‰Â”\‚Èƒe[ƒ}‚Ìˆê——
+        /// åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒã®ä¸€è¦§
         /// </summary>
         public IReadOnlyList<ThemeInfo> AvailableThemes { get; private set; }
 
         /// <summary>
-        /// Œ»İ‚Ìƒe[ƒ}
+        /// ç¾åœ¨ã®ãƒ†ãƒ¼ãƒ
         /// </summary>
         public ThemeInfo CurrentTheme { get; private set; }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“İ’è
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
         /// </summary>
         public AppSettings AppSettings { get; private set; }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ó‘Ô‚ª•ÏX‚³‚ê‚½‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler ApplicationStateChanged;
 
         /// <summary>
-        /// ƒe[ƒ}‚ª•ÏX‚³‚ê‚½‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ãƒ†ãƒ¼ãƒãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler<ThemeChangedEventArgs> ThemeChanged;
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ªI—¹‚·‚é‚É”­¶‚·‚éƒCƒxƒ“ƒg
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã™ã‚‹æ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler<AppClosingEventArgs> ApplicationClosing;
 
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“ƒ}ƒl[ƒWƒƒ[
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
         /// </summary>
         public PluginManager PluginManager { get; private set; }
 
         /// <summary>
-        /// AppContext‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// AppContextã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
         public AppContext(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = serviceProvider.GetRequiredService<ILogger<AppContext>>();
             
-            // İ’è‚Ìƒ[ƒh
+            // è¨­å®šã®ãƒ­ãƒ¼ãƒ‰
             AppSettings = serviceProvider.GetRequiredService<AppSettings>();
             
-            // —˜—p‰Â”\‚Èƒe[ƒ}‚Ìƒ[ƒh
+            // åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒã®ãƒ­ãƒ¼ãƒ‰
             LoadThemes();
             
-            // ƒvƒ‰ƒOƒCƒ“ƒ}ƒl[ƒWƒƒ[‚Ì‰Šú‰»
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®åˆæœŸåŒ–
             PluginManager = new PluginManager(this);
             PluginManager.LoadPlugins();
             
@@ -2198,7 +2198,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// —˜—p‰Â”\‚Èƒe[ƒ}‚ğƒ[ƒh
+        /// åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒã‚’ãƒ­ãƒ¼ãƒ‰
         /// </summary>
         private void LoadThemes()
         {
@@ -2211,15 +2211,15 @@ namespace DesktopAppFramework
             
             AvailableThemes = themes;
             
-            // ƒfƒtƒHƒ‹ƒgƒe[ƒ}‚à‚µ‚­‚Í•Û‘¶‚³‚ê‚½ƒe[ƒ}‚Ìİ’è
+            // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ãƒ¼ãƒã‚‚ã—ãã¯ä¿å­˜ã•ã‚ŒãŸãƒ†ãƒ¼ãƒã®è¨­å®š
             string savedTheme = AppSettings.CurrentTheme;
             CurrentTheme = themes.Find(t => t.Name == savedTheme) ?? themes[0];
         }
 
         /// <summary>
-        /// ƒe[ƒ}‚ğ•ÏX
+        /// ãƒ†ãƒ¼ãƒã‚’å¤‰æ›´
         /// </summary>
-        /// <param name="themeName">ƒe[ƒ}–¼</param>
+        /// <param name="themeName">ãƒ†ãƒ¼ãƒå</param>
         public void ChangeTheme(string themeName)
         {
             var theme = AvailableThemes.FirstOrDefault(t => t.Name == themeName);
@@ -2235,7 +2235,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìó‘Ô‚ğXV
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ã‚’æ›´æ–°
         /// </summary>
         private void UpdateApplicationState()
         {
@@ -2243,7 +2243,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚Ì•ÏXó‘Ô‚ª•Ï‚í‚Á‚½‚Ìˆ—
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å¤‰æ›´çŠ¶æ…‹ãŒå¤‰ã‚ã£ãŸæ™‚ã®å‡¦ç†
         /// </summary>
         private void ProjectContext_ModifiedChanged(object sender, EventArgs e)
         {
@@ -2251,9 +2251,9 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹‘O‚Ìˆ—
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å‰ã®å‡¦ç†
         /// </summary>
-        /// <returns>I—¹ˆ—‚ª‹–‰Â‚³‚ê‚½‚©‚Ç‚¤‚©</returns>
+        /// <returns>çµ‚äº†å‡¦ç†ãŒè¨±å¯ã•ã‚ŒãŸã‹ã©ã†ã‹</returns>
         public bool OnApplicationClosing()
         {
             var args = new AppClosingEventArgs();
@@ -2262,7 +2262,7 @@ namespace DesktopAppFramework
             if (args.Cancel)
                 return false;
                 
-            // –¢•Û‘¶‚Ì•ÏX‚ğŠm”F
+            // æœªä¿å­˜ã®å¤‰æ›´ã‚’ç¢ºèª
             if (CurrentProjectContext != null && CurrentProjectContext.IsModified)
             {
                 var projectService = _serviceProvider.GetRequiredService<IProjectService>();
@@ -2270,10 +2270,10 @@ namespace DesktopAppFramework
                     return false;
             }
             
-            // İ’è‚Ì•Û‘¶
+            // è¨­å®šã®ä¿å­˜
             AppSettings.Save();
             
-            // ƒvƒ‰ƒOƒCƒ“‚ÌƒAƒ“ƒ[ƒh
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚¢ãƒ³ãƒ­ãƒ¼ãƒ‰
             PluginManager.UnloadPlugins();
             
             _logger.LogInformation("Application closing");
@@ -2283,9 +2283,9 @@ namespace DesktopAppFramework
         #region Project Commands
 
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public bool NewProject()
         {
             try
@@ -2306,10 +2306,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public bool OpenProject(string filePath)
         {
             try
@@ -2320,7 +2320,7 @@ namespace DesktopAppFramework
 
                 CurrentProjectContext = projectService.Open(filePath);
                 
-                // Å‹ßg‚Á‚½ƒtƒ@ƒCƒ‹ƒŠƒXƒg‚É’Ç‰Á
+                // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
                 AppSettings.AddRecentFile(filePath);
                 AppSettings.Save();
                 
@@ -2335,9 +2335,9 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚ğ•Û‘¶
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
         /// </summary>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public bool SaveProject()
         {
             if (CurrentProjectContext == null)
@@ -2349,7 +2349,7 @@ namespace DesktopAppFramework
                 
                 if (string.IsNullOrEmpty(CurrentProjectContext.Project.FilePath))
                 {
-                    // ƒpƒX‚ª‚È‚¢ê‡‚ÍSaveAs‚É“]‘—
+                    // ãƒ‘ã‚¹ãŒãªã„å ´åˆã¯SaveAsã«è»¢é€
                     return SaveProjectAs(null);
                 }
                 
@@ -2367,10 +2367,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚ğ•Ê–¼‚Å•Û‘¶
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>‘€ì¬Œ÷‚©‚Ç‚¤‚©</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
         public bool SaveProjectAs(string filePath)
         {
             if (CurrentProjectContext == null)
@@ -2380,7 +2380,7 @@ namespace DesktopAppFramework
             {
                 if (string.IsNullOrEmpty(filePath))
                 {
-                    // UIƒT[ƒrƒX‚ğg—p‚µ‚Äƒtƒ@ƒCƒ‹‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
+                    // UIã‚µãƒ¼ãƒ“ã‚¹ã‚’ä½¿ç”¨ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
                     var uiService = _serviceProvider.GetRequiredService<IUIService>();
                     filePath = uiService.ShowSaveFileDialog(
                         "Save Project",
@@ -2394,7 +2394,7 @@ namespace DesktopAppFramework
                 var projectService = _serviceProvider.GetRequiredService<IProjectService>();
                 projectService.SaveAs(CurrentProjectContext, filePath);
                 
-                // Å‹ßg‚Á‚½ƒtƒ@ƒCƒ‹ƒŠƒXƒg‚É’Ç‰Á
+                // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
                 AppSettings.AddRecentFile(filePath);
                 AppSettings.Save();
                 
@@ -2413,7 +2413,7 @@ namespace DesktopAppFramework
         #endregion
 
         /// <summary>
-        /// ƒŠƒ\[ƒX‚Ì‰ğ•ú
+        /// ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
         /// </summary>
         public void Dispose()
         {
@@ -2429,7 +2429,7 @@ namespace DesktopAppFramework
 }
 ```
 
-### ˆË‘¶«’“ü‚É‚æ‚éƒT[ƒrƒX‚Ì“o˜^
+### ä¾å­˜æ€§æ³¨å…¥ã«ã‚ˆã‚‹ã‚µãƒ¼ãƒ“ã‚¹ã®ç™»éŒ²
 
 ```csharp name=Program.cs
 using System;
@@ -2445,7 +2445,7 @@ namespace DesktopAppFramework
         [STAThread]
         public static void Main(string[] args)
         {
-            // Serilog‚Ìİ’è
+            // Serilogã®è¨­å®š
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
@@ -2454,20 +2454,20 @@ namespace DesktopAppFramework
 
             try
             {
-                // ƒT[ƒrƒXƒRƒ“ƒeƒi‚Ì\’z
+                // ã‚µãƒ¼ãƒ“ã‚¹ã‚³ãƒ³ãƒ†ãƒŠã®æ§‹ç¯‰
                 var services = new ServiceCollection();
                 ConfigureServices(services);
                 
                 var serviceProvider = services.BuildServiceProvider();
 
-                // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌÀs
+                // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè¡Œ
                 var app = new App(serviceProvider);
                 app.InitializeComponent();
                 app.Run();
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Åˆ—‚³‚ê‚È‚¢—áŠO‚ª”­¶‚µ‚Ü‚µ‚½");
+                Log.Fatal(ex, "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§å‡¦ç†ã•ã‚Œãªã„ä¾‹å¤–ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
             }
             finally
             {
@@ -2477,7 +2477,7 @@ namespace DesktopAppFramework
 
         private static void ConfigureServices(ServiceCollection services)
         {
-            // ƒƒMƒ“ƒOİ’è
+            // ãƒ­ã‚®ãƒ³ã‚°è¨­å®š
             services.AddLogging(builder =>
             {
                 builder.ClearProviders();
@@ -2485,33 +2485,33 @@ namespace DesktopAppFramework
                 builder.AddSerilog(dispose: true);
             });
 
-            // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“İ’è
+            // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
             services.AddSingleton<AppSettings>();
             
-            // ƒRƒAƒT[ƒrƒX
+            // ã‚³ã‚¢ã‚µãƒ¼ãƒ“ã‚¹
             services.AddSingleton<AppContext>();
             services.AddSingleton<IProjectService, ProjectService>();
             services.AddSingleton<IUIService, WpfUIService>();
             
-            // ‰æ–Ê‚Ìƒrƒ…[ƒ‚ƒfƒ‹
+            // ç”»é¢ã®ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<ProjectPropertiesViewModel>();
             services.AddTransient<SettingsViewModel>();
             
-            // ƒRƒ}ƒ“ƒhƒnƒ“ƒhƒ‰
+            // ã‚³ãƒãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ©
             services.AddSingleton<ICommandHandler, FileCommandHandler>();
             services.AddSingleton<ICommandHandler, EditCommandHandler>();
             services.AddSingleton<ICommandHandler, ViewCommandHandler>();
             services.AddSingleton<ICommandHandler, HelpCommandHandler>();
             
-            // ƒ_ƒCƒAƒƒOƒT[ƒrƒX
+            // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹
             services.AddSingleton<IDialogService, DialogService>();
         }
     }
 }
 ```
 
-### IProjectService ƒCƒ“ƒ^[ƒtƒF[ƒX‚Ì“±“ü
+### IProjectService ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã®å°å…¥
 
 ```csharp name=IProjectService.cs
 using System;
@@ -2521,59 +2521,59 @@ using System.Threading.Tasks;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒg‘€ìƒT[ƒrƒX‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæ“ä½œã‚µãƒ¼ãƒ“ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IProjectService
     {
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚Ìˆê——‚ğæ“¾
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã®ä¸€è¦§ã‚’å–å¾—
         /// </summary>
         IReadOnlyList<ProjectType> ProjectTypes { get; }
         
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
-        /// <param name="projectType">ƒvƒƒWƒFƒNƒgƒ^ƒCƒviÈ—ª‰Âj</param>
-        /// <returns>ì¬‚³‚ê‚½ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</returns>
+        /// <param name="projectType">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ï¼ˆçœç•¥å¯ï¼‰</param>
+        /// <returns>ä½œæˆã•ã‚ŒãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</returns>
         ProjectContext CreateNew(ProjectType projectType = null);
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>ŠJ‚¢‚½ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>é–‹ã„ãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</returns>
         ProjectContext Open(string filePath);
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
         /// </summary>
-        /// <param name="context">•Û‘¶‚·‚éƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="context">ä¿å­˜ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void Save(ProjectContext context);
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Ê–¼‚Å•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
         /// </summary>
-        /// <param name="context">•Û‘¶‚·‚éƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</param>
-        /// <param name="filePath">•Û‘¶æƒtƒ@ƒCƒ‹ƒpƒX</param>
+        /// <param name="context">ä¿å­˜ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
+        /// <param name="filePath">ä¿å­˜å…ˆãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
         void SaveAs(ProjectContext context, string filePath);
         
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚É–¢•Û‘¶‚Ì•ÏX‚ª‚ ‚éê‡A•Û‘¶‚·‚é‚©‚Ç‚¤‚©Šm”F
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹å ´åˆã€ä¿å­˜ã™ã‚‹ã‹ã©ã†ã‹ç¢ºèª
         /// </summary>
-        /// <returns>‘±s‰Â”\‚©itrue=‘±s‰Â”\Afalse=‘€ìƒLƒƒƒ“ƒZƒ‹j</returns>
+        /// <returns>ç¶šè¡Œå¯èƒ½ã‹ï¼ˆtrue=ç¶šè¡Œå¯èƒ½ã€false=æ“ä½œã‚­ãƒ£ãƒ³ã‚»ãƒ«ï¼‰</returns>
         bool ConfirmSaveIfModified();
         
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚Ì—LŒø«‚ğŒŸØ
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®æœ‰åŠ¹æ€§ã‚’æ¤œè¨¼
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>—LŒø‚ÈƒvƒƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚©‚Ç‚¤‚©</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æœ‰åŠ¹ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‹ã©ã†ã‹</returns>
         bool ValidateProjectFile(string filePath);
     }
 }
 ```
 
-### ProjectService‚ÌŠg’£À‘•
+### ProjectServiceã®æ‹¡å¼µå®Ÿè£…
 
 ```csharp name=ProjectService.cs
 using System;
@@ -2586,7 +2586,7 @@ using Microsoft.Extensions.Logging;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒvƒƒWƒFƒNƒg‘€ìƒT[ƒrƒX‚ÌÀ‘•ƒNƒ‰ƒX
+    /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæ“ä½œã‚µãƒ¼ãƒ“ã‚¹ã®å®Ÿè£…ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class ProjectService : IProjectService
     {
@@ -2596,12 +2596,12 @@ namespace DesktopAppFramework
         private readonly List<ProjectType> _projectTypes = new List<ProjectType>();
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚Ìˆê——
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã®ä¸€è¦§
         /// </summary>
         public IReadOnlyList<ProjectType> ProjectTypes => _projectTypes.AsReadOnly();
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
         public ProjectService(
             AppContext appContext, 
@@ -2612,12 +2612,12 @@ namespace DesktopAppFramework
             _uiService = uiService ?? throw new ArgumentNullException(nameof(uiService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             
-            // ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚Ì“o˜^
+            // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã®ç™»éŒ²
             RegisterDefaultProjectTypes();
         }
 
         /// <summary>
-        /// ƒfƒtƒHƒ‹ƒg‚ÌƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚ğ“o˜^
+        /// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã‚’ç™»éŒ²
         /// </summary>
         private void RegisterDefaultProjectTypes()
         {
@@ -2635,9 +2635,9 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒ^ƒCƒv‚ğ“o˜^
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã‚’ç™»éŒ²
         /// </summary>
-        /// <param name="projectType">ƒvƒƒWƒFƒNƒgƒ^ƒCƒv</param>
+        /// <param name="projectType">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—</param>
         public void RegisterProjectType(ProjectType projectType)
         {
             if (projectType == null)
@@ -2653,10 +2653,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// V‹KƒvƒƒWƒFƒNƒg‚ğì¬
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         /// </summary>
-        /// <param name="projectType">ƒvƒƒWƒFƒNƒgƒ^ƒCƒviÈ—ª‰Âj</param>
-        /// <returns>ì¬‚³‚ê‚½ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</returns>
+        /// <param name="projectType">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ï¼ˆçœç•¥å¯ï¼‰</param>
+        /// <returns>ä½œæˆã•ã‚ŒãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</returns>
         public ProjectContext CreateNew(ProjectType projectType = null)
         {
             projectType ??= _projectTypes.First();
@@ -2666,10 +2666,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğŠJ‚­
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>ŠJ‚¢‚½ƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>é–‹ã„ãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</returns>
         public ProjectContext Open(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -2700,9 +2700,9 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
         /// </summary>
-        /// <param name="context">•Û‘¶‚·‚éƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="context">ä¿å­˜ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         public void Save(ProjectContext context)
         {
             if (context == null)
@@ -2718,10 +2718,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğ•Ê–¼‚Å•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
         /// </summary>
-        /// <param name="context">•Û‘¶‚·‚éƒvƒƒWƒFƒNƒgƒRƒ“ƒeƒLƒXƒg</param>
-        /// <param name="filePath">•Û‘¶æƒtƒ@ƒCƒ‹ƒpƒX</param>
+        /// <param name="context">ä¿å­˜ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
+        /// <param name="filePath">ä¿å­˜å…ˆãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
         public void SaveAs(ProjectContext context, string filePath)
         {
             if (context == null)
@@ -2737,7 +2737,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒg‚ğw’è‚³‚ê‚½ƒtƒ@ƒCƒ‹‚É•Û‘¶
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
         /// </summary>
         private void SaveToFile(ProjectContext context, string filePath)
         {
@@ -2756,9 +2756,9 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// Œ»İ‚ÌƒvƒƒWƒFƒNƒg‚É–¢•Û‘¶‚Ì•ÏX‚ª‚ ‚éê‡A•Û‘¶‚·‚é‚©‚Ç‚¤‚©Šm”F
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹å ´åˆã€ä¿å­˜ã™ã‚‹ã‹ã©ã†ã‹ç¢ºèª
         /// </summary>
-        /// <returns>‘±s‰Â”\‚©itrue=‘±s‰Â”\Afalse=‘€ìƒLƒƒƒ“ƒZƒ‹j</returns>
+        /// <returns>ç¶šè¡Œå¯èƒ½ã‹ï¼ˆtrue=ç¶šè¡Œå¯èƒ½ã€false=æ“ä½œã‚­ãƒ£ãƒ³ã‚»ãƒ«ï¼‰</returns>
         public bool ConfirmSaveIfModified()
         {
             var currentContext = _appContext.CurrentProjectContext;
@@ -2766,8 +2766,8 @@ namespace DesktopAppFramework
                 return true;
 
             var result = _uiService.ShowMessageBox(
-                $"ƒvƒƒWƒFƒNƒg '{currentContext.Project.Name}' ‚É–¢•Û‘¶‚Ì•ÏX‚ª‚ ‚è‚Ü‚·B•Û‘¶‚µ‚Ü‚·‚©?",
-                "•Û‘¶Šm”F",
+                $"ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ '{currentContext.Project.Name}' ã«æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚Šã¾ã™ã€‚ä¿å­˜ã—ã¾ã™ã‹?",
+                "ä¿å­˜ç¢ºèª",
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Question);
             
@@ -2778,9 +2778,9 @@ namespace DesktopAppFramework
                     {
                         if (string.IsNullOrEmpty(currentContext.Project.FilePath))
                         {
-                            // ƒtƒ@ƒCƒ‹‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
+                            // ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
                             string filePath = _uiService.ShowSaveFileDialog(
-                                "ƒvƒƒWƒFƒNƒg‚Ì•Û‘¶",
+                                "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä¿å­˜",
                                 _appContext.AppSettings.ProjectFileFilter,
                                 _appContext.AppSettings.DefaultProjectExtension);
                                 
@@ -2799,8 +2799,8 @@ namespace DesktopAppFramework
                     {
                         _logger.LogError(ex, "Error during save confirmation");
                         _uiService.ShowMessageBox(
-                            $"•Û‘¶ƒGƒ‰[: {ex.Message}", 
-                            "ƒGƒ‰[", 
+                            $"ä¿å­˜ã‚¨ãƒ©ãƒ¼: {ex.Message}", 
+                            "ã‚¨ãƒ©ãƒ¼", 
                             MessageBoxButton.OK, 
                             MessageBoxImage.Error);
                         return false;
@@ -2814,10 +2814,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚Ì—LŒø«‚ğŒŸØ
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®æœ‰åŠ¹æ€§ã‚’æ¤œè¨¼
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
-        /// <returns>—LŒø‚ÈƒvƒƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚©‚Ç‚¤‚©</returns>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æœ‰åŠ¹ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‹ã©ã†ã‹</returns>
         public bool ValidateProjectFile(string filePath)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
@@ -2838,7 +2838,7 @@ namespace DesktopAppFramework
 }
 ```
 
-### UIƒT[ƒrƒXƒCƒ“ƒ^[ƒtƒF[ƒX
+### UIã‚µãƒ¼ãƒ“ã‚¹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 
 ```csharp name=IUIService.cs
 using System;
@@ -2847,64 +2847,64 @@ using System.Windows;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// UI‘€ì‚ÌƒT[ƒrƒXƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// UIæ“ä½œã®ã‚µãƒ¼ãƒ“ã‚¹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IUIService
     {
         /// <summary>
-        /// ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ğ•\¦
+        /// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
         /// </summary>
-        /// <param name="message">ƒƒbƒZ[ƒW</param>
-        /// <param name="title">ƒ^ƒCƒgƒ‹</param>
-        /// <param name="buttons">ƒ{ƒ^ƒ“</param>
-        /// <param name="icon">ƒAƒCƒRƒ“</param>
-        /// <returns>Œ‹‰Ê</returns>
+        /// <param name="message">ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸</param>
+        /// <param name="title">ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="buttons">ãƒœã‚¿ãƒ³</param>
+        /// <param name="icon">ã‚¢ã‚¤ã‚³ãƒ³</param>
+        /// <returns>çµæœ</returns>
         MessageBoxResult ShowMessageBox(string message, string title, MessageBoxButton buttons, MessageBoxImage icon);
         
         /// <summary>
-        /// ƒtƒ@ƒCƒ‹‚ğŠJ‚­ƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ããƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
-        /// <param name="title">ƒ_ƒCƒAƒƒO‚Ìƒ^ƒCƒgƒ‹</param>
-        /// <param name="filter">ƒtƒ@ƒCƒ‹ƒtƒBƒ‹ƒ^</param>
-        /// <param name="defaultExtension">ƒfƒtƒHƒ‹ƒgŠg’£q</param>
-        /// <returns>‘I‘ğ‚³‚ê‚½ƒtƒ@ƒCƒ‹ƒpƒXAƒLƒƒƒ“ƒZƒ‹‚Í‹ó•¶š</returns>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="filter">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚£ãƒ«ã‚¿</param>
+        /// <param name="defaultExtension">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ‹¡å¼µå­</param>
+        /// <returns>é¸æŠã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºæ–‡å­—</returns>
         string ShowOpenFileDialog(string title, string filter, string defaultExtension);
         
         /// <summary>
-        /// ƒtƒ@ƒCƒ‹‚ğ•Û‘¶ƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
-        /// <param name="title">ƒ_ƒCƒAƒƒO‚Ìƒ^ƒCƒgƒ‹</param>
-        /// <param name="filter">ƒtƒ@ƒCƒ‹ƒtƒBƒ‹ƒ^</param>
-        /// <param name="defaultExtension">ƒfƒtƒHƒ‹ƒgŠg’£q</param>
-        /// <returns>‘I‘ğ‚³‚ê‚½ƒtƒ@ƒCƒ‹ƒpƒXAƒLƒƒƒ“ƒZƒ‹‚Í‹ó•¶š</returns>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="filter">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚£ãƒ«ã‚¿</param>
+        /// <param name="defaultExtension">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ‹¡å¼µå­</param>
+        /// <returns>é¸æŠã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºæ–‡å­—</returns>
         string ShowSaveFileDialog(string title, string filter, string defaultExtension);
         
         /// <summary>
-        /// ƒtƒHƒ‹ƒ_‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ•ã‚©ãƒ«ãƒ€é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
-        /// <param name="title">ƒ_ƒCƒAƒƒO‚Ìƒ^ƒCƒgƒ‹</param>
-        /// <returns>‘I‘ğ‚³‚ê‚½ƒtƒHƒ‹ƒ_ƒpƒXAƒLƒƒƒ“ƒZƒ‹‚Í‹ó•¶š</returns>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <returns>é¸æŠã•ã‚ŒãŸãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºæ–‡å­—</returns>
         string ShowFolderBrowserDialog(string title);
         
         /// <summary>
-        /// ƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
-        /// <typeparam name="TViewModel">ƒrƒ…[ƒ‚ƒfƒ‹‚ÌŒ^</typeparam>
-        /// <param name="viewModel">ƒ_ƒCƒAƒƒO‚Ìƒrƒ…[ƒ‚ƒfƒ‹</param>
-        /// <param name="title">ƒ_ƒCƒAƒƒO‚Ìƒ^ƒCƒgƒ‹</param>
-        /// <returns>ƒ_ƒCƒAƒƒO‚ÌŒ‹‰Ê</returns>
+        /// <typeparam name="TViewModel">ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®å‹</typeparam>
+        /// <param name="viewModel">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«</param>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <returns>ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®çµæœ</returns>
         bool? ShowDialog<TViewModel>(TViewModel viewModel, string title = null) where TViewModel : ViewModelBase;
         
         /// <summary>
-        /// w’è‚³‚ê‚½ƒrƒ…[‚ğƒƒCƒ“ƒ[ƒNƒXƒy[ƒX‚É•\¦
+        /// æŒ‡å®šã•ã‚ŒãŸãƒ“ãƒ¥ãƒ¼ã‚’ãƒ¡ã‚¤ãƒ³ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã«è¡¨ç¤º
         /// </summary>
-        /// <typeparam name="TViewModel">ƒrƒ…[ƒ‚ƒfƒ‹‚ÌŒ^</typeparam>
+        /// <typeparam name="TViewModel">ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®å‹</typeparam>
         void ShowView<TViewModel>(TViewModel viewModel = null) where TViewModel : ViewModelBase;
     }
 }
 ```
 
-### WPFŒü‚¯UIƒT[ƒrƒXÀ‘•
+### WPFå‘ã‘UIã‚µãƒ¼ãƒ“ã‚¹å®Ÿè£…
 
 ```csharp name=WpfUIService.cs
 using System;
@@ -2916,7 +2916,7 @@ using Microsoft.Win32;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// WPFŒü‚¯UIƒT[ƒrƒX‚ÌÀ‘•
+    /// WPFå‘ã‘UIã‚µãƒ¼ãƒ“ã‚¹ã®å®Ÿè£…
     /// </summary>
     public class WpfUIService : IUIService
     {
@@ -2930,7 +2930,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ğ•\¦
+        /// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
         /// </summary>
         public MessageBoxResult ShowMessageBox(string message, string title, MessageBoxButton buttons, MessageBoxImage icon)
         {
@@ -2938,7 +2938,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒtƒ@ƒCƒ‹‚ğŠJ‚­ƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ããƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
         public string ShowOpenFileDialog(string title, string filter, string defaultExtension)
         {
@@ -2955,7 +2955,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒtƒ@ƒCƒ‹‚ğ•Û‘¶ƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
         public string ShowSaveFileDialog(string title, string filter, string defaultExtension)
         {
@@ -2972,7 +2972,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒtƒHƒ‹ƒ_‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ•ã‚©ãƒ«ãƒ€é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
         public string ShowFolderBrowserDialog(string title)
         {
@@ -2987,7 +2987,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒ_ƒCƒAƒƒO‚ğ•\¦
+        /// ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
         /// </summary>
         public bool? ShowDialog<TViewModel>(TViewModel viewModel, string title = null) where TViewModel : ViewModelBase
         {
@@ -2998,7 +2998,7 @@ namespace DesktopAppFramework
                 return null;
             }
             
-            // ƒrƒ…[‚ÌƒCƒ“ƒXƒ^ƒ“ƒXì¬
+            // ãƒ“ãƒ¥ãƒ¼ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä½œæˆ
             var view = Activator.CreateInstance(viewType) as Window;
             if (view == null)
             {
@@ -3006,21 +3006,21 @@ namespace DesktopAppFramework
                 return null;
             }
             
-            // ƒ^ƒCƒgƒ‹İ’è
+            // ã‚¿ã‚¤ãƒˆãƒ«è¨­å®š
             if (!string.IsNullOrEmpty(title))
             {
                 view.Title = title;
             }
             
-            // ƒf[ƒ^ƒRƒ“ƒeƒLƒXƒgİ’è
+            // ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆè¨­å®š
             view.DataContext = viewModel;
             
-            // ƒ‚[ƒ_ƒ‹ƒ_ƒCƒAƒƒO‚Æ‚µ‚Ä•\¦
+            // ãƒ¢ãƒ¼ãƒ€ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã¨ã—ã¦è¡¨ç¤º
             return view.ShowDialog();
         }
 
         /// <summary>
-        /// w’è‚³‚ê‚½ƒrƒ…[‚ğƒƒCƒ“ƒ[ƒNƒXƒy[ƒX‚É•\¦
+        /// æŒ‡å®šã•ã‚ŒãŸãƒ“ãƒ¥ãƒ¼ã‚’ãƒ¡ã‚¤ãƒ³ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã«è¡¨ç¤º
         /// </summary>
         public void ShowView<TViewModel>(TViewModel viewModel = null) where TViewModel : ViewModelBase
         {
@@ -3033,7 +3033,7 @@ namespace DesktopAppFramework
                 return;
             }
             
-            // MainWindow‚ÌWorkspace‚Éƒrƒ…[‚ğ•\¦
+            // MainWindowã®Workspaceã«ãƒ“ãƒ¥ãƒ¼ã‚’è¡¨ç¤º
             var mainViewModel = mainWindow.DataContext as MainWindowViewModel;
             mainViewModel?.ShowWorkspaceContent(viewModel);
         }
@@ -3041,7 +3041,7 @@ namespace DesktopAppFramework
 }
 ```
 
-### ƒAƒvƒŠƒP[ƒVƒ‡ƒ“İ’è
+### ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
 
 ```csharp name=AppSettings.cs
 using System;
@@ -3053,35 +3053,35 @@ using Microsoft.Extensions.Logging;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“İ’è
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
     /// </summary>
     public class AppSettings
     {
         private readonly ILogger<AppSettings> _logger;
         private const int MaxRecentFiles = 10;
 
-        // ‘S”Êİ’è
+        // å…¨èˆ¬è¨­å®š
         public string ApplicationName { get; set; } = "Desktop App Framework";
         public string CurrentTheme { get; set; } = "Light";
         public bool CheckForUpdatesOnStartup { get; set; } = true;
         public bool AutoSaveEnabled { get; set; } = true;
         public int AutoSaveIntervalMinutes { get; set; } = 5;
         
-        // ƒvƒƒWƒFƒNƒgİ’è
+        // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆè¨­å®š
         public string DefaultProjectExtension { get; set; } = ".proj";
         public string ProjectFileFilter { get; set; } = "Project Files (*.proj)|*.proj|All Files (*.*)|*.*";
         public string DefaultProjectsDirectory { get; set; } = "";
         
-        // Å‹ßg—p‚µ‚½ƒtƒ@ƒCƒ‹
+        // æœ€è¿‘ä½¿ç”¨ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«
         public List<string> RecentFiles { get; set; } = new List<string>();
         
-        // ƒEƒBƒ“ƒhƒEİ’è
+        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¨­å®š
         public double WindowWidth { get; set; } = 1200;
         public double WindowHeight { get; set; } = 800;
         public bool StartMaximized { get; set; } = false;
 
         /// <summary>
-        /// İ’èƒtƒ@ƒCƒ‹‚ÌƒpƒX
+        /// è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
         /// </summary>
         private string SettingsFilePath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -3089,13 +3089,13 @@ namespace DesktopAppFramework
             "settings.json");
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
         public AppSettings(ILogger<AppSettings> logger = null)
         {
             _logger = logger;
             
-            // ƒfƒtƒHƒ‹ƒgƒvƒƒWƒFƒNƒgƒfƒBƒŒƒNƒgƒŠ‚Ìİ’è
+            // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®è¨­å®š
             if (string.IsNullOrEmpty(DefaultProjectsDirectory))
             {
                 DefaultProjectsDirectory = Path.Combine(
@@ -3104,12 +3104,12 @@ namespace DesktopAppFramework
                     "Projects");
             }
             
-            // İ’è‚Ìƒ[ƒh
+            // è¨­å®šã®ãƒ­ãƒ¼ãƒ‰
             Load();
         }
 
         /// <summary>
-        /// İ’è‚ğƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh
+        /// è¨­å®šã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰
         /// </summary>
         public void Load()
         {
@@ -3117,7 +3117,7 @@ namespace DesktopAppFramework
             {
                 if (!File.Exists(SettingsFilePath))
                 {
-                    // İ’èƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍƒfƒtƒHƒ‹ƒg’l‚ğg—p
+                    // è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’ä½¿ç”¨
                     Save();
                     return;
                 }
@@ -3127,7 +3127,7 @@ namespace DesktopAppFramework
                 
                 if (settings != null)
                 {
-                    // ƒvƒƒpƒeƒB‚ğƒRƒs[
+                    // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’ã‚³ãƒ”ãƒ¼
                     ApplicationName = settings.ApplicationName;
                     CurrentTheme = settings.CurrentTheme;
                     CheckForUpdatesOnStartup = settings.CheckForUpdatesOnStartup;
@@ -3151,13 +3151,13 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// İ’è‚ğƒtƒ@ƒCƒ‹‚É•Û‘¶
+        /// è¨­å®šã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
         /// </summary>
         public void Save()
         {
             try
             {
-                // ƒfƒBƒŒƒNƒgƒŠ‚ª‘¶İ‚µ‚È‚¢ê‡‚Íì¬
+                // ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ä½œæˆ
                 string directory = Path.GetDirectoryName(SettingsFilePath);
                 if (!Directory.Exists(directory))
                 {
@@ -3177,19 +3177,19 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// Å‹ßg—p‚µ‚½ƒtƒ@ƒCƒ‹‚ğ’Ç‰Á
+        /// æœ€è¿‘ä½¿ç”¨ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ 
         /// </summary>
-        /// <param name="filePath">ƒtƒ@ƒCƒ‹ƒpƒX</param>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
         public void AddRecentFile(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
                 return;
                 
-            // Šù‚É‘¶İ‚·‚éê‡‚Ííœ‚µ‚Äæ“ª‚É’Ç‰Á
+            // æ—¢ã«å­˜åœ¨ã™ã‚‹å ´åˆã¯å‰Šé™¤ã—ã¦å…ˆé ­ã«è¿½åŠ 
             RecentFiles.Remove(filePath);
             RecentFiles.Insert(0, filePath);
             
-            // Å‘å”‚ğ’´‚¦‚éê‡‚ÍŒÃ‚¢‚à‚Ì‚ğíœ
+            // æœ€å¤§æ•°ã‚’è¶…ãˆã‚‹å ´åˆã¯å¤ã„ã‚‚ã®ã‚’å‰Šé™¤
             while (RecentFiles.Count > MaxRecentFiles)
             {
                 RecentFiles.RemoveAt(RecentFiles.Count - 1);
@@ -3199,7 +3199,7 @@ namespace DesktopAppFramework
 }
 ```
 
-### ƒvƒ‰ƒOƒCƒ“ƒVƒXƒeƒ€
+### ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ 
 
 ```csharp name=PluginManager.cs
 using System;
@@ -3212,7 +3212,7 @@ using Microsoft.Extensions.Logging;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒvƒ‰ƒOƒCƒ“‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+    /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
     /// </summary>
     public class PluginManager : IDisposable
     {
@@ -3221,14 +3221,14 @@ namespace DesktopAppFramework
         private readonly ILogger<PluginManager> _logger;
 
         /// <summary>
-        /// “Ç‚İ‚Ü‚ê‚½ƒvƒ‰ƒOƒCƒ“‚ÌƒŠƒXƒg
+        /// èª­ã¿è¾¼ã¾ã‚ŒãŸãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ãƒªã‚¹ãƒˆ
         /// </summary>
         public IReadOnlyList<IPlugin> LoadedPlugins => _loadedPlugins.AsReadOnly();
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
-        /// <param name="appContext">ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="appContext">ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         public PluginManager(AppContext appContext)
         {
             _appContext = appContext ?? throw new ArgumentNullException(nameof(appContext));
@@ -3236,7 +3236,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚ğ“Ç‚İ‚Ş
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’èª­ã¿è¾¼ã‚€
         /// </summary>
         public void LoadPlugins()
         {
@@ -3253,7 +3253,7 @@ namespace DesktopAppFramework
 
             try
             {
-                // ƒvƒ‰ƒOƒCƒ“ƒfƒBƒŒƒNƒgƒŠ“à‚ÌDLL‚ğŒŸõ
+                // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®DLLã‚’æ¤œç´¢
                 string[] dllFiles = Directory.GetFiles(pluginsDirectory, "*.dll");
                 
                 foreach (string dllPath in dllFiles)
@@ -3277,14 +3277,14 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// w’è‚³‚ê‚½ƒAƒZƒ“ƒuƒŠ‚©‚çƒvƒ‰ƒOƒCƒ“‚ğ“Ç‚İ‚Ş
+        /// æŒ‡å®šã•ã‚ŒãŸã‚¢ã‚»ãƒ³ãƒ–ãƒªã‹ã‚‰ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’èª­ã¿è¾¼ã‚€
         /// </summary>
-        /// <param name="assemblyPath">ƒAƒZƒ“ƒuƒŠƒpƒX</param>
+        /// <param name="assemblyPath">ã‚¢ã‚»ãƒ³ãƒ–ãƒªãƒ‘ã‚¹</param>
         private void LoadPluginFromAssembly(string assemblyPath)
         {
             var assembly = Assembly.LoadFrom(assemblyPath);
             
-            // IPlugin‚ğÀ‘•‚·‚éŒ^‚ğŒŸõ
+            // IPluginã‚’å®Ÿè£…ã™ã‚‹å‹ã‚’æ¤œç´¢
             var pluginTypes = assembly.GetTypes()
                 .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
                 .ToList();
@@ -3293,15 +3293,15 @@ namespace DesktopAppFramework
             {
                 try
                 {
-                    // ƒvƒ‰ƒOƒCƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬
+                    // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆ
                     var plugin = Activator.CreateInstance(pluginType) as IPlugin;
                     
                     if (plugin != null)
                     {
-                        // ƒvƒ‰ƒOƒCƒ“‚ğ‰Šú‰»
+                        // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’åˆæœŸåŒ–
                         plugin.Initialize(_appContext);
                         
-                        // ƒŠƒXƒg‚É’Ç‰Á
+                        // ãƒªã‚¹ãƒˆã«è¿½åŠ 
                         _loadedPlugins.Add(plugin);
                         
                         _logger?.LogInformation($"Loaded plugin: {plugin.Name} ({plugin.Version})");
@@ -3315,7 +3315,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚ğƒAƒ“ƒ[ƒh
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ã‚¢ãƒ³ãƒ­ãƒ¼ãƒ‰
         /// </summary>
         public void UnloadPlugins()
         {
@@ -3336,7 +3336,7 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒŠƒ\[ƒX‚Ì‰ğ•ú
+        /// ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
         /// </summary>
         public void Dispose()
         {
@@ -3346,7 +3346,7 @@ namespace DesktopAppFramework
 }
 ```
 
-### ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒ^[ƒtƒF[ƒX
+### ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 
 ```csharp name=IPlugin.cs
 using System;
@@ -3354,45 +3354,45 @@ using System;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒvƒ‰ƒOƒCƒ“‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     /// </summary>
     public interface IPlugin
     {
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“–¼
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³å
         /// </summary>
         string Name { get; }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚Ìà–¾
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®èª¬æ˜
         /// </summary>
         string Description { get; }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚Ìƒo[ƒWƒ‡ƒ“
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³
         /// </summary>
         Version Version { get; }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚ÌìÒ
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ä½œè€…
         /// </summary>
         string Author { get; }
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚ğ‰Šú‰»
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’åˆæœŸåŒ–
         /// </summary>
-        /// <param name="appContext">ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒRƒ“ƒeƒLƒXƒg</param>
+        /// <param name="appContext">ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ</param>
         void Initialize(AppContext appContext);
         
         /// <summary>
-        /// ƒvƒ‰ƒOƒCƒ“‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ã‚·ãƒ£ãƒƒãƒˆãƒ€ã‚¦ãƒ³
         /// </summary>
         void Shutdown();
     }
 }
 ```
 
-### MVVMŠî’êƒNƒ‰ƒX
+### MVVMåŸºåº•ã‚¯ãƒ©ã‚¹
 
 ```csharp name=ViewModelBase.cs
 using System;
@@ -3402,32 +3402,32 @@ using System.Runtime.CompilerServices;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// ƒrƒ…[ƒ‚ƒfƒ‹‚ÌŠî’êƒNƒ‰ƒX
+    /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®åŸºåº•ã‚¯ãƒ©ã‚¹
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         /// <summary>
-        /// ƒvƒƒpƒeƒB•ÏX’Ê’mƒCƒxƒ“ƒg
+        /// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å¤‰æ›´é€šçŸ¥ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// ƒvƒƒpƒeƒB•ÏX’Ê’m‚ğ”­¶‚³‚¹‚é
+        /// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å¤‰æ›´é€šçŸ¥ã‚’ç™ºç”Ÿã•ã›ã‚‹
         /// </summary>
-        /// <param name="propertyName">ƒvƒƒpƒeƒB–¼</param>
+        /// <param name="propertyName">ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
-        /// ƒvƒƒpƒeƒB’l‚ğİ’è‚µA•ÏX‚É’Ê’m‚ğ”­¶‚³‚¹‚é
+        /// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å€¤ã‚’è¨­å®šã—ã€å¤‰æ›´æ™‚ã«é€šçŸ¥ã‚’ç™ºç”Ÿã•ã›ã‚‹
         /// </summary>
-        /// <typeparam name="T">ƒvƒƒpƒeƒB‚ÌŒ^</typeparam>
-        /// <param name="field">ƒoƒbƒLƒ“ƒOƒtƒB[ƒ‹ƒh</param>
-        /// <param name="value">V‚µ‚¢’l</param>
-        /// <param name="propertyName">ƒvƒƒpƒeƒB–¼</param>
-        /// <returns>’l‚ª•ÏX‚³‚ê‚½‚©‚Ç‚¤‚©</returns>
+        /// <typeparam name="T">ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®å‹</typeparam>
+        /// <param name="field">ãƒãƒƒã‚­ãƒ³ã‚°ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰</param>
+        /// <param name="value">æ–°ã—ã„å€¤</param>
+        /// <param name="propertyName">ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å</param>
+        /// <returns>å€¤ãŒå¤‰æ›´ã•ã‚ŒãŸã‹ã©ã†ã‹</returns>
         protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -3440,7 +3440,7 @@ namespace DesktopAppFramework
 }
 ```
 
-### ƒRƒ}ƒ“ƒhƒCƒ“ƒtƒ‰ƒXƒgƒ‰ƒNƒ`ƒƒ
+### ã‚³ãƒãƒ³ãƒ‰ã‚¤ãƒ³ãƒ•ãƒ©ã‚¹ãƒˆãƒ©ã‚¯ãƒãƒ£
 
 ```csharp name=RelayCommand.cs
 using System;
@@ -3449,7 +3449,7 @@ using System.Windows.Input;
 namespace DesktopAppFramework
 {
     /// <summary>
-    /// Ä—˜—p‰Â”\‚ÈƒRƒ}ƒ“ƒhÀ‘•
+    /// å†åˆ©ç”¨å¯èƒ½ãªã‚³ãƒãƒ³ãƒ‰å®Ÿè£…
     /// </summary>
     public class RelayCommand : ICommand
     {
@@ -3457,7 +3457,7 @@ namespace DesktopAppFramework
         private readonly Predicate<object> _canExecute;
 
         /// <summary>
-        /// Às‰Â”\ó‘Ô•ÏX‚ÌƒCƒxƒ“ƒg
+        /// å®Ÿè¡Œå¯èƒ½çŠ¶æ…‹å¤‰æ›´æ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆ
         /// </summary>
         public event EventHandler CanExecuteChanged
         {
@@ -3466,10 +3466,10 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         /// </summary>
-        /// <param name="execute">Àsˆ—</param>
-        /// <param name="canExecute">Às‰Â”\”»’è</param>
+        /// <param name="execute">å®Ÿè¡Œå‡¦ç†</param>
+        /// <param name="canExecute">å®Ÿè¡Œå¯èƒ½åˆ¤å®š</param>
         public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
@@ -3477,26 +3477,26 @@ namespace DesktopAppFramework
         }
 
         /// <summary>
-        /// ƒRƒ}ƒ“ƒh‚ªÀs‰Â”\‚©‚Ç‚¤‚©”»’è
+        /// ã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œå¯èƒ½ã‹ã©ã†ã‹åˆ¤å®š
         /// </summary>
-        /// <param name="parameter">ƒpƒ‰ƒ[ƒ^</param>
-        /// <returns>Às‰Â”\‚©‚Ç‚¤‚©</returns>
+        /// <param name="parameter">ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+        /// <returns>å®Ÿè¡Œå¯èƒ½ã‹ã©ã†ã‹</returns>
         public bool CanExecute(object parameter)
         {
             return _canExecute == null || _canExecute(parameter);
         }
 
         /// <summary>
-        /// ƒRƒ}ƒ“ƒh‚ğÀs
+        /// ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œ
         /// </summary>
-        /// <param name="parameter">ƒpƒ‰ƒ[ƒ^</param>
+        /// <param name="parameter">ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
         public void Execute(object parameter)
         {
             _execute(parameter);
         }
 
         /// <summary>
-        /// ƒRƒ}ƒ“ƒhÀs‰Â”\ó‘Ô‚ÌÄ•]‰¿‚ğ—v‹
+        /// ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œå¯èƒ½çŠ¶æ…‹ã®å†è©•ä¾¡ã‚’è¦æ±‚
         /// </summary>
         public void RaiseCanExecuteChanged()
         {
@@ -3506,43 +3506,3561 @@ namespace DesktopAppFramework
 }
 ```
 
-## Šg’£‹@”\‚Ìà–¾
+## æ‹¡å¼µæ©Ÿèƒ½ã®èª¬æ˜
 
-‚±‚ÌŠg’£ƒtƒŒ[ƒ€ƒ[ƒN‚ÍAˆÈ‰º‚Ì‚æ‚¤‚È‹@”\‚ğ’ñ‹Ÿ‚µ‚Ü‚·F
+ã“ã®æ‹¡å¼µãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã¯ã€ä»¥ä¸‹ã®ã‚ˆã†ãªæ©Ÿèƒ½ã‚’æä¾›ã—ã¾ã™ï¼š
 
-1. **MVVM ƒpƒ^[ƒ“‚ÌÀ‘•**
-   - `ViewModelBase` ƒNƒ‰ƒX‚É‚æ‚éƒvƒƒpƒeƒB•ÏX’Ê’m
-   - `RelayCommand` ‚É‚æ‚éƒRƒ}ƒ“ƒhƒoƒCƒ“ƒfƒBƒ“ƒO
-   - `ViewLocator` ‚É‚æ‚é View ‚Æ ViewModel ‚Ì©“®Œ‹‡
+1. **MVVM ãƒ‘ã‚¿ãƒ¼ãƒ³ã®å®Ÿè£…**
+   - `ViewModelBase` ã‚¯ãƒ©ã‚¹ã«ã‚ˆã‚‹ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å¤‰æ›´é€šçŸ¥
+   - `RelayCommand` ã«ã‚ˆã‚‹ã‚³ãƒãƒ³ãƒ‰ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°
+   - `ViewLocator` ã«ã‚ˆã‚‹ View ã¨ ViewModel ã®è‡ªå‹•çµåˆ
 
-2. **ƒT[ƒrƒXƒx[ƒX‚ÌƒA[ƒLƒeƒNƒ`ƒƒ**
-   - ƒCƒ“ƒ^[ƒtƒF[ƒXƒx[ƒX‚Ì‘aŒ‹‡İŒv
-   - ˆË‘¶«’“ü‚É‚æ‚é_“î‚È\¬
-   - ƒeƒXƒg—eˆÕ«‚ÌŒüã
+2. **ã‚µãƒ¼ãƒ“ã‚¹ãƒ™ãƒ¼ã‚¹ã®ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£**
+   - ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ãƒ™ãƒ¼ã‚¹ã®ç–çµåˆè¨­è¨ˆ
+   - ä¾å­˜æ€§æ³¨å…¥ã«ã‚ˆã‚‹æŸ”è»Ÿãªæ§‹æˆ
+   - ãƒ†ã‚¹ãƒˆå®¹æ˜“æ€§ã®å‘ä¸Š
 
-3. **ƒvƒ‰ƒOƒCƒ“ƒVƒXƒeƒ€**
-   - ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‹@”\‚ğ“®“I‚ÉŠg’£
-   - ƒT[ƒhƒp[ƒeƒB‚É‚æ‚éŠJ”­‚ª—eˆÕ
+3. **ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ **
+   - ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®æ©Ÿèƒ½ã‚’å‹•çš„ã«æ‹¡å¼µ
+   - ã‚µãƒ¼ãƒ‰ãƒ‘ãƒ¼ãƒ†ã‚£ã«ã‚ˆã‚‹é–‹ç™ºãŒå®¹æ˜“
 
-4. **ƒe[ƒ}‚ÆƒXƒ^ƒCƒ‹**
-   - “®“I‚Èƒe[ƒ}Ø‚è‘Ö‚¦
-   - ƒJƒXƒ^ƒ}ƒCƒY‰Â”\‚ÈUIƒXƒ^ƒCƒ‹
+4. **ãƒ†ãƒ¼ãƒã¨ã‚¹ã‚¿ã‚¤ãƒ«**
+   - å‹•çš„ãªãƒ†ãƒ¼ãƒåˆ‡ã‚Šæ›¿ãˆ
+   - ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚ºå¯èƒ½ãªUIã‚¹ã‚¿ã‚¤ãƒ«
 
-5. **İ’èŠÇ—**
-   - İ’è‚Ì‰i‘±‰»
-   - ƒ†[ƒU[İ’è‚Ì•Û‘¶‚Æ“Ç‚İ‚İ
+5. **è¨­å®šç®¡ç†**
+   - è¨­å®šã®æ°¸ç¶šåŒ–
+   - ãƒ¦ãƒ¼ã‚¶ãƒ¼è¨­å®šã®ä¿å­˜ã¨èª­ã¿è¾¼ã¿
 
-6. **ƒƒMƒ“ƒO**
-   - •ïŠ‡“I‚ÈƒGƒ‰[‚¨‚æ‚Ñ‘€ìƒƒO
-   - Serilog‚É‚æ‚é_“î‚ÈƒƒOo—Í
+6. **ãƒ­ã‚®ãƒ³ã‚°**
+   - åŒ…æ‹¬çš„ãªã‚¨ãƒ©ãƒ¼ãŠã‚ˆã³æ“ä½œãƒ­ã‚°
+   - Serilogã«ã‚ˆã‚‹æŸ”è»Ÿãªãƒ­ã‚°å‡ºåŠ›
 
-‚±‚ÌŠg’£ƒtƒŒ[ƒ€ƒ[ƒN‚ğƒx[ƒX‚ÉA—lX‚Èí—Ş‚ÌƒfƒXƒNƒgƒbƒvƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğŠJ”­‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B—á‚¦‚ÎAƒeƒLƒXƒgƒGƒfƒBƒ^A‰æ‘œ•ÒWƒ\ƒtƒgAƒf[ƒ^•ªÍƒc[ƒ‹‚È‚ÇAƒvƒƒWƒFƒNƒg‚ÌŠT”O‚ğ‚Â‚Ù‚Æ‚ñ‚Ç‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚É‰—p‰Â”\‚Å‚·B
+ã“ã®æ‹¡å¼µãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’ãƒ™ãƒ¼ã‚¹ã«ã€æ§˜ã€…ãªç¨®é¡ã®ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é–‹ç™ºã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚ä¾‹ãˆã°ã€ãƒ†ã‚­ã‚¹ãƒˆã‚¨ãƒ‡ã‚£ã‚¿ã€ç”»åƒç·¨é›†ã‚½ãƒ•ãƒˆã€ãƒ‡ãƒ¼ã‚¿åˆ†æãƒ„ãƒ¼ãƒ«ãªã©ã€ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®æ¦‚å¿µã‚’æŒã¤ã»ã¨ã‚“ã©ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«å¿œç”¨å¯èƒ½ã§ã™ã€‚
 
-## À‘•‚Ìƒ|ƒCƒ“ƒg
+## å®Ÿè£…ã®ãƒã‚¤ãƒ³ãƒˆ
 
-- **UIƒtƒŒ[ƒ€ƒ[ƒN“Æ—§«**: ƒRƒAƒƒWƒbƒN‚ÆUI‚Ì•ª—£‚É‚æ‚èA«—ˆˆÙ‚È‚éUI‹ZpiAvalonia, WinUI‚È‚Çj‚Ö‚ÌˆÚs‚ª—eˆÕ
-- **ƒeƒXƒg—eˆÕ«**: ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÆDI‚ÌŠˆ—p‚É‚æ‚è’P‘ÌƒeƒXƒg‚ª—eˆÕ
-- **Šg’£«**: ƒvƒ‰ƒOƒCƒ“ƒA[ƒLƒeƒNƒ`ƒƒ‚É‚æ‚è‹@”\Šg’£‚ª‰Â”\
-- **•Ûç«**: ŠÖS‚Ì•ª—£‚Æ•W€ƒpƒ^[ƒ“‚ÌÌ—p‚É‚æ‚è•Ûç‚ª—eˆÕ
+- **UIãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ç‹¬ç«‹æ€§**: ã‚³ã‚¢ãƒ­ã‚¸ãƒƒã‚¯ã¨UIã®åˆ†é›¢ã«ã‚ˆã‚Šã€å°†æ¥ç•°ãªã‚‹UIæŠ€è¡“ï¼ˆAvalonia, WinUIãªã©ï¼‰ã¸ã®ç§»è¡ŒãŒå®¹æ˜“
+- **ãƒ†ã‚¹ãƒˆå®¹æ˜“æ€§**: ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã¨DIã®æ´»ç”¨ã«ã‚ˆã‚Šå˜ä½“ãƒ†ã‚¹ãƒˆãŒå®¹æ˜“
+- **æ‹¡å¼µæ€§**: ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã«ã‚ˆã‚Šæ©Ÿèƒ½æ‹¡å¼µãŒå¯èƒ½
+- **ä¿å®ˆæ€§**: é–¢å¿ƒã®åˆ†é›¢ã¨æ¨™æº–ãƒ‘ã‚¿ãƒ¼ãƒ³ã®æ¡ç”¨ã«ã‚ˆã‚Šä¿å®ˆãŒå®¹æ˜“
 
-‚±‚ê‚ç‚ÌŠg’£‚É‚æ‚èA”Ä—p“I‚ÈƒfƒXƒNƒgƒbƒvƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒx[ƒX‚Æ‚µ‚Äg—p‚Å‚«‚éŒ˜˜S‚ÈƒtƒŒ[ƒ€ƒ[ƒN‚ª\’z‚Å‚«‚Ü‚·B
+ã“ã‚Œã‚‰ã®æ‹¡å¼µã«ã‚ˆã‚Šã€æ±ç”¨çš„ãªãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ™ãƒ¼ã‚¹ã¨ã—ã¦ä½¿ç”¨ã§ãã‚‹å …ç‰¢ãªãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ãŒæ§‹ç¯‰ã§ãã¾ã™ã€‚
+
+
+---
+
+
+# WinFormsã¸ã®MVVMãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯é©ç”¨
+
+å‰å›ææ¡ˆã—ãŸæ±ç”¨ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã‚’WinFormsãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã«é©ç”¨ã—ã¾ã™ã€‚WinFormsã¯WPFã¨ç•°ãªã‚ŠMVVMãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ãƒã‚¤ãƒ†ã‚£ãƒ–ã§ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ãªã„ãŸã‚ã€ã„ãã¤ã‹ã®è¿½åŠ å®Ÿè£…ãŒå¿…è¦ã«ãªã‚Šã¾ã™ã€‚
+
+## WinFormså‘ã‘ä¸»è¦ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+
+### 1. BindableBase - WinFormså‘ã‘ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚µãƒãƒ¼ãƒˆ
+
+```csharp name=BindableBase.cs
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// WinFormså‘ã‘ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’ã‚µãƒãƒ¼ãƒˆã™ã‚‹åŸºåº•ã‚¯ãƒ©ã‚¹
+    /// </summary>
+    public abstract class BindableBase : INotifyPropertyChanged
+    {
+        /// <summary>
+        /// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒå¤‰æ›´ã•ã‚ŒãŸã¨ãã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å¤‰æ›´é€šçŸ¥ã‚’ç™ºç”Ÿã•ã›ã‚‹
+        /// </summary>
+        /// <param name="propertyName">ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å</param>
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®å€¤ã‚’è¨­å®šã—ã€å¤‰æ›´ãŒã‚ã‚Œã°é€šçŸ¥ã‚’ç™ºç”Ÿã•ã›ã‚‹
+        /// </summary>
+        /// <typeparam name="T">ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®å‹</typeparam>
+        /// <param name="storage">ãƒãƒƒã‚­ãƒ³ã‚°ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰</param>
+        /// <param name="value">æ–°ã—ã„å€¤</param>
+        /// <param name="propertyName">ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£å</param>
+        /// <returns>å€¤ãŒå¤‰æ›´ã•ã‚ŒãŸã‹ã©ã†ã‹</returns>
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value))
+                return false;
+
+            storage = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+    }
+}
+```
+
+### 2. WinFormsCommand - WinFormså‘ã‘ã‚³ãƒãƒ³ãƒ‰å®Ÿè£…
+
+```csharp name=WinFormsCommand.cs
+using System;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// WinFormså‘ã‘ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³å®Ÿè£…
+    /// </summary>
+    public class WinFormsCommand
+    {
+        private readonly Action<object> _execute;
+        private readonly Func<object, bool> _canExecute;
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œå¯èƒ½çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸã¨ãã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler CanExecuteChanged;
+
+        /// <summary>
+        /// å®Ÿè¡Œå¯èƒ½çŠ¶æ…‹ã®å¤‰æ›´ã‚’é€šçŸ¥
+        /// </summary>
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+        /// </summary>
+        /// <param name="execute">å®Ÿè¡Œã™ã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³</param>
+        /// <param name="canExecute">å®Ÿè¡Œå¯èƒ½ã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹é–¢æ•°</param>
+        public WinFormsCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute ?? (_ => true);
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œå¯èƒ½ã‹ã©ã†ã‹åˆ¤æ–­
+        /// </summary>
+        /// <param name="parameter">ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+        /// <returns>å®Ÿè¡Œå¯èƒ½ãªã‚‰true</returns>
+        public bool CanExecute(object parameter)
+        {
+            return _canExecute(parameter);
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œ
+        /// </summary>
+        /// <param name="parameter">ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+        public void Execute(object parameter)
+        {
+            if (CanExecute(parameter))
+                _execute(parameter);
+        }
+    }
+
+    /// <summary>
+    /// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãªã—ã®WinFormsã‚³ãƒãƒ³ãƒ‰
+    /// </summary>
+    public class WinFormsCommand<T> : WinFormsCommand
+    {
+        /// <summary>
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+        /// </summary>
+        /// <param name="execute">å®Ÿè¡Œã™ã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³</param>
+        /// <param name="canExecute">å®Ÿè¡Œå¯èƒ½ã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹é–¢æ•°</param>
+        public WinFormsCommand(Action<T> execute, Func<T, bool> canExecute = null)
+            : base(
+                  p => execute(p == null ? default : (T)p),
+                  canExecute == null ? null : p => canExecute(p == null ? default : (T)p))
+        {
+        }
+    }
+}
+```
+
+### 3. WinFormsUIService - WinFormså‘ã‘UIã‚µãƒ¼ãƒ“ã‚¹
+
+```csharp name=WinFormsUIService.cs
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// WinFormså‘ã‘UIã‚µãƒ¼ãƒ“ã‚¹ã®å®Ÿè£…
+    /// </summary>
+    public class WinFormsUIService : IUIService
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<WinFormsUIService> _logger;
+        private readonly Form _mainForm;
+        private readonly Dictionary<Type, Type> _viewModelToFormMap = new Dictionary<Type, Type>();
+
+        public WinFormsUIService(IServiceProvider serviceProvider, Form mainForm, ILogger<WinFormsUIService> logger)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _mainForm = mainForm ?? throw new ArgumentNullException(nameof(mainForm));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
+            // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã¨ãƒ•ã‚©ãƒ¼ãƒ ã®é–¢é€£ä»˜ã‘ã‚’ç™»éŒ²
+            RegisterViewModelMappings();
+        }
+
+        /// <summary>
+        /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã¨ãƒ•ã‚©ãƒ¼ãƒ ã®ãƒãƒƒãƒ”ãƒ³ã‚°ã‚’ç™»éŒ²
+        /// </summary>
+        private void RegisterViewModelMappings()
+        {
+            // ä¾‹: _viewModelToFormMap.Add(typeof(ProjectViewModel), typeof(ProjectForm));
+        }
+
+        /// <summary>
+        /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã¨é–¢é€£ä»˜ã‘ã‚‰ã‚ŒãŸãƒ•ã‚©ãƒ¼ãƒ ã‚’ç™»éŒ²
+        /// </summary>
+        /// <typeparam name="TViewModel">ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®å‹</typeparam>
+        /// <typeparam name="TForm">ãƒ•ã‚©ãƒ¼ãƒ ã®å‹</typeparam>
+        public void RegisterView<TViewModel, TForm>()
+            where TViewModel : ViewModelBase
+            where TForm : Form
+        {
+            _viewModelToFormMap[typeof(TViewModel)] = typeof(TForm);
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
+        /// </summary>
+        public DialogResult ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            return MessageBox.Show(_mainForm, message, title, buttons, icon);
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ããƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public string ShowOpenFileDialog(string title, string filter, string defaultExtension)
+        {
+            using var dialog = new OpenFileDialog
+            {
+                Title = title,
+                Filter = filter,
+                DefaultExt = defaultExtension,
+                CheckFileExists = true
+            };
+
+            return dialog.ShowDialog(_mainForm) == DialogResult.OK ? dialog.FileName : string.Empty;
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public string ShowSaveFileDialog(string title, string filter, string defaultExtension)
+        {
+            using var dialog = new SaveFileDialog
+            {
+                Title = title,
+                Filter = filter,
+                DefaultExt = defaultExtension,
+                AddExtension = true
+            };
+
+            return dialog.ShowDialog(_mainForm) == DialogResult.OK ? dialog.FileName : string.Empty;
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ«ãƒ€é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public string ShowFolderBrowserDialog(string title)
+        {
+            using var dialog = new FolderBrowserDialog
+            {
+                Description = title,
+                ShowNewFolderButton = true
+            };
+
+            return dialog.ShowDialog(_mainForm) == DialogResult.OK ? dialog.SelectedPath : string.Empty;
+        }
+
+        /// <summary>
+        /// ãƒ¢ãƒ¼ãƒ€ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public DialogResult ShowDialog<TViewModel>(TViewModel viewModel, string title = null) 
+            where TViewModel : ViewModelBase
+        {
+            if (!_viewModelToFormMap.TryGetValue(typeof(TViewModel), out Type formType))
+            {
+                _logger.LogError($"ãƒ•ã‚©ãƒ¼ãƒ ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“: {typeof(TViewModel).Name}");
+                return DialogResult.Cancel;
+            }
+
+            try
+            {
+                // ãƒ•ã‚©ãƒ¼ãƒ ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆ
+                Form form = (Form)Activator.CreateInstance(formType);
+                
+                // ã‚¿ã‚¤ãƒˆãƒ«è¨­å®š
+                if (!string.IsNullOrEmpty(title))
+                {
+                    form.Text = title;
+                }
+                
+                // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ•ã‚©ãƒ¼ãƒ ã«ãƒã‚¤ãƒ³ãƒ‰
+                BindViewModel(form, viewModel);
+                
+                // ãƒ¢ãƒ¼ãƒ€ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã¨ã—ã¦è¡¨ç¤º
+                return form.ShowDialog(_mainForm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤ºã«å¤±æ•—ã—ã¾ã—ãŸ: {typeof(TViewModel).Name}");
+                return DialogResult.Cancel;
+            }
+        }
+
+        /// <summary>
+        /// å­ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¡¨ç¤º
+        /// </summary>
+        public void ShowChildForm<TViewModel>(TViewModel viewModel = null) 
+            where TViewModel : ViewModelBase
+        {
+            if (viewModel == null)
+            {
+                viewModel = _serviceProvider.GetService(typeof(TViewModel)) as TViewModel;
+                if (viewModel == null)
+                {
+                    _logger.LogError($"ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ: {typeof(TViewModel).Name}");
+                    return;
+                }
+            }
+
+            if (!_viewModelToFormMap.TryGetValue(typeof(TViewModel), out Type formType))
+            {
+                _logger.LogError($"ãƒ•ã‚©ãƒ¼ãƒ ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“: {typeof(TViewModel).Name}");
+                return;
+            }
+
+            try
+            {
+                // ãƒ•ã‚©ãƒ¼ãƒ ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆ
+                Form form = (Form)Activator.CreateInstance(formType);
+                
+                // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ•ã‚©ãƒ¼ãƒ ã«ãƒã‚¤ãƒ³ãƒ‰
+                BindViewModel(form, viewModel);
+                
+                // è¦ªãƒ•ã‚©ãƒ¼ãƒ ã®ã‚³ãƒ³ãƒ†ãƒŠã«ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¡¨ç¤º
+                if (_mainForm is MainForm mainForm)
+                {
+                    mainForm.ShowChildForm(form);
+                }
+                else
+                {
+                    // MDIã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®å ´åˆ
+                    if (_mainForm.IsMdiContainer)
+                    {
+                        form.MdiParent = _mainForm;
+                        form.Show();
+                    }
+                    else
+                    {
+                        // é€šå¸¸ã®ãƒ•ã‚©ãƒ¼ãƒ ã¨ã—ã¦è¡¨ç¤º
+                        form.Show(_mainForm);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"å­ãƒ•ã‚©ãƒ¼ãƒ ã®è¡¨ç¤ºã«å¤±æ•—ã—ã¾ã—ãŸ: {typeof(TViewModel).Name}");
+            }
+        }
+
+        /// <summary>
+        /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ•ã‚©ãƒ¼ãƒ ã«ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        private void BindViewModel(Form form, ViewModelBase viewModel)
+        {
+            // WinFormsDataBinderã‚’ä½¿ç”¨ã—ã¦ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ•ã‚©ãƒ¼ãƒ ã«ãƒã‚¤ãƒ³ãƒ‰
+            if (form is IBindableView bindableView)
+            {
+                bindableView.BindViewModel(viewModel);
+            }
+            else
+            {
+                // ãƒ•ã‚©ãƒ¼ãƒ ã«TagçµŒç”±ã§ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’è¨­å®š
+                form.Tag = viewModel;
+                
+                // å¿…è¦ã«å¿œã˜ã¦æ‰‹å‹•ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’å®Ÿè£…
+                ApplyManualBindings(form, viewModel);
+            }
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ¼ãƒ ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã¸ã®æ‰‹å‹•ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’é©ç”¨
+        /// </summary>
+        private void ApplyManualBindings(Form form, ViewModelBase viewModel)
+        {
+            // ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯å®Ÿéš›ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§å…·ä½“çš„ã«å®Ÿè£…
+        }
+    }
+}
+```
+
+### 4. WinFormsDataBinder - WinFormsã®ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°å®Ÿè£…
+
+```csharp name=WinFormsDataBinder.cs
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Windows.Forms;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// WinFormså‘ã‘ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’æä¾›ã™ã‚‹ã‚¯ãƒ©ã‚¹
+    /// </summary>
+    public class WinFormsDataBinder
+    {
+        private readonly List<IDisposable> _bindings = new List<IDisposable>();
+
+        /// <summary>
+        /// TextBoxã‚’ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã«ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        public void BindTextBox<T>(TextBox textBox, T source, Expression<Func<T, string>> propertyExpression)
+            where T : INotifyPropertyChanged
+        {
+            if (textBox == null || source == null || propertyExpression == null)
+                throw new ArgumentNullException();
+
+            var binding = new TextBoxBinding<T>(textBox, source, propertyExpression);
+            _bindings.Add(binding);
+        }
+
+        /// <summary>
+        /// CheckBoxã‚’ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã«ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        public void BindCheckBox<T>(CheckBox checkBox, T source, Expression<Func<T, bool>> propertyExpression)
+            where T : INotifyPropertyChanged
+        {
+            if (checkBox == null || source == null || propertyExpression == null)
+                throw new ArgumentNullException();
+
+            var binding = new CheckBoxBinding<T>(checkBox, source, propertyExpression);
+            _bindings.Add(binding);
+        }
+
+        /// <summary>
+        /// ComboBoxã‚’ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã«ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        public void BindComboBox<T, TItem>(ComboBox comboBox, T source, 
+            Expression<Func<T, TItem>> selectedItemExpression, 
+            IList<TItem> items, 
+            string displayMember = null)
+            where T : INotifyPropertyChanged
+        {
+            if (comboBox == null || source == null || selectedItemExpression == null || items == null)
+                throw new ArgumentNullException();
+
+            var binding = new ComboBoxBinding<T, TItem>(comboBox, source, selectedItemExpression, items, displayMember);
+            _bindings.Add(binding);
+        }
+
+        /// <summary>
+        /// Buttonã‚’WinFormsCommandã«ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        public void BindButton(Button button, WinFormsCommand command)
+        {
+            if (button == null || command == null)
+                throw new ArgumentNullException();
+
+            var binding = new ButtonCommandBinding(button, command);
+            _bindings.Add(binding);
+        }
+
+        /// <summary>
+        /// DataGridViewã‚’ãƒªã‚¹ãƒˆãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã«ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        public void BindDataGridView<T, TItem>(DataGridView dataGridView, T source, 
+            Expression<Func<T, IEnumerable<TItem>>> propertyExpression)
+            where T : INotifyPropertyChanged
+        {
+            if (dataGridView == null || source == null || propertyExpression == null)
+                throw new ArgumentNullException();
+
+            var binding = new DataGridViewBinding<T, TItem>(dataGridView, source, propertyExpression);
+            _bindings.Add(binding);
+        }
+
+        /// <summary>
+        /// ã™ã¹ã¦ã®ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’è§£é™¤
+        /// </summary>
+        public void Unbind()
+        {
+            foreach (var binding in _bindings)
+            {
+                binding.Dispose();
+            }
+            _bindings.Clear();
+        }
+
+        #region Binding Implementations
+
+        private class TextBoxBinding<T> : IDisposable where T : INotifyPropertyChanged
+        {
+            private readonly TextBox _textBox;
+            private readonly T _source;
+            private readonly PropertyInfo _property;
+            private bool _updating;
+
+            public TextBoxBinding(TextBox textBox, T source, Expression<Func<T, string>> propertyExpression)
+            {
+                _textBox = textBox;
+                _source = source;
+
+                // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚’å–å¾—
+                var memberExpression = propertyExpression.Body as MemberExpression;
+                _property = memberExpression?.Member as PropertyInfo;
+
+                if (_property == null)
+                    throw new ArgumentException("Invalid property expression", nameof(propertyExpression));
+
+                // åˆæœŸå€¤è¨­å®š
+                _textBox.Text = (string)_property.GetValue(_source) ?? string.Empty;
+
+                // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ç™»éŒ²
+                _textBox.TextChanged += TextBox_TextChanged;
+                _source.PropertyChanged += Source_PropertyChanged;
+            }
+
+            private void TextBox_TextChanged(object sender, EventArgs e)
+            {
+                if (_updating) return;
+                _updating = true;
+
+                try
+                {
+                    _property.SetValue(_source, _textBox.Text);
+                }
+                catch (Exception)
+                {
+                    // ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°
+                }
+                finally
+                {
+                    _updating = false;
+                }
+            }
+
+            private void Source_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (_updating) return;
+                if (e.PropertyName == _property.Name)
+                {
+                    _updating = true;
+                    try
+                    {
+                        _textBox.Text = (string)_property.GetValue(_source) ?? string.Empty;
+                    }
+                    finally
+                    {
+                        _updating = false;
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                _textBox.TextChanged -= TextBox_TextChanged;
+                _source.PropertyChanged -= Source_PropertyChanged;
+            }
+        }
+
+        private class CheckBoxBinding<T> : IDisposable where T : INotifyPropertyChanged
+        {
+            private readonly CheckBox _checkBox;
+            private readonly T _source;
+            private readonly PropertyInfo _property;
+            private bool _updating;
+
+            public CheckBoxBinding(CheckBox checkBox, T source, Expression<Func<T, bool>> propertyExpression)
+            {
+                _checkBox = checkBox;
+                _source = source;
+
+                // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚’å–å¾—
+                var memberExpression = propertyExpression.Body as MemberExpression;
+                _property = memberExpression?.Member as PropertyInfo;
+
+                if (_property == null)
+                    throw new ArgumentException("Invalid property expression", nameof(propertyExpression));
+
+                // åˆæœŸå€¤è¨­å®š
+                _checkBox.Checked = (bool)_property.GetValue(_source);
+
+                // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ç™»éŒ²
+                _checkBox.CheckedChanged += CheckBox_CheckedChanged;
+                _source.PropertyChanged += Source_PropertyChanged;
+            }
+
+            private void CheckBox_CheckedChanged(object sender, EventArgs e)
+            {
+                if (_updating) return;
+                _updating = true;
+
+                try
+                {
+                    _property.SetValue(_source, _checkBox.Checked);
+                }
+                finally
+                {
+                    _updating = false;
+                }
+            }
+
+            private void Source_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (_updating) return;
+                if (e.PropertyName == _property.Name)
+                {
+                    _updating = true;
+                    try
+                    {
+                        _checkBox.Checked = (bool)_property.GetValue(_source);
+                    }
+                    finally
+                    {
+                        _updating = false;
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                _checkBox.CheckedChanged -= CheckBox_CheckedChanged;
+                _source.PropertyChanged -= Source_PropertyChanged;
+            }
+        }
+
+        private class ComboBoxBinding<T, TItem> : IDisposable where T : INotifyPropertyChanged
+        {
+            private readonly ComboBox _comboBox;
+            private readonly T _source;
+            private readonly PropertyInfo _property;
+            private readonly IList<TItem> _items;
+            private bool _updating;
+
+            public ComboBoxBinding(ComboBox comboBox, T source, Expression<Func<T, TItem>> propertyExpression, 
+                IList<TItem> items, string displayMember)
+            {
+                _comboBox = comboBox;
+                _source = source;
+                _items = items;
+
+                // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚’å–å¾—
+                var memberExpression = propertyExpression.Body as MemberExpression;
+                _property = memberExpression?.Member as PropertyInfo;
+
+                if (_property == null)
+                    throw new ArgumentException("Invalid property expression", nameof(propertyExpression));
+
+                // ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹ã®è¨­å®š
+                _comboBox.DataSource = null;
+                _comboBox.Items.Clear();
+                _comboBox.DisplayMember = displayMember;
+                _comboBox.DataSource = _items;
+
+                // åˆæœŸå€¤è¨­å®š
+                var selectedValue = _property.GetValue(_source);
+                int index = -1;
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    if (Equals(_items[i], selectedValue))
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index >= 0)
+                    _comboBox.SelectedIndex = index;
+
+                // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ç™»éŒ²
+                _comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
+                _source.PropertyChanged += Source_PropertyChanged;
+            }
+
+            private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)
+            {
+                if (_updating) return;
+                _updating = true;
+
+                try
+                {
+                    if (_comboBox.SelectedIndex >= 0 && _comboBox.SelectedIndex < _items.Count)
+                    {
+                        _property.SetValue(_source, _items[_comboBox.SelectedIndex]);
+                    }
+                }
+                finally
+                {
+                    _updating = false;
+                }
+            }
+
+            private void Source_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (_updating) return;
+                if (e.PropertyName == _property.Name)
+                {
+                    _updating = true;
+                    try
+                    {
+                        var selectedValue = _property.GetValue(_source);
+                        int index = -1;
+                        for (int i = 0; i < _items.Count; i++)
+                        {
+                            if (Equals(_items[i], selectedValue))
+                            {
+                                index = i;
+                                break;
+                            }
+                        }
+                        if (index >= 0)
+                            _comboBox.SelectedIndex = index;
+                    }
+                    finally
+                    {
+                        _updating = false;
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                _comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;
+                _source.PropertyChanged -= Source_PropertyChanged;
+            }
+        }
+
+        private class ButtonCommandBinding : IDisposable
+        {
+            private readonly Button _button;
+            private readonly WinFormsCommand _command;
+
+            public ButtonCommandBinding(Button button, WinFormsCommand command)
+            {
+                _button = button;
+                _command = command;
+
+                // ãƒœã‚¿ãƒ³ã®åˆæœŸçŠ¶æ…‹ã‚’è¨­å®š
+                UpdateButtonState();
+
+                // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ç™»éŒ²
+                _button.Click += Button_Click;
+                _command.CanExecuteChanged += Command_CanExecuteChanged;
+            }
+
+            private void Button_Click(object sender, EventArgs e)
+            {
+                _command.Execute(null);
+            }
+
+            private void Command_CanExecuteChanged(object sender, EventArgs e)
+            {
+                UpdateButtonState();
+            }
+
+            private void UpdateButtonState()
+            {
+                _button.Enabled = _command.CanExecute(null);
+            }
+
+            public void Dispose()
+            {
+                _button.Click -= Button_Click;
+                _command.CanExecuteChanged -= Command_CanExecuteChanged;
+            }
+        }
+
+        private class DataGridViewBinding<T, TItem> : IDisposable where T : INotifyPropertyChanged
+        {
+            private readonly DataGridView _dataGridView;
+            private readonly T _source;
+            private readonly PropertyInfo _property;
+            private bool _updating;
+
+            public DataGridViewBinding(DataGridView dataGridView, T source, Expression<Func<T, IEnumerable<TItem>>> propertyExpression)
+            {
+                _dataGridView = dataGridView;
+                _source = source;
+
+                // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£æƒ…å ±ã‚’å–å¾—
+                var memberExpression = propertyExpression.Body as MemberExpression;
+                _property = memberExpression?.Member as PropertyInfo;
+
+                if (_property == null)
+                    throw new ArgumentException("Invalid property expression", nameof(propertyExpression));
+
+                // åˆæœŸå€¤è¨­å®š
+                UpdateDataSource();
+
+                // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ç™»éŒ²
+                _source.PropertyChanged += Source_PropertyChanged;
+            }
+
+            private void UpdateDataSource()
+            {
+                var items = _property.GetValue(_source) as IEnumerable<TItem>;
+                _dataGridView.DataSource = items;
+            }
+
+            private void Source_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (_updating) return;
+                if (e.PropertyName == _property.Name)
+                {
+                    _updating = true;
+                    try
+                    {
+                        UpdateDataSource();
+                    }
+                    finally
+                    {
+                        _updating = false;
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                _source.PropertyChanged -= Source_PropertyChanged;
+            }
+        }
+
+        #endregion
+    }
+}
+```
+
+### 5. ãƒã‚¤ãƒ³ãƒ‰å¯èƒ½ãªãƒ“ãƒ¥ãƒ¼ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+
+```csharp name=IBindableView.cs
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒã‚¤ãƒ³ãƒ‰å¯èƒ½ãªãƒ“ãƒ¥ãƒ¼ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+    /// </summary>
+    public interface IBindableView
+    {
+        /// <summary>
+        /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒã‚¤ãƒ³ãƒ‰
+        /// </summary>
+        /// <param name="viewModel">ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«</param>
+        void BindViewModel(ViewModelBase viewModel);
+    }
+}
+```
+
+### 6. AppContextã®WinFormså®Ÿè£…
+
+```csharp name=AppContext.cs
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
+    /// </summary>
+    public class AppContext : IDisposable
+    {
+        private ProjectContext _currentProjectContext;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<AppContext> _logger;
+        private readonly IUIService _uiService;
+        
+        /// <summary>
+        /// ä¾å­˜æ€§æ³¨å…¥ã‚³ãƒ³ãƒ†ãƒŠ
+        /// </summary>
+        public IServiceProvider ServiceProvider => _serviceProvider;
+
+        /// <summary>
+        /// ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+        /// </summary>
+        public ProjectContext CurrentProjectContext
+        {
+            get => _currentProjectContext;
+            private set
+            {
+                if (_currentProjectContext != null)
+                {
+                    _currentProjectContext.ModifiedChanged -= ProjectContext_ModifiedChanged;
+                    _currentProjectContext.Dispose();
+                }
+
+                _currentProjectContext = value;
+
+                if (_currentProjectContext != null)
+                {
+                    _currentProjectContext.ModifiedChanged += ProjectContext_ModifiedChanged;
+                }
+
+                UpdateApplicationState();
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒˆãƒ«
+        /// </summary>
+        public string ApplicationTitle
+        {
+            get
+            {
+                string baseTitle = AppSettings.ApplicationName;
+                if (CurrentProjectContext == null)
+                    return baseTitle;
+
+                string modifiedIndicator = CurrentProjectContext.IsModified ? "*" : "";
+                return $"{CurrentProjectContext.Project.Name}{modifiedIndicator} - {baseTitle}";
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
+        /// </summary>
+        public AppSettings AppSettings { get; private set; }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler ApplicationStateChanged;
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã™ã‚‹æ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler<AppClosingEventArgs> ApplicationClosing;
+
+        /// <summary>
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+        /// </summary>
+        public PluginManager PluginManager { get; private set; }
+
+        /// <summary>
+        /// AppContextã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+        /// </summary>
+        public AppContext(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = serviceProvider.GetRequiredService<ILogger<AppContext>>();
+            _uiService = serviceProvider.GetRequiredService<IUIService>();
+            
+            // è¨­å®šã®ãƒ­ãƒ¼ãƒ‰
+            AppSettings = serviceProvider.GetRequiredService<AppSettings>();
+            
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®åˆæœŸåŒ–
+            PluginManager = new PluginManager(this);
+            PluginManager.LoadPlugins();
+            
+            _logger.LogInformation("Application initialized");
+        }
+
+        /// <summary>
+        /// ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’æ›´æ–°
+        /// </summary>
+        public void UpdateMainFormTitle()
+        {
+            if (System.Windows.Forms.Application.OpenForms.Count > 0 && 
+                System.Windows.Forms.Application.OpenForms[0] is Form mainForm)
+            {
+                mainForm.Text = ApplicationTitle;
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ã‚’æ›´æ–°
+        /// </summary>
+        private void UpdateApplicationState()
+        {
+            UpdateMainFormTitle();
+            ApplicationStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å¤‰æ›´çŠ¶æ…‹ãŒå¤‰ã‚ã£ãŸæ™‚ã®å‡¦ç†
+        /// </summary>
+        private void ProjectContext_ModifiedChanged(object sender, EventArgs e)
+        {
+            UpdateApplicationState();
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å‰ã®å‡¦ç†
+        /// </summary>
+        /// <returns>çµ‚äº†å‡¦ç†ãŒè¨±å¯ã•ã‚ŒãŸã‹ã©ã†ã‹</returns>
+        public bool OnApplicationClosing()
+        {
+            var args = new AppClosingEventArgs();
+            ApplicationClosing?.Invoke(this, args);
+            
+            if (args.Cancel)
+                return false;
+                
+            // æœªä¿å­˜ã®å¤‰æ›´ã‚’ç¢ºèª
+            if (CurrentProjectContext != null && CurrentProjectContext.IsModified)
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                if (!projectService.ConfirmSaveIfModified())
+                    return false;
+            }
+            
+            // è¨­å®šã®ä¿å­˜
+            AppSettings.Save();
+            
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚¢ãƒ³ãƒ­ãƒ¼ãƒ‰
+            PluginManager.UnloadPlugins();
+            
+            _logger.LogInformation("Application closing");
+            return true;
+        }
+
+        #region Project Commands
+
+        /// <summary>
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
+        /// </summary>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool NewProject()
+        {
+            try
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                if (!projectService.ConfirmSaveIfModified())
+                    return false;
+
+                CurrentProjectContext = projectService.CreateNew();
+                _logger.LogInformation("New project created");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating new project");
+                _uiService.ShowMessageBox(
+                    $"æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆã‚¨ãƒ©ãƒ¼: {ex.Message}", 
+                    "ã‚¨ãƒ©ãƒ¼", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
+        /// </summary>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool OpenProject(string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    filePath = _uiService.ShowOpenFileDialog(
+                        "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã",
+                        AppSettings.ProjectFileFilter,
+                        AppSettings.DefaultProjectExtension);
+                        
+                    if (string.IsNullOrEmpty(filePath))
+                        return false;
+                }
+
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                if (!projectService.ConfirmSaveIfModified())
+                    return false;
+
+                CurrentProjectContext = projectService.Open(filePath);
+                
+                // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
+                AppSettings.AddRecentFile(filePath);
+                AppSettings.Save();
+                
+                _logger.LogInformation($"Project opened: {filePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error opening project: {filePath}");
+                _uiService.ShowMessageBox(
+                    $"ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ãéš›ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: {ex.Message}", 
+                    "ã‚¨ãƒ©ãƒ¼", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
+        /// </summary>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool SaveProject()
+        {
+            if (CurrentProjectContext == null)
+                return false;
+
+            try
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                
+                if (string.IsNullOrEmpty(CurrentProjectContext.Project.FilePath))
+                {
+                    // ãƒ‘ã‚¹ãŒãªã„å ´åˆã¯SaveAsã«è»¢é€
+                    return SaveProjectAs(null);
+                }
+                
+                projectService.Save(CurrentProjectContext);
+                UpdateApplicationState();
+                
+                _logger.LogInformation($"Project saved: {CurrentProjectContext.Project.FilePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving project");
+                _uiService.ShowMessageBox(
+                    $"ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä¿å­˜ã‚¨ãƒ©ãƒ¼: {ex.Message}", 
+                    "ã‚¨ãƒ©ãƒ¼", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
+        /// </summary>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool SaveProjectAs(string filePath)
+        {
+            if (CurrentProjectContext == null)
+                return false;
+
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    // UIã‚µãƒ¼ãƒ“ã‚¹ã‚’ä½¿ç”¨ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+                    filePath = _uiService.ShowSaveFileDialog(
+                        "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜",
+                        AppSettings.ProjectFileFilter,
+                        AppSettings.DefaultProjectExtension);
+                    
+                    if (string.IsNullOrEmpty(filePath))
+                        return false;
+                }
+
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                projectService.SaveAs(CurrentProjectContext, filePath);
+                
+                // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
+                AppSettings.AddRecentFile(filePath);
+                AppSettings.Save();
+                
+                UpdateApplicationState();
+                
+                _logger.LogInformation($"Project saved as: {filePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error saving project as: {filePath}");
+                _uiService.ShowMessageBox(
+                    $"ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä¿å­˜ã‚¨ãƒ©ãƒ¼: {ex.Message}", 
+                    "ã‚¨ãƒ©ãƒ¼", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
+        /// </summary>
+        public void Dispose()
+        {
+            if (_currentProjectContext != null)
+            {
+                _currentProjectContext.Dispose();
+                _currentProjectContext = null;
+            }
+            
+            PluginManager?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆå¼•æ•°
+    /// </summary>
+    public class AppClosingEventArgs : EventArgs
+    {
+        /// <summary>
+        /// çµ‚äº†ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã‹ã©ã†ã‹
+        /// </summary>
+        public bool Cancel { get; set; }
+    }
+}
+```
+
+### 7. WinFormså‘ã‘ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ 
+
+```csharp name=MainForm.cs
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace WinFormsAppFramework
+{
+    public partial class MainForm : Form, IBindableView
+    {
+        private readonly AppContext _appContext;
+        private readonly IServiceProvider _serviceProvider;
+        private MainViewModel _viewModel;
+        private readonly WinFormsDataBinder _dataBinder = new WinFormsDataBinder();
+        private Form _activeChildForm;
+
+        public MainForm(IServiceProvider serviceProvider)
+        {
+            InitializeComponent();
+            
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _appContext = serviceProvider.GetRequiredService<AppContext>();
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ ãŒé–‰ã˜ã‚‰ã‚Œã‚‹å‰ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©
+            FormClosing += MainForm_FormClosing;
+            
+            // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹å¤‰æ›´ã‚¤ãƒ™ãƒ³ãƒˆã‚’è³¼èª­
+            _appContext.ApplicationStateChanged += AppContext_ApplicationStateChanged;
+            
+            // ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã‚’ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+            SetupMenuItems();
+            
+            // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®å–å¾—ã¨ãƒã‚¤ãƒ³ãƒ‰
+            _viewModel = serviceProvider.GetRequiredService<MainViewModel>();
+            BindViewModel(_viewModel);
+        }
+
+        public void BindViewModel(ViewModelBase viewModel)
+        {
+            if (!(viewModel is MainViewModel mainViewModel))
+                throw new ArgumentException("ViewModel must be of type MainViewModel");
+                
+            _viewModel = mainViewModel;
+            
+            // ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’ã‚¯ãƒªã‚¢
+            _dataBinder.Unbind();
+            
+            // ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«è¨­å®šã™ã‚‹
+            UpdateMenuItemsState();
+            
+            // ã“ã“ã§ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã¨ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’è¨­å®š
+            // ä¾‹: _dataBinder.BindTextBox(textBoxTitle, _viewModel, vm => vm.Title);
+            
+            // ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã®ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°
+            _dataBinder.BindTextBox(textBoxStatus, _viewModel, vm => vm.StatusMessage);
+        }
+
+        /// <summary>
+        /// å­ãƒ•ã‚©ãƒ¼ãƒ ã‚’ã‚³ãƒ³ãƒ†ãƒŠã«è¡¨ç¤º
+        /// </summary>
+        public void ShowChildForm(Form form)
+        {
+            // ç¾åœ¨ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªå­ãƒ•ã‚©ãƒ¼ãƒ ã‚’é–‰ã˜ã‚‹
+            if (_activeChildForm != null && !_activeChildForm.IsDisposed)
+            {
+                _activeChildForm.Hide();
+            }
+            
+            // æ–°ã—ã„å­ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¨­å®š
+            _activeChildForm = form;
+            
+            if (!form.TopLevel)
+            {
+                // ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã¨ã—ã¦è¿½åŠ ã™ã‚‹å ´åˆ
+                form.TopLevel = false;
+                form.FormBorderStyle = FormBorderStyle.None;
+                form.Dock = DockStyle.Fill;
+                
+                panelContent.Controls.Clear();
+                panelContent.Controls.Add(form);
+                form.Show();
+            }
+            else
+            {
+                // é€šå¸¸ã®ãƒ•ã‚©ãƒ¼ãƒ ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹å ´åˆ
+                form.Show(this);
+            }
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ ã‚¿ã‚¤ãƒˆãƒ«ã‚’æ›´æ–°
+            Text = _appContext.ApplicationTitle;
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+        /// </summary>
+        private void SetupMenuItems()
+        {
+            // Fileãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            var fileMenu = new ToolStripMenuItem("ãƒ•ã‚¡ã‚¤ãƒ«(&F)");
+            fileMenu.DropDownItems.Add(new ToolStripMenuItem("æ–°è¦ä½œæˆ(&N)", null, (s, e) => _appContext.NewProject()));
+            fileMenu.DropDownItems.Add(new ToolStripMenuItem("é–‹ã(&O)...", null, (s, e) => _appContext.OpenProject(null)));
+            fileMenu.DropDownItems.Add(new ToolStripSeparator());
+            fileMenu.DropDownItems.Add(new ToolStripMenuItem("ä¿å­˜(&S)", null, (s, e) => _appContext.SaveProject()));
+            fileMenu.DropDownItems.Add(new ToolStripMenuItem("åå‰ã‚’ä»˜ã‘ã¦ä¿å­˜(&A)...", null, (s, e) => _appContext.SaveProjectAs(null)));
+            fileMenu.DropDownItems.Add(new ToolStripSeparator());
+            
+            // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚µãƒ–ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            var recentFilesMenu = new ToolStripMenuItem("æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«");
+            fileMenu.DropDownItems.Add(recentFilesMenu);
+            UpdateRecentFilesMenu(recentFilesMenu);
+            
+            fileMenu.DropDownItems.Add(new ToolStripSeparator());
+            fileMenu.DropDownItems.Add(new ToolStripMenuItem("çµ‚äº†(&X)", null, (s, e) => Close()));
+            
+            // Editãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            var editMenu = new ToolStripMenuItem("ç·¨é›†(&E)");
+            // ç·¨é›†ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®é …ç›®ã‚’è¿½åŠ 
+            
+            // Viewãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            var viewMenu = new ToolStripMenuItem("è¡¨ç¤º(&V)");
+            // è¡¨ç¤ºãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®é …ç›®ã‚’è¿½åŠ 
+            
+            // Helpãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            var helpMenu = new ToolStripMenuItem("ãƒ˜ãƒ«ãƒ—(&H)");
+            helpMenu.DropDownItems.Add(new ToolStripMenuItem("ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±(&A)...", null, (s, e) => ShowAboutDialog()));
+            
+            // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã«è¿½åŠ 
+            menuStrip.Items.Add(fileMenu);
+            menuStrip.Items.Add(editMenu);
+            menuStrip.Items.Add(viewMenu);
+            menuStrip.Items.Add(helpMenu);
+        }
+
+        /// <summary>
+        /// æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®æ›´æ–°
+        /// </summary>
+        private void UpdateRecentFilesMenu(ToolStripMenuItem recentFilesMenu)
+        {
+            recentFilesMenu.DropDownItems.Clear();
+            
+            if (_appContext.AppSettings.RecentFiles.Count == 0)
+            {
+                var emptyItem = new ToolStripMenuItem("(æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¯ã‚ã‚Šã¾ã›ã‚“)");
+                emptyItem.Enabled = false;
+                recentFilesMenu.DropDownItems.Add(emptyItem);
+                return;
+            }
+            
+            foreach (var filePath in _appContext.AppSettings.RecentFiles)
+            {
+                var item = new ToolStripMenuItem(filePath);
+                item.Click += (s, e) => _appContext.OpenProject(filePath);
+                recentFilesMenu.DropDownItems.Add(item);
+            }
+            
+            recentFilesMenu.DropDownItems.Add(new ToolStripSeparator());
+            recentFilesMenu.DropDownItems.Add(new ToolStripMenuItem("ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢", null, (s, e) => {
+                _appContext.AppSettings.RecentFiles.Clear();
+                _appContext.AppSettings.Save();
+                UpdateRecentFilesMenu(recentFilesMenu);
+            }));
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®çŠ¶æ…‹ã‚’æ›´æ–°
+        /// </summary>
+        private void UpdateMenuItemsState()
+        {
+            bool hasProject = _appContext.CurrentProjectContext != null;
+            
+            // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®é …ç›®
+            foreach (ToolStripItem item in ((ToolStripMenuItem)menuStrip.Items[0]).DropDownItems)
+            {
+                if (item.Text.Contains("ä¿å­˜"))
+                {
+                    item.Enabled = hasProject;
+                }
+            }
+            
+            // ä»–ã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã‚‚åŒæ§˜ã«æ›´æ–°
+        }
+
+        /// <summary>
+        /// ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        private void ShowAboutDialog()
+        {
+            var about = new AboutBox
+            {
+                ApplicationName = _appContext.AppSettings.ApplicationName,
+                Version = Application.ProductVersion,
+                Copyright = "Copyright Â© " + DateTime.Now.Year
+            };
+            
+            about.ShowDialog(this);
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å‰ã®ç¢ºèª
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                if (!_appContext.OnApplicationClosing())
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void AppContext_ApplicationStateChanged(object sender, EventArgs e)
+        {
+            // UIæ›´æ–°ã¯UIã‚¹ãƒ¬ãƒƒãƒ‰ã§è¡Œã†
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateUI()));
+            }
+            else
+            {
+                UpdateUI();
+            }
+        }
+
+        private void UpdateUI()
+        {
+            // ãƒ•ã‚©ãƒ¼ãƒ ã‚¿ã‚¤ãƒˆãƒ«ã‚’æ›´æ–°
+            Text = _appContext.ApplicationTitle;
+            
+            // ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®çŠ¶æ…‹ã‚’æ›´æ–°
+            UpdateMenuItemsState();
+            
+            // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’æ›´æ–°
+            var fileMenu = menuStrip.Items[0] as ToolStripMenuItem;
+            var recentFilesMenu = fileMenu?.DropDownItems
+                .OfType<ToolStripMenuItem>()
+                .FirstOrDefault(item => item.Text == "æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«");
+                
+            if (recentFilesMenu != null)
+            {
+                UpdateRecentFilesMenu(recentFilesMenu);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dataBinder.Unbind();
+                _appContext.ApplicationStateChanged -= AppContext_ApplicationStateChanged;
+                
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private System.ComponentModel.IContainer components = null;
+        private MenuStrip menuStrip;
+        private ToolStrip toolStrip;
+        private StatusStrip statusStrip;
+        private Panel panelContent;
+        private TextBox textBoxStatus;
+
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.menuStrip = new MenuStrip();
+            this.toolStrip = new ToolStrip();
+            this.statusStrip = new StatusStrip();
+            this.panelContent = new Panel();
+            this.textBoxStatus = new TextBox();
+            
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip.TabIndex = 0;
+            this.menuStrip.Text = "menuStrip1";
+            
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip.TabIndex = 1;
+            this.toolStrip.Text = "toolStrip1";
+            
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip.TabIndex = 2;
+            this.statusStrip.Text = "statusStrip1";
+            
+            //
+            // textBoxStatus
+            //
+            this.textBoxStatus.BorderStyle = BorderStyle.None;
+            this.textBoxStatus.ReadOnly = true;
+            this.textBoxStatus.Dock = DockStyle.Fill;
+            this.statusStrip.Items.Add(new ToolStripControlHost(textBoxStatus));
+            
+            // 
+            // panelContent
+            // 
+            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContent.Location = new System.Drawing.Point(0, 49);
+            this.panelContent.Name = "panelContent";
+            this.panelContent.Size = new System.Drawing.Size(800, 379);
+            this.panelContent.TabIndex = 3;
+            
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.panelContent);
+            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.toolStrip);
+            this.Controls.Add(this.menuStrip);
+            this.MainMenuStrip = this.menuStrip;
+            this.Name = "MainForm";
+            this.Text = "WinForms Application";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+
+        #endregion
+    }
+}
+```
+
+### 8. WinFormså‘ã‘ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+
+```csharp name=Program.cs
+using System;
+using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+
+namespace WinFormsAppFramework
+{
+    internal static class Program
+    {
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ¡ã‚¤ãƒ³ ã‚¨ãƒ³ãƒˆãƒª ãƒã‚¤ãƒ³ãƒˆ
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            // Serilogã®è¨­å®š
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .WriteTo.Console()
+                .WriteTo.File("logs/app-.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            try
+            {
+                // ãƒ‡ã‚¶ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰ã§ãªã„å ´åˆã®ã¿
+                if (!System.ComponentModel.LicenseManager.UsageMode.Equals(System.ComponentModel.LicenseUsageMode.Designtime))
+                {
+                    // ã‚µãƒ¼ãƒ“ã‚¹ã‚³ãƒ³ãƒ†ãƒŠã®æ§‹ç¯‰
+                    var services = new ServiceCollection();
+                    ConfigureServices(services);
+                    
+                    using (var serviceProvider = services.BuildServiceProvider())
+                    {
+                        // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®æ¨™æº–è¨­å®š
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        
+                        // ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã®ä½œæˆã¨ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å®Ÿè¡Œ
+                        var mainForm = new MainForm(serviceProvider);
+                        
+                        // UIã‚µãƒ¼ãƒ“ã‚¹ã®ç™»éŒ²ã¨åˆæœŸåŒ–
+                        var uiService = serviceProvider.GetRequiredService<IUIService>() as WinFormsUIService;
+                        InitializeUIService(uiService);
+                        
+                        // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè¡Œ
+                        Application.Run(mainForm);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§å‡¦ç†ã•ã‚Œãªã„ä¾‹å¤–ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
+                MessageBox.Show(
+                    $"ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚\n\n{ex.Message}",
+                    "ã‚¨ãƒ©ãƒ¼",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            // ãƒ­ã‚®ãƒ³ã‚°è¨­å®š
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.SetMinimumLevel(LogLevel.Information);
+                builder.AddSerilog(dispose: true);
+            });
+
+            // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
+            services.AddSingleton<AppSettings>();
+            
+            // ã‚³ã‚¢ã‚µãƒ¼ãƒ“ã‚¹
+            services.AddSingleton<AppContext>();
+            services.AddSingleton<IProjectService, ProjectService>();
+            
+            // UIã‚µãƒ¼ãƒ“ã‚¹ (MainFormã¯ã¾ã ä½œæˆã•ã‚Œã¦ã„ãªã„ã®ã§å¾Œã§åˆæœŸåŒ–)
+            services.AddSingleton<IUIService>(provider => {
+                var mainForm = Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null;
+                var logger = provider.GetRequiredService<ILogger<WinFormsUIService>>();
+                return new WinFormsUIService(provider, mainForm, logger);
+            });
+            
+            // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«
+            services.AddTransient<MainViewModel>();
+            services.AddTransient<ProjectViewModel>();
+            services.AddTransient<SettingsViewModel>();
+        }
+
+        private static void InitializeUIService(WinFormsUIService uiService)
+        {
+            // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã¨ãƒ•ã‚©ãƒ¼ãƒ ã®ãƒãƒƒãƒ”ãƒ³ã‚°ã‚’ç™»éŒ²
+            uiService.RegisterView<ProjectViewModel, ProjectForm>();
+            uiService.RegisterView<SettingsViewModel, SettingsForm>();
+        }
+    }
+}
+```
+
+## å®Ÿè£…ã®ç‰¹å¾´ã¨æ³¨æ„ç‚¹
+
+### 1. ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°
+
+WinFormsã«ã¯ç›´æ¥çš„ãªãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒ¡ã‚«ãƒ‹ã‚ºãƒ ãŒãªã„ãŸã‚ã€ã‚«ã‚¹ã‚¿ãƒ ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚¯ãƒ©ã‚¹ã‚’å®Ÿè£…ã—ã¦ã„ã¾ã™ã€‚`WinFormsDataBinder`ã¯WPFã®ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã«ä¼¼ãŸæ©Ÿèƒ½ã‚’æä¾›ã—ã¾ã™ã€‚
+
+### 2. ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³
+
+`WinFormsCommand`ã‚¯ãƒ©ã‚¹ã¯WPFã®`ICommand`ã«ç›¸å½“ã™ã‚‹æ©Ÿèƒ½ã‚’æä¾›ã—ã¾ã™ã€‚ãƒœã‚¿ãƒ³ã‚¯ãƒªãƒƒã‚¯ã¨ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œã‚’åˆ†é›¢ã—ã€MVVMãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å®Ÿç¾ã—ã¾ã™ã€‚
+
+### 3. ãƒ“ãƒ¥ãƒ¼ã¨ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®æ¥ç¶š
+
+`IBindableView`ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å®Ÿè£…ã™ã‚‹ã“ã¨ã§ã€ãƒ•ã‚©ãƒ¼ãƒ ã¯ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã¨ã®æ¥ç¶šæ–¹æ³•ã‚’å®šç¾©ã—ã¾ã™ã€‚
+
+### 4. UIæ›´æ–°ã®åŒæœŸ
+
+WinFormsã§ã¯`InvokeRequired`ã‚’ä½¿ç”¨ã—ã¦UIã‚¹ãƒ¬ãƒƒãƒ‰ã§ã®UIæ›´æ–°ã‚’è¡Œã†å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+
+### 5. ãƒ•ã‚©ãƒ¼ãƒ ã®ã‚³ãƒ³ãƒ†ãƒŠåŒ–
+
+`MainForm`ã®ãƒ‘ãƒãƒ«ã«ãƒ•ã‚©ãƒ¼ãƒ ã‚’åŸ‹ã‚è¾¼ã‚€ã“ã¨ã§ã€WPFã®ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã«ä¼¼ãŸæ©Ÿèƒ½ã‚’å®Ÿç¾ã—ã¦ã„ã¾ã™ã€‚
+
+## ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚³ãƒ¼ãƒ‰ä¾‹
+
+ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆç·¨é›†ãƒ•ã‚©ãƒ¼ãƒ ã®å®Ÿè£…ä¾‹ï¼š
+
+```csharp name=ProjectForm.cs
+using System;
+using System.Windows.Forms;
+
+namespace WinFormsAppFramework
+{
+    public partial class ProjectForm : Form, IBindableView
+    {
+        private ProjectViewModel _viewModel;
+        private readonly WinFormsDataBinder _dataBinder = new WinFormsDataBinder();
+
+        public ProjectForm()
+        {
+            InitializeComponent();
+        }
+
+        public void BindViewModel(ViewModelBase viewModel)
+        {
+            if (!(viewModel is ProjectViewModel projectViewModel))
+                throw new ArgumentException("ViewModel must be of type ProjectViewModel");
+                
+            _viewModel = projectViewModel;
+            
+            // ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’ã‚¯ãƒªã‚¢
+            _dataBinder.Unbind();
+            
+            // ãƒ†ã‚­ã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã¨ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°
+            _dataBinder.BindTextBox(textBoxName, _viewModel, vm => vm.Name);
+            _dataBinder.BindTextBox(textBoxDescription, _viewModel, vm => vm.Description);
+            
+            // ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°
+            _dataBinder.BindCheckBox(checkBoxIsDirty, _viewModel, vm => vm.IsDirty);
+            
+            // ãƒœã‚¿ãƒ³ã¨ã‚³ãƒãƒ³ãƒ‰ã®ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°
+            _dataBinder.BindButton(buttonSave, _viewModel.SaveCommand);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dataBinder.Unbind();
+                
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
+    }
+}
+```
+
+## ã¾ã¨ã‚
+
+WinFormsã§ã¯MVVMãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å®Œå…¨ã«ã‚µãƒãƒ¼ãƒˆã™ã‚‹çµ„ã¿è¾¼ã¿æ©Ÿèƒ½ãŒãªã„ãŸã‚ã€ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚„ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’è‡ªå‰ã§å®Ÿè£…ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚ã—ã‹ã—ã€ä¸Šè¨˜ã®ã‚ˆã†ãªæ‹¡å¼µã‚¯ãƒ©ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹ã“ã¨ã§ã€WPFã«ä¼¼ãŸæ§‹é€ ã‚’æŒã¤ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é–‹ç™ºã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚
+
+ã“ã®å®Ÿè£…ã«ã‚ˆã‚Šã€ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ­ã‚¸ãƒƒã‚¯ï¼ˆViewModelã‚„Serviceï¼‰ã‚’å¤‰æ›´ã›ãšã«UIæŠ€è¡“ï¼ˆWPFã‹ã‚‰WinFormsãªã©ï¼‰ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã“ã¨ãŒå¯èƒ½ã«ãªã‚Šã¾ã™ã€‚ã¾ãŸã€ãƒ†ã‚¹ãƒˆå®¹æ˜“æ€§ã‚„ä¿å®ˆæ€§ã‚‚å‘ä¸Šã—ã¾ã™ã€‚
+
+ä»¥ä¸Šã®å®Ÿè£…ã§WinFormsã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã‚‚MVVMãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’æ´»ç”¨ã§ãã‚‹å …ç‰¢ãªã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã‚’æ§‹ç¯‰ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚
+
+
+---
+
+
+# WinFormså‘ã‘ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯
+
+å‰å›ææ¡ˆã—ãŸã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã‚’WinFormsã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å‘ã‘ã«é©å¿œã•ã›ã¾ã™ã€‚WinFormsã§ã¯MVVMãƒ‘ã‚¿ãƒ¼ãƒ³ãŒWPFã»ã©è‡ªç„¶ã«å®Ÿè£…ã§ããªã„ãŸã‚ã€é©å¿œå‹MVVMãƒ‘ã‚¿ãƒ¼ãƒ³ã¨MVPãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’çµ„ã¿åˆã‚ã›ãŸã‚¢ãƒ—ãƒ­ãƒ¼ãƒã‚’æ¡ç”¨ã—ã¾ã™ã€‚
+
+## æ–°ã—ã„ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã®æ¦‚è¦
+
+1. **ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®å®Ÿè£…**
+2. **ãƒ•ã‚©ãƒ¼ãƒ ã¨ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®ç®¡ç†**
+3. **WinFormså¯¾å¿œã®UIã‚µãƒ¼ãƒ“ã‚¹**
+4. **Eventãƒ™ãƒ¼ã‚¹ã®ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³**
+5. **ã‚³ã‚¢ãƒ­ã‚¸ãƒƒã‚¯ã®ç¶­æŒ**
+
+## ä¸»è¦ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å®Ÿè£…
+
+### WinFormsã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+
+```csharp name=Program.cs
+using System;
+using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+
+namespace WinFormsAppFramework
+{
+    static class Program
+    {
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ¡ã‚¤ãƒ³ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            // Serilogã®è¨­å®š
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            try
+            {
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+
+                // ã‚µãƒ¼ãƒ“ã‚¹ã‚³ãƒ³ãƒ†ãƒŠã®æ§‹ç¯‰
+                var services = new ServiceCollection();
+                ConfigureServices(services);
+                
+                var serviceProvider = services.BuildServiceProvider();
+
+                // ã‚·ã‚¹ãƒ†ãƒ æƒ…å ±ã‚’è¨˜éŒ²
+                var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation($"Application started at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
+                logger.LogInformation($"Current user: {Environment.UserName}");
+
+                // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®åˆæœŸåŒ–
+                var appContext = serviceProvider.GetRequiredService<AppContext>();
+                
+                // ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã®è¡¨ç¤º
+                var mainForm = serviceProvider.GetRequiredService<MainForm>();
+                Application.Run(mainForm);
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§å‡¦ç†ã•ã‚Œãªã„ä¾‹å¤–ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
+                MessageBox.Show(
+                    $"äºˆæœŸã—ãªã„ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: {ex.Message}",
+                    "ã‚¨ãƒ©ãƒ¼",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            // ãƒ­ã‚®ãƒ³ã‚°è¨­å®š
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.SetMinimumLevel(LogLevel.Information);
+                builder.AddSerilog(dispose: true);
+            });
+
+            // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
+            services.AddSingleton<AppSettings>();
+            
+            // ã‚³ã‚¢ã‚µãƒ¼ãƒ“ã‚¹
+            services.AddSingleton<AppContext>();
+            services.AddSingleton<IProjectService, ProjectService>();
+            services.AddSingleton<IUIService, WinFormsUIService>();
+            services.AddSingleton<IDialogService, WinFormsDialogService>();
+            
+            // ã‚³ãƒãƒ³ãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+            services.AddSingleton<CommandManager>();
+            
+            // ã‚³ãƒãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ©
+            services.AddSingleton<ICommandHandler, FileCommandHandler>();
+            services.AddSingleton<ICommandHandler, EditCommandHandler>();
+            services.AddSingleton<ICommandHandler, ViewCommandHandler>();
+            services.AddSingleton<ICommandHandler, HelpCommandHandler>();
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ 
+            services.AddTransient<MainForm>();
+            services.AddTransient<ProjectPropertiesForm>();
+            services.AddTransient<SettingsForm>();
+            
+            // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ï¼ˆWinFormsã§ã‚‚å…±é€šã‚³ã‚¢ãƒ­ã‚¸ãƒƒã‚¯ç”¨ã«ä½¿ç”¨ï¼‰
+            services.AddTransient<MainViewModel>();
+            services.AddTransient<ProjectPropertiesViewModel>();
+            services.AddTransient<SettingsViewModel>();
+        }
+    }
+}
+```
+
+### AppContext - ã»ã¼ã‚³ã‚¢å®Ÿè£…ã¨åŒã˜
+
+```csharp name=AppContext.cs
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
+    /// </summary>
+    public class AppContext : IDisposable
+    {
+        private ProjectContext _currentProjectContext;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<AppContext> _logger;
+
+        /// <summary>
+        /// ä¾å­˜æ€§æ³¨å…¥ã‚³ãƒ³ãƒ†ãƒŠ
+        /// </summary>
+        public IServiceProvider ServiceProvider => _serviceProvider;
+
+        /// <summary>
+        /// ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+        /// </summary>
+        public ProjectContext CurrentProjectContext
+        {
+            get => _currentProjectContext;
+            private set
+            {
+                if (_currentProjectContext != null)
+                {
+                    _currentProjectContext.ModifiedChanged -= ProjectContext_ModifiedChanged;
+                    _currentProjectContext.Dispose();
+                }
+
+                _currentProjectContext = value;
+
+                if (_currentProjectContext != null)
+                {
+                    _currentProjectContext.ModifiedChanged += ProjectContext_ModifiedChanged;
+                }
+
+                OnApplicationStateChanged();
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒˆãƒ«
+        /// </summary>
+        public string ApplicationTitle
+        {
+            get
+            {
+                string baseTitle = AppSettings.ApplicationName;
+                if (CurrentProjectContext == null)
+                    return baseTitle;
+
+                string modifiedIndicator = CurrentProjectContext.IsModified ? "*" : "";
+                return $"{CurrentProjectContext.Project.Name}{modifiedIndicator} - {baseTitle}";
+            }
+        }
+
+        /// <summary>
+        /// åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒã®ä¸€è¦§
+        /// </summary>
+        public IReadOnlyList<ThemeInfo> AvailableThemes { get; private set; }
+
+        /// <summary>
+        /// ç¾åœ¨ã®ãƒ†ãƒ¼ãƒ
+        /// </summary>
+        public ThemeInfo CurrentTheme { get; private set; }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
+        /// </summary>
+        public AppSettings AppSettings { get; private set; }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler ApplicationStateChanged;
+
+        /// <summary>
+        /// ãƒ†ãƒ¼ãƒãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler<ThemeChangedEventArgs> ThemeChanged;
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã™ã‚‹æ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler<AppClosingEventArgs> ApplicationClosing;
+
+        /// <summary>
+        /// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+        /// </summary>
+        public PluginManager PluginManager { get; private set; }
+
+        /// <summary>
+        /// AppContextã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+        /// </summary>
+        public AppContext(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = serviceProvider.GetRequiredService<ILogger<AppContext>>();
+            
+            // è¨­å®šã®ãƒ­ãƒ¼ãƒ‰
+            AppSettings = serviceProvider.GetRequiredService<AppSettings>();
+            
+            // åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒã®ãƒ­ãƒ¼ãƒ‰
+            LoadThemes();
+            
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®åˆæœŸåŒ–
+            PluginManager = new PluginManager(this);
+            PluginManager.LoadPlugins();
+            
+            _logger.LogInformation("Application initialized");
+        }
+
+        /// <summary>
+        /// åˆ©ç”¨å¯èƒ½ãªãƒ†ãƒ¼ãƒã‚’ãƒ­ãƒ¼ãƒ‰
+        /// </summary>
+        private void LoadThemes()
+        {
+            var themes = new List<ThemeInfo>
+            {
+                new ThemeInfo("Default", "Default"),
+                new ThemeInfo("Blue", "Blue"),
+                new ThemeInfo("Dark", "Dark")
+            };
+            
+            AvailableThemes = themes;
+            
+            // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ãƒ¼ãƒã‚‚ã—ãã¯ä¿å­˜ã•ã‚ŒãŸãƒ†ãƒ¼ãƒã®è¨­å®š
+            string savedTheme = AppSettings.CurrentTheme;
+            CurrentTheme = themes.Find(t => t.Name == savedTheme) ?? themes[0];
+        }
+
+        /// <summary>
+        /// ãƒ†ãƒ¼ãƒã‚’å¤‰æ›´
+        /// </summary>
+        /// <param name="themeName">ãƒ†ãƒ¼ãƒå</param>
+        public void ChangeTheme(string themeName)
+        {
+            var theme = AvailableThemes.FirstOrDefault(t => t.Name == themeName);
+            if (theme != null && theme != CurrentTheme)
+            {
+                CurrentTheme = theme;
+                AppSettings.CurrentTheme = theme.Name;
+                AppSettings.Save();
+                
+                OnThemeChanged(new ThemeChangedEventArgs(theme));
+                _logger.LogInformation($"Theme changed to {theme.Name}");
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ã‚’æ›´æ–°
+        /// </summary>
+        protected virtual void OnApplicationStateChanged()
+        {
+            ApplicationStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+        
+        /// <summary>
+        /// ãƒ†ãƒ¼ãƒå¤‰æ›´ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºç”Ÿ
+        /// </summary>
+        protected virtual void OnThemeChanged(ThemeChangedEventArgs args)
+        {
+            ThemeChanged?.Invoke(this, args);
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å¤‰æ›´çŠ¶æ…‹ãŒå¤‰ã‚ã£ãŸæ™‚ã®å‡¦ç†
+        /// </summary>
+        private void ProjectContext_ModifiedChanged(object sender, EventArgs e)
+        {
+            OnApplicationStateChanged();
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å‰ã®å‡¦ç†
+        /// </summary>
+        /// <returns>çµ‚äº†å‡¦ç†ãŒè¨±å¯ã•ã‚ŒãŸã‹ã©ã†ã‹</returns>
+        public bool OnApplicationClosing()
+        {
+            var args = new AppClosingEventArgs();
+            ApplicationClosing?.Invoke(this, args);
+            
+            if (args.Cancel)
+                return false;
+                
+            // æœªä¿å­˜ã®å¤‰æ›´ã‚’ç¢ºèª
+            if (CurrentProjectContext != null && CurrentProjectContext.IsModified)
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                if (!projectService.ConfirmSaveIfModified())
+                    return false;
+            }
+            
+            // è¨­å®šã®ä¿å­˜
+            AppSettings.Save();
+            
+            // ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚¢ãƒ³ãƒ­ãƒ¼ãƒ‰
+            PluginManager.UnloadPlugins();
+            
+            _logger.LogInformation("Application closing");
+            return true;
+        }
+
+        #region Project Commands
+
+        /// <summary>
+        /// æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
+        /// </summary>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool NewProject()
+        {
+            try
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                if (!projectService.ConfirmSaveIfModified())
+                    return false;
+
+                CurrentProjectContext = projectService.CreateNew();
+                _logger.LogInformation("New project created");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating new project");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã
+        /// </summary>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool OpenProject(string filePath)
+        {
+            try
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                if (!projectService.ConfirmSaveIfModified())
+                    return false;
+
+                CurrentProjectContext = projectService.Open(filePath);
+                
+                // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
+                AppSettings.AddRecentFile(filePath);
+                AppSettings.Save();
+                
+                _logger.LogInformation($"Project opened: {filePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error opening project: {filePath}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
+        /// </summary>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool SaveProject()
+        {
+            if (CurrentProjectContext == null)
+                return false;
+
+            try
+            {
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                
+                if (string.IsNullOrEmpty(CurrentProjectContext.Project.FilePath))
+                {
+                    // ãƒ‘ã‚¹ãŒãªã„å ´åˆã¯SaveAsã«è»¢é€
+                    return SaveProjectAs(null);
+                }
+                
+                projectService.Save(CurrentProjectContext);
+                OnApplicationStateChanged();
+                
+                _logger.LogInformation($"Project saved: {CurrentProjectContext.Project.FilePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving project");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ç¾åœ¨ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥åã§ä¿å­˜
+        /// </summary>
+        /// <param name="filePath">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+        /// <returns>æ“ä½œæˆåŠŸã‹ã©ã†ã‹</returns>
+        public bool SaveProjectAs(string filePath)
+        {
+            if (CurrentProjectContext == null)
+                return false;
+
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    // UIã‚µãƒ¼ãƒ“ã‚¹ã‚’ä½¿ç”¨ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+                    var uiService = _serviceProvider.GetRequiredService<IUIService>();
+                    filePath = uiService.ShowSaveFileDialog(
+                        "Save Project",
+                        AppSettings.ProjectFileFilter,
+                        AppSettings.DefaultProjectExtension);
+                    
+                    if (string.IsNullOrEmpty(filePath))
+                        return false;
+                }
+
+                var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+                projectService.SaveAs(CurrentProjectContext, filePath);
+                
+                // æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
+                AppSettings.AddRecentFile(filePath);
+                AppSettings.Save();
+                
+                OnApplicationStateChanged();
+                
+                _logger.LogInformation($"Project saved as: {filePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error saving project as: {filePath}");
+                return false;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
+        /// </summary>
+        public void Dispose()
+        {
+            if (_currentProjectContext != null)
+            {
+                _currentProjectContext.Dispose();
+                _currentProjectContext = null;
+            }
+            
+            PluginManager?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// ãƒ†ãƒ¼ãƒæƒ…å ±ã‚¯ãƒ©ã‚¹
+    /// </summary>
+    public class ThemeInfo
+    {
+        public string Name { get; }
+        public string ResourcePath { get; }
+
+        public ThemeInfo(string name, string resourcePath)
+        {
+            Name = name;
+            ResourcePath = resourcePath;
+        }
+    }
+
+    /// <summary>
+    /// ãƒ†ãƒ¼ãƒå¤‰æ›´ã‚¤ãƒ™ãƒ³ãƒˆå¼•æ•°
+    /// </summary>
+    public class ThemeChangedEventArgs : EventArgs
+    {
+        public ThemeInfo Theme { get; }
+
+        public ThemeChangedEventArgs(ThemeInfo theme)
+        {
+            Theme = theme;
+        }
+    }
+
+    /// <summary>
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆå¼•æ•°
+    /// </summary>
+    public class AppClosingEventArgs : EventArgs
+    {
+        public bool Cancel { get; set; }
+    }
+}
+```
+
+### WinFormså‘ã‘UIã‚µãƒ¼ãƒ“ã‚¹
+
+```csharp name=WinFormsUIService.cs
+using System;
+using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// WinFormså‘ã‘UIã‚µãƒ¼ãƒ“ã‚¹ã®å®Ÿè£…
+    /// </summary>
+    public class WinFormsUIService : IUIService
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<WinFormsUIService> _logger;
+        private Form _activeForm;
+
+        public WinFormsUIService(IServiceProvider serviceProvider, ILogger<WinFormsUIService> logger)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
+        /// </summary>
+        public DialogResult ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            return MessageBox.Show(_activeForm, message, title, buttons, icon);
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ããƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public string ShowOpenFileDialog(string title, string filter, string defaultExtension)
+        {
+            using var dialog = new OpenFileDialog
+            {
+                Title = title,
+                Filter = filter,
+                DefaultExt = defaultExtension,
+                CheckFileExists = true
+            };
+
+            var result = dialog.ShowDialog(_activeForm);
+            return result == DialogResult.OK ? dialog.FileName : string.Empty;
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public string ShowSaveFileDialog(string title, string filter, string defaultExtension)
+        {
+            using var dialog = new SaveFileDialog
+            {
+                Title = title,
+                Filter = filter,
+                DefaultExt = defaultExtension,
+                AddExtension = true
+            };
+
+            var result = dialog.ShowDialog(_activeForm);
+            return result == DialogResult.OK ? dialog.FileName : string.Empty;
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ«ãƒ€é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public string ShowFolderBrowserDialog(string title)
+        {
+            using var dialog = new FolderBrowserDialog
+            {
+                Description = title,
+                ShowNewFolderButton = true
+            };
+
+            var result = dialog.ShowDialog(_activeForm);
+            return result == DialogResult.OK ? dialog.SelectedPath : string.Empty;
+        }
+
+        /// <summary>
+        /// æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚©ãƒ¼ãƒ ã‚’ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã¨ã—ã¦è¡¨ç¤º
+        /// </summary>
+        public DialogResult ShowDialog<TForm>(object viewModel = null) where TForm : Form
+        {
+            try
+            {
+                var form = _serviceProvider.GetRequiredService<TForm>();
+                
+                // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’è¨­å®šï¼ˆãƒ•ã‚©ãƒ¼ãƒ ãŒIViewModelHostã‚’å®Ÿè£…ã—ã¦ã„ã‚‹å ´åˆï¼‰
+                if (viewModel != null && form is IViewModelHost host)
+                {
+                    host.SetViewModel(viewModel);
+                }
+                
+                return form.ShowDialog(_activeForm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error showing dialog: {typeof(TForm).Name}");
+                return DialogResult.None;
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ•ã‚©ãƒ¼ãƒ ã‚’è¨­å®š
+        /// </summary>
+        /// <param name="activeForm">ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ•ã‚©ãƒ¼ãƒ </param>
+        public void SetActiveForm(Form activeForm)
+        {
+            _activeForm = activeForm;
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        public void ShowProgressDialog(string title, string message, Action<IProgressReporter> action)
+        {
+            using var progressForm = new ProgressForm(title, message);
+            progressForm.StartPosition = FormStartPosition.CenterParent;
+            
+            // ãƒãƒƒã‚¯ã‚°ãƒ©ã‚¦ãƒ³ãƒ‰å‡¦ç†ã®è¨­å®š
+            progressForm.SetOperation(action);
+            
+            // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã¨ã—ã¦è¡¨ç¤º
+            progressForm.ShowDialog(_activeForm);
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ¼ãƒ ã®ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+        /// </summary>
+        public void ApplyTheme(Form form, ThemeInfo theme)
+        {
+            try
+            {
+                switch (theme.Name)
+                {
+                    case "Default":
+                        // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ãƒ¼ãƒ
+                        ApplyDefaultTheme(form);
+                        break;
+                    case "Blue":
+                        // ãƒ–ãƒ«ãƒ¼ãƒ†ãƒ¼ãƒ
+                        ApplyBlueTheme(form);
+                        break;
+                    case "Dark":
+                        // ãƒ€ãƒ¼ã‚¯ãƒ†ãƒ¼ãƒ
+                        ApplyDarkTheme(form);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error applying theme: {theme.Name}");
+            }
+        }
+
+        private void ApplyDefaultTheme(Form form)
+        {
+            form.BackColor = System.Drawing.SystemColors.Control;
+            form.ForeColor = System.Drawing.SystemColors.ControlText;
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ å†…ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã«ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+            ApplyThemeToControls(form.Controls, ThemeColors.Default);
+        }
+
+        private void ApplyBlueTheme(Form form)
+        {
+            form.BackColor = ThemeColors.Blue.BackColor;
+            form.ForeColor = ThemeColors.Blue.ForeColor;
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ å†…ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã«ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+            ApplyThemeToControls(form.Controls, ThemeColors.Blue);
+        }
+
+        private void ApplyDarkTheme(Form form)
+        {
+            form.BackColor = ThemeColors.Dark.BackColor;
+            form.ForeColor = ThemeColors.Dark.ForeColor;
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ å†…ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã«ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+            ApplyThemeToControls(form.Controls, ThemeColors.Dark);
+        }
+
+        private void ApplyThemeToControls(Control.ControlCollection controls, ThemeColorScheme colors)
+        {
+            foreach (Control control in controls)
+            {
+                // å†å¸°çš„ã«ã™ã¹ã¦ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã«ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+                if (control.Controls.Count > 0)
+                {
+                    ApplyThemeToControls(control.Controls, colors);
+                }
+                
+                // ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ—ã«åŸºã¥ã„ã¦ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+                if (control is Button btn)
+                {
+                    btn.BackColor = colors.ButtonBackColor;
+                    btn.ForeColor = colors.ButtonForeColor;
+                    btn.FlatStyle = colors.ButtonFlatStyle;
+                }
+                else if (control is TextBox txt)
+                {
+                    txt.BackColor = colors.TextBoxBackColor;
+                    txt.ForeColor = colors.TextBoxForeColor;
+                }
+                else if (control is Panel panel)
+                {
+                    panel.BackColor = colors.PanelBackColor;
+                    panel.ForeColor = colors.PanelForeColor;
+                }
+                // ãã®ä»–ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ—ã«å¯¾ã—ã¦ã‚‚é©å®œè¨­å®š
+            }
+        }
+    }
+
+    /// <summary>
+    /// ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹å ±å‘Šã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+    /// </summary>
+    public interface IProgressReporter
+    {
+        void ReportProgress(int percentComplete, string message = null);
+        bool IsCancellationRequested { get; }
+    }
+
+    /// <summary>
+    /// ãƒ†ãƒ¼ãƒã‚«ãƒ©ãƒ¼ã‚¹ã‚­ãƒ¼ãƒ 
+    /// </summary>
+    public class ThemeColorScheme
+    {
+        public System.Drawing.Color BackColor { get; set; }
+        public System.Drawing.Color ForeColor { get; set; }
+        public System.Drawing.Color ButtonBackColor { get; set; }
+        public System.Drawing.Color ButtonForeColor { get; set; }
+        public System.Drawing.Color TextBoxBackColor { get; set; }
+        public System.Drawing.Color TextBoxForeColor { get; set; }
+        public System.Drawing.Color PanelBackColor { get; set; }
+        public System.Drawing.Color PanelForeColor { get; set; }
+        public FlatStyle ButtonFlatStyle { get; set; } = FlatStyle.Standard;
+    }
+
+    /// <summary>
+    /// ãƒ†ãƒ¼ãƒã‚«ãƒ©ãƒ¼å®šç¾©
+    /// </summary>
+    public static class ThemeColors
+    {
+        public static ThemeColorScheme Default { get; } = new ThemeColorScheme
+        {
+            BackColor = System.Drawing.SystemColors.Control,
+            ForeColor = System.Drawing.SystemColors.ControlText,
+            ButtonBackColor = System.Drawing.SystemColors.Control,
+            ButtonForeColor = System.Drawing.SystemColors.ControlText,
+            TextBoxBackColor = System.Drawing.SystemColors.Window,
+            TextBoxForeColor = System.Drawing.SystemColors.WindowText,
+            PanelBackColor = System.Drawing.SystemColors.Control,
+            PanelForeColor = System.Drawing.SystemColors.ControlText,
+            ButtonFlatStyle = FlatStyle.Standard
+        };
+
+        public static ThemeColorScheme Blue { get; } = new ThemeColorScheme
+        {
+            BackColor = System.Drawing.Color.FromArgb(240, 240, 255),
+            ForeColor = System.Drawing.Color.FromArgb(0, 0, 64),
+            ButtonBackColor = System.Drawing.Color.FromArgb(210, 230, 255),
+            ButtonForeColor = System.Drawing.Color.FromArgb(0, 0, 100),
+            TextBoxBackColor = System.Drawing.Color.White,
+            TextBoxForeColor = System.Drawing.Color.FromArgb(0, 0, 100),
+            PanelBackColor = System.Drawing.Color.FromArgb(230, 240, 255),
+            PanelForeColor = System.Drawing.Color.FromArgb(0, 0, 64),
+            ButtonFlatStyle = FlatStyle.Flat
+        };
+
+        public static ThemeColorScheme Dark { get; } = new ThemeColorScheme
+        {
+            BackColor = System.Drawing.Color.FromArgb(50, 50, 50),
+            ForeColor = System.Drawing.Color.FromArgb(230, 230, 230),
+            ButtonBackColor = System.Drawing.Color.FromArgb(70, 70, 70),
+            ButtonForeColor = System.Drawing.Color.FromArgb(240, 240, 240),
+            TextBoxBackColor = System.Drawing.Color.FromArgb(30, 30, 30),
+            TextBoxForeColor = System.Drawing.Color.FromArgb(220, 220, 220),
+            PanelBackColor = System.Drawing.Color.FromArgb(60, 60, 60),
+            PanelForeColor = System.Drawing.Color.FromArgb(230, 230, 230),
+            ButtonFlatStyle = FlatStyle.Flat
+        };
+    }
+}
+```
+
+### IUIã‚µãƒ¼ãƒ“ã‚¹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+
+```csharp name=IUIService.cs
+using System;
+using System.Windows.Forms;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// UIæ“ä½œã®ã‚µãƒ¼ãƒ“ã‚¹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+    /// </summary>
+    public interface IUIService
+    {
+        /// <summary>
+        /// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
+        /// </summary>
+        /// <param name="message">ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸</param>
+        /// <param name="title">ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="buttons">ãƒœã‚¿ãƒ³</param>
+        /// <param name="icon">ã‚¢ã‚¤ã‚³ãƒ³</param>
+        /// <returns>çµæœ</returns>
+        DialogResult ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon);
+        
+        /// <summary>
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ããƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="filter">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚£ãƒ«ã‚¿</param>
+        /// <param name="defaultExtension">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ‹¡å¼µå­</param>
+        /// <returns>é¸æŠã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºæ–‡å­—</returns>
+        string ShowOpenFileDialog(string title, string filter, string defaultExtension);
+        
+        /// <summary>
+        /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="filter">ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚£ãƒ«ã‚¿</param>
+        /// <param name="defaultExtension">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ‹¡å¼µå­</param>
+        /// <returns>é¸æŠã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºæ–‡å­—</returns>
+        string ShowSaveFileDialog(string title, string filter, string defaultExtension);
+        
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ«ãƒ€é¸æŠãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        /// <param name="title">ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <returns>é¸æŠã•ã‚ŒãŸãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«æ™‚ã¯ç©ºæ–‡å­—</returns>
+        string ShowFolderBrowserDialog(string title);
+        
+        /// <summary>
+        /// æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚©ãƒ¼ãƒ ã‚’ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã¨ã—ã¦è¡¨ç¤º
+        /// </summary>
+        /// <typeparam name="TForm">ãƒ•ã‚©ãƒ¼ãƒ ã®å‹</typeparam>
+        /// <param name="viewModel">ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ï¼ˆã‚ªãƒ—ã‚·ãƒ§ãƒ³ï¼‰</param>
+        /// <returns>ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®çµæœ</returns>
+        DialogResult ShowDialog<TForm>(object viewModel = null) where TForm : Form;
+        
+        /// <summary>
+        /// ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ•ã‚©ãƒ¼ãƒ ã‚’è¨­å®š
+        /// </summary>
+        /// <param name="activeForm">ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªãƒ•ã‚©ãƒ¼ãƒ </param>
+        void SetActiveForm(Form activeForm);
+        
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
+        /// </summary>
+        /// <param name="title">ã‚¿ã‚¤ãƒˆãƒ«</param>
+        /// <param name="message">ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸</param>
+        /// <param name="action">ãƒãƒƒã‚¯ã‚°ãƒ©ã‚¦ãƒ³ãƒ‰å‡¦ç†</param>
+        void ShowProgressDialog(string title, string message, Action<IProgressReporter> action);
+        
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ¼ãƒ ã®ãƒ†ãƒ¼ãƒã‚’é©ç”¨
+        /// </summary>
+        /// <param name="form">ãƒ†ãƒ¼ãƒã‚’é©ç”¨ã™ã‚‹ãƒ•ã‚©ãƒ¼ãƒ </param>
+        /// <param name="theme">ãƒ†ãƒ¼ãƒæƒ…å ±</param>
+        void ApplyTheme(Form form, ThemeInfo theme);
+    }
+}
+```
+
+### WinFormså‘ã‘ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
+
+```csharp name=ProgressForm.cs
+using System;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace WinFormsAppFramework
+{
+    public partial class ProgressForm : Form, IProgressReporter
+    {
+        private readonly BackgroundWorker _worker;
+        private CancellationTokenSource _cancellationSource;
+        private Action<IProgressReporter> _operation;
+
+        public bool IsCancellationRequested => _cancellationSource.IsCancellationRequested;
+
+        public ProgressForm(string title, string message)
+        {
+            InitializeComponent();
+            
+            Text = title;
+            labelMessage.Text = message;
+            
+            // BackgroundWorkerã®è¨­å®š
+            _worker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            
+            _worker.DoWork += Worker_DoWork;
+            _worker.ProgressChanged += Worker_ProgressChanged;
+            _worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            
+            _cancellationSource = new CancellationTokenSource();
+            
+            // ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒœã‚¿ãƒ³è¨­å®š
+            buttonCancel.Click += (s, e) => 
+            {
+                buttonCancel.Enabled = false;
+                buttonCancel.Text = "ã‚­ãƒ£ãƒ³ã‚»ãƒ«ä¸­...";
+                _cancellationSource.Cancel();
+                _worker.CancelAsync();
+            };
+        }
+
+        /// <summary>
+        /// å®Ÿè¡Œã™ã‚‹æ“ä½œã‚’è¨­å®š
+        /// </summary>
+        public void SetOperation(Action<IProgressReporter> operation)
+        {
+            _operation = operation ?? throw new ArgumentNullException(nameof(operation));
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ¼ãƒ ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸæ™‚ã«å‡¦ç†ã‚’é–‹å§‹
+        /// </summary>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            
+            if (_operation != null)
+            {
+                progressBar.Value = 0;
+                _worker.RunWorkerAsync();
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚’å ±å‘Š
+        /// </summary>
+        public void ReportProgress(int percentComplete, string message = null)
+        {
+            if (_worker.IsBusy && !_worker.CancellationPending)
+            {
+                _worker.ReportProgress(percentComplete, message);
+            }
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                _operation(this);
+            }
+            catch (Exception ex)
+            {
+                e.Result = ex;
+            }
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar.Value = e.ProgressPercentage;
+            
+            if (e.UserState is string message && !string.IsNullOrEmpty(message))
+            {
+                labelMessage.Text = message;
+            }
+        }
+
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show(
+                    $"å‡¦ç†ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: {e.Error.Message}",
+                    "ã‚¨ãƒ©ãƒ¼",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            else if (e.Result is Exception resultEx)
+            {
+                MessageBox.Show(
+                    $"å‡¦ç†ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: {resultEx.Message}",
+                    "ã‚¨ãƒ©ãƒ¼",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            
+            Close();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _worker.DoWork -= Worker_DoWork;
+                _worker.ProgressChanged -= Worker_ProgressChanged;
+                _worker.RunWorkerCompleted -= Worker_RunWorkerCompleted;
+                _cancellationSource?.Dispose();
+            }
+            
+            base.Dispose(disposing);
+        }
+
+        private void InitializeComponent()
+        {
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.labelMessage = new System.Windows.Forms.Label();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // progressBar
+            // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.Location = new System.Drawing.Point(12, 39);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(360, 23);
+            this.progressBar.TabIndex = 0;
+            // 
+            // labelMessage
+            // 
+            this.labelMessage.AutoSize = true;
+            this.labelMessage.Location = new System.Drawing.Point(12, 13);
+            this.labelMessage.Name = "labelMessage";
+            this.labelMessage.Size = new System.Drawing.Size(87, 15);
+            this.labelMessage.TabIndex = 1;
+            this.labelMessage.Text = "å‡¦ç†ä¸­ã§ã™...";
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.Location = new System.Drawing.Point(297, 77);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.Text = "ã‚­ãƒ£ãƒ³ã‚»ãƒ«";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // ProgressForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(384, 112);
+            this.ControlBox = false;
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.labelMessage);
+            this.Controls.Add(this.progressBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "ProgressForm";
+            this.Text = "å‡¦ç†ä¸­";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.Label labelMessage;
+        private System.Windows.Forms.Button buttonCancel;
+    }
+}
+```
+
+### WinFormsç”¨ã‚³ãƒãƒ³ãƒ‰ã‚¤ãƒ³ãƒ•ãƒ©ã‚¹ãƒˆãƒ©ã‚¯ãƒãƒ£
+
+```csharp name=CommandManager.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// ã‚³ãƒãƒ³ãƒ‰ã®å‡¦ç†ã‚’çµ±æ‹¬ã™ã‚‹ã‚¯ãƒ©ã‚¹
+    /// </summary>
+    public class CommandManager
+    {
+        private readonly Dictionary<string, CommandInfo> _commands = new Dictionary<string, CommandInfo>();
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<CommandManager> _logger;
+
+        /// <summary>
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+        /// </summary>
+        public CommandManager(IServiceProvider serviceProvider, ILogger<CommandManager> logger)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
+            // ã‚³ãƒãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ©ã®ç™»éŒ²
+            RegisterCommandHandlers();
+        }
+
+        /// <summary>
+        /// ã‚µãƒ¼ãƒ“ã‚¹ãƒ—ãƒ­ãƒã‚¤ãƒ€ãƒ¼ã‹ã‚‰å…¨ã¦ã®ã‚³ãƒãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ©ã‚’ç™»éŒ²
+        /// </summary>
+        private void RegisterCommandHandlers()
+        {
+            var handlers = _serviceProvider.GetServices<ICommandHandler>();
+            
+            foreach (var handler in handlers)
+            {
+                foreach (var command in handler.GetCommands())
+                {
+                    RegisterCommand(command.CommandId, command.CommandName, command.Execute, command.CanExecute);
+                }
+            }
+            
+            _logger.LogInformation($"Registered {_commands.Count} commands");
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²
+        /// </summary>
+        public void RegisterCommand(string commandId, string name, Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            if (string.IsNullOrEmpty(commandId))
+                throw new ArgumentException("Command ID cannot be empty", nameof(commandId));
+                
+            if (execute == null)
+                throw new ArgumentNullException(nameof(execute));
+                
+            _commands[commandId] = new CommandInfo
+            {
+                CommandId = commandId,
+                Name = name ?? commandId,
+                Execute = execute,
+                CanExecute = canExecute ?? (_ => true)
+            };
+            
+            // ã‚³ãƒãƒ³ãƒ‰çŠ¶æ…‹å¤‰æ›´é€šçŸ¥
+            CommandStateChanged?.Invoke(this, new CommandEventArgs(commandId));
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œ
+        /// </summary>
+        public bool ExecuteCommand(string commandId, object parameter = null)
+        {
+            if (!_commands.TryGetValue(commandId, out var command))
+            {
+                _logger.LogWarning($"Command not found: {commandId}");
+                return false;
+            }
+            
+            if (!command.CanExecute(parameter))
+            {
+                _logger.LogInformation($"Command cannot be executed: {commandId}");
+                return false;
+            }
+            
+            try
+            {
+                command.Execute(parameter);
+                _logger.LogInformation($"Command executed: {commandId}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error executing command: {commandId}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œå¯èƒ½ã‹ã©ã†ã‹ã‚’åˆ¤å®š
+        /// </summary>
+        public bool CanExecuteCommand(string commandId, object parameter = null)
+        {
+            if (!_commands.TryGetValue(commandId, out var command))
+            {
+                return false;
+            }
+            
+            return command.CanExecute(parameter);
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ã®çŠ¶æ…‹ã‚’æ›´æ–°ï¼ˆUIè¦ç´ ã®æœ‰åŠ¹/ç„¡åŠ¹ã‚’æ›´æ–°ã™ã‚‹ãŸã‚ã«å‘¼ã³å‡ºã™ï¼‰
+        /// </summary>
+        public void UpdateCommandStates()
+        {
+            foreach (var commandId in _commands.Keys.ToList())
+            {
+                CommandStateChanged?.Invoke(this, new CommandEventArgs(commandId));
+            }
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰ã®çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸæ™‚ã«ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+        /// </summary>
+        public event EventHandler<CommandEventArgs> CommandStateChanged;
+    }
+
+    /// <summary>
+    /// ã‚³ãƒãƒ³ãƒ‰æƒ…å ±
+    /// </summary>
+    public class CommandInfo
+    {
+        public string CommandId { get; set; }
+        public string Name { get; set; }
+        public Action<object> Execute { get; set; }
+        public Func<object, bool> CanExecute { get; set; }
+    }
+
+    /// <summary>
+    /// ã‚³ãƒãƒ³ãƒ‰ã‚¤ãƒ™ãƒ³ãƒˆå¼•æ•°
+    /// </summary>
+    public class CommandEventArgs : EventArgs
+    {
+        public string CommandId { get; }
+
+        public CommandEventArgs(string commandId)
+        {
+            CommandId = commandId;
+        }
+    }
+}
+```
+
+### ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã¨ãƒ•ã‚©ãƒ¼ãƒ ã®é€£æºã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+
+```csharp name=IViewModelHost.cs
+namespace WinFormsAppFramework
+{
+    /// <summary>
+    /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ›ã‚¹ãƒˆã™ã‚‹ãƒ•ã‚©ãƒ¼ãƒ ãŒå®Ÿè£…ã™ã‚‹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+    /// </summary>
+    public interface IViewModelHost
+    {
+        /// <summary>
+        /// ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’è¨­å®š
+        /// </summary>
+        void SetViewModel(object viewModel);
+        
+        /// <summary>
+        /// ç¾åœ¨ã®ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’å–å¾—
+        /// </summary>
+        object GetViewModel();
+    }
+}
+```
+
+### ãƒ¡ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ å®Ÿè£…
+
+```csharp name=MainForm.cs
+using System;
+using System.ComponentModel;
+using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
+
+namespace WinFormsAppFramework
+{
+    public partial class MainForm : Form, IViewModelHost
+    {
+        private readonly AppContext _appContext;
+        private readonly IUIService _uiService;
+        private readonly CommandManager _commandManager;
+        private readonly ILogger<MainForm> _logger;
+        private MainViewModel _viewModel;
+
+        // ãƒˆãƒ©ãƒƒã‚­ãƒ³ã‚°ã®ãŸã‚ã®å¤‰æ•°
+        private bool _updatingUI = false;
+
+        public MainForm(
+            AppContext appContext,
+            IUIService uiService,
+            CommandManager commandManager,
+            ILogger<MainForm> logger)
+        {
+            _appContext = appContext ?? throw new ArgumentNullException(nameof(appContext));
+            _uiService = uiService ?? throw new ArgumentNullException(nameof(uiService));
+            _commandManager = commandManager ?? throw new ArgumentNullException(nameof(commandManager));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            InitializeComponent();
+            
+            // UIã‚µãƒ¼ãƒ“ã‚¹ã«ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãƒ•ã‚©ãƒ¼ãƒ ã¨ã—ã¦ç™»éŒ²
+            _uiService.SetActiveForm(this);
+            
+            // ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ã®è¨­å®š
+            _appContext.ApplicationStateChanged += AppContext_ApplicationStateChanged;
+            _appContext.ThemeChanged += AppContext_ThemeChanged;
+            _commandManager.CommandStateChanged += CommandManager_CommandStateChanged;
+            
+            // ãƒ•ã‚©ãƒ¼ãƒ ã‚¯ãƒ­ãƒ¼ã‚ºæ™‚ã®å‡¦ç†
+            FormClosing += MainForm_FormClosing;
+            
+            // ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«ã®ä½œæˆã¨è¨­å®š
+            _viewModel = new MainViewModel(_appContext);
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ¼ãƒ èª­ã¿è¾¼ã¿æ™‚ã®åˆæœŸåŒ–
+        /// </summary>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            
+            try
+            {
+                // ãƒ†ãƒ¼ãƒã®é©ç”¨
+                _uiService.ApplyTheme(this, _appContext.CurrentTheme);
+                
+                // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¨ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®åˆæœŸè¨­å®š
+                SetupMenuCommands();
+                
+                // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã¨çŠ¶æ…‹ã®å¾©å…ƒ
+                RestoreWindowState();
+                
+                // åˆæœŸçŠ¶æ…‹ã®æ›´æ–°
+                UpdateUI();
+                
+                // èµ·å‹•æ™‚ã«æ–°è¦ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
+                _appContext.NewProject();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error initializing main form");
+                MessageBox.Show($"åˆæœŸåŒ–ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: {ex.Message}", "ã‚¨ãƒ©ãƒ¼", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®çŠ¶æ…‹ã‚’å¾©å…ƒ
+        /// </summary>
+        private void RestoreWindowState()
+        {
+            var settings = _appContext.AppSettings;
+            
+            Width = (int)settings.WindowWidth;
+            Height = (int)settings.WindowHeight;
+            
+            if (settings.StartMaximized)
+            {
+                WindowState = FormWindowState.Maximized;
+            }
+        }
+
+        /// <summary>
+        /// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®çŠ¶æ…‹ã‚’ä¿å­˜
+        /// </summary>
+        private void SaveWindowState()
+        {
+            var settings = _appContext.AppSettings;
+            
+            if (WindowState == FormWindowState.Normal)
+            {
+                settings.WindowWidth = Width;
+                settings.WindowHeight = Height;
+            }
+            
+            settings.StartMaximized = (WindowState == FormWindowState.Maximized);
+        }
+
+        /// <summary>
+        /// ãƒ•ã‚©ãƒ¼ãƒ ãŒé–‰ã˜ã‚‹å‰ã®å‡¦ç†
+        /// </summary>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†å‰ã®å‡¦ç†
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = !_appContext.OnApplicationClosing();
+                
+                if (!e.Cancel)
+                {
+                    // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®çŠ¶æ…‹ã‚’ä¿å­˜
+                    SaveWindowState();
+                }
+            }
+        }
+
+        /// <summary>
+        /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹å¤‰æ›´æ™‚ã®å‡¦ç†
+        /// </summary>
+        private void AppContext_ApplicationStateChanged(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(UpdateUI));
+            }
+            else
+            {
+                UpdateUI();
+            }
+        }
+
+        /// <summary>
+        /// ãƒ†ãƒ¼ãƒå¤‰æ›´æ™‚ã®å‡¦ç†
+        /// </summary>
+        private void AppContext_ThemeChanged(object sender, ThemeChangedEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<ThemeInfo>(_uiService.ApplyTheme), this, e.Theme);
+            }
+            else
+            {
+                _uiService.ApplyTheme(this, e.Theme);
+            }
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰çŠ¶æ…‹å¤‰æ›´æ™‚ã®å‡¦ç†
+        /// </summary>
+        private void CommandManager_CommandStateChanged(object sender, CommandEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(UpdateCommandUI));
+            }
+            else
+            {
+                UpdateCommandUI();
+            }
+        }
+
+        /// <summary>
+        /// UIã®çŠ¶æ…‹ã‚’æ›´æ–°
+        /// </summary>
+        private void UpdateUI()
+        {
+            if (_updatingUI) return;
+            
+            _updatingUI = true;
+            try
+            {
+                // ã‚¿ã‚¤ãƒˆãƒ«ã®æ›´æ–°
+                Text = _appContext.ApplicationTitle;
+                
+                // ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã®æ›´æ–°
+                UpdateStatusBar();
+                
+                // ã‚³ãƒãƒ³ãƒ‰çŠ¶æ…‹ã®æ›´æ–°
+                UpdateCommandUI();
+                
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæƒ…å ±ã®è¡¨ç¤º
+                UpdateProjectDisplay();
+            }
+            finally
+            {
+                _updatingUI = false;
+            }
+        }
+
+        /// <summary>
+        /// ã‚³ãƒãƒ³ãƒ‰UIã®æ›´æ–°
+        /// </summary>
+        private void UpdateCommandUI()
+        {
+            // ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®æœ‰åŠ¹/ç„¡åŠ¹ã‚’æ›´æ–°
+            foreach (ToolStripItem item in menuStrip.Items)
+            {
+                UpdateMenuItemState(item);
+            }
+            
+            // ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ãƒœã‚¿ãƒ³ã®æœ‰åŠ¹/ç„¡åŠ¹ã‚’æ›´æ–°
+            foreach (ToolStripItem item in toolStrip.Items)
+            {
+                UpdateToolbarItemState(item);
+            }
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®çŠ¶æ…‹ã‚’æ›´æ–°
+        /// </summary>
+        private void UpdateMenuItemState(ToolStripItem item)
+        {
+            if (item is ToolStripMenuItem menuItem)
+            {
+                // ã‚³ãƒãƒ³ãƒ‰IDãŒã‚¿ã‚°ã¨ã—ã¦è¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆ
+                if (menuItem.Tag is string commandId)
+                {
+                    menuItem.Enabled = _commandManager.CanExecuteCommand(commandId);
+                }
+                
+                // ã‚µãƒ–ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®å‡¦ç†
+                foreach (ToolStripItem subItem in menuItem.DropDownItems)
+                {
+                    UpdateMenuItemState(subItem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ãƒ„ãƒ¼ãƒ«ãƒãƒ¼é …ç›®ã®çŠ¶æ…‹ã‚’æ›´æ–°
+        /// </summary>
+        private void UpdateToolbarItemState(ToolStripItem item)
+        {
+            if (item.Tag is string commandId)
+            {
+                item.Enabled = _commandManager.CanExecuteCommand(commandId);
+            }
+        }
+
+        /// <summary>
+        /// ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã®æ›´æ–°
+        /// </summary>
+        private void UpdateStatusBar()
+        {
+            var project = _appContext.CurrentProjectContext?.Project;
+            if (project != null)
+            {
+                toolStripStatusProject.Text = $"ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ: {project.Name}";
+                toolStripStatusModified.Text = project.IsDirty ? "å¤‰æ›´ã‚ã‚Š" : "ä¿å­˜æ¸ˆã¿";
+            }
+            else
+            {
+                toolStripStatusProject.Text = "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ: ãªã—";
+                toolStripStatusModified.Text = "";
+            }
+            
+            // ç¾åœ¨ã®æ—¥æ™‚ã‚’è¡¨ç¤º
+            toolStripStatusDateTime.Text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            
+            // ç¾åœ¨ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’è¡¨ç¤º
+            toolStripStatusUser.Text = $"ãƒ¦ãƒ¼ã‚¶ãƒ¼: {Environment.UserName}";
+        }
+
+        /// <summary>
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæƒ…å ±ã®è¡¨ç¤ºã‚’æ›´æ–°
+        /// </summary>
+        private void UpdateProjectDisplay()
+        {
+            // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå†…å®¹ã‚’è¡¨ç¤ºã™ã‚‹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚’æ›´æ–°
+            var project = _appContext.CurrentProjectContext?.Project;
+            if (project != null)
+            {
+                // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å†…å®¹ã«å¿œã˜ãŸè¡¨ç¤ºæ›´æ–°
+                textBoxContent.Text = project.Content?.ToString() ?? "";
+            }
+            else
+            {
+                textBoxContent.Text = "";
+            }
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+        /// </summary>
+        private void SetupMenuCommands()
+        {
+            // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            SetupMenuItem(newToolStripMenuItem, "FileNew", NewToolStripMenuItem_Click);
+            SetupMenuItem(openToolStripMenuItem, "FileOpen", OpenToolStripMenuItem_Click);
+            SetupMenuItem(saveToolStripMenuItem, "FileSave", SaveToolStripMenuItem_Click);
+            SetupMenuItem(saveAsToolStripMenuItem, "FileSaveAs", SaveAsToolStripMenuItem_Click);
+            SetupMenuItem(exitToolStripMenuItem, "FileExit", ExitToolStripMenuItem_Click);
+            
+            // ç·¨é›†ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            SetupMenuItem(undoToolStripMenuItem, "EditUndo", UndoToolStripMenuItem_Click);
+            SetupMenuItem(redoToolStripMenuItem, "EditRedo", RedoToolStripMenuItem_Click);
+            SetupMenuItem(cutToolStripMenuItem, "EditCut", CutToolStripMenuItem_Click);
+            SetupMenuItem(copyToolStripMenuItem, "EditCopy", CopyToolStripMenuItem_Click);
+            SetupMenuItem(pasteToolStripMenuItem, "EditPaste", PasteToolStripMenuItem_Click);
+            
+            // è¡¨ç¤ºãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            SetupMenuItem(themesToolStripMenuItem, "ViewThemes", null);
+            foreach (var theme in _appContext.AvailableThemes)
+            {
+                var themeMenuItem = new ToolStripMenuItem(theme.Name);
+                themeMenuItem.Click += (s, e) => _appContext.ChangeTheme(theme.Name);
+                themesToolStripMenuItem.DropDownItems.Add(themeMenuItem);
+            }
+            
+            // ãƒ„ãƒ¼ãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            SetupMenuItem(optionsToolStripMenuItem, "ToolsOptions", OptionsToolStripMenuItem_Click);
+            
+            // ãƒ˜ãƒ«ãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+            SetupMenuItem(aboutToolStripMenuItem, "HelpAbout", AboutToolStripMenuItem_Click);
+            
+            // ãƒ„ãƒ¼ãƒ«ãƒãƒ¼
+            SetupToolbarButton(newToolStripButton, "FileNew");
+            SetupToolbarButton(openToolStripButton, "FileOpen");
+            SetupToolbarButton(saveToolStripButton, "FileSave");
+            
+            // ã‚¿ã‚¤ãƒãƒ¼ã§ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã®æ›´æ–°
+            var timer = new Timer
+            {
+                Interval = 1000
+            };
+            timer.Tick += (s, e) => 
+            {
+                toolStripStatusDateTime.Text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            };
+            timer.Start();
+        }
+
+        /// <summary>
+        /// ãƒ¡ãƒ‹ãƒ¥ãƒ¼é …ç›®ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+        /// </summary>
+        private void SetupMenuItem(ToolStripMenuItem menuItem, string commandId, EventHandler clickHandler)
+        {
+            menuItem.Tag = commandId;
+            
+            if (clickHandler != null)
+            {
+                menuItem.Click += clickHandler;
+            }
+            else
+            {
+                menuItem.Click += (s, e) => 
+                {
+                    if (s is ToolStripMenuItem item && item.Tag is string cmd)
+                    {
+                        _commandManager.ExecuteCommand(cmd);
+                    }
+                };
+            }
+        }
+
+        /// <summary>
+        /// ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ãƒœã‚¿ãƒ³ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+        /// </summary>
+        private void SetupToolbarButton(ToolStripButton button, string commandId)
+        {
+            button.Tag = commandId;
+            button.Click += (s, e) => 
+            {
+                if (s is ToolStripButton btn && btn.Tag is string cmd)
+                {
+                    _commandManager.ExecuteCommand(cmd);
+                }
+            };
+        }
+
+        #region ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©
+
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _appContext.NewProject();
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filePath = _uiService.ShowOpenFileDialog(
+                "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹ã",
+                _appContext.AppSettings.ProjectFileFilter,
+                _appContext.AppSettings.DefaultProjectExtension);
+                
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                _appContext.OpenProject(filePath);
+            }
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _appContext.SaveProject();
+        }
+
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _appContext.SaveProjectAs(null);
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl is TextBox textBox)
+            {
+                textBox.Undo();
+            }
+        }
+
+        private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // WinFormsã®æ¨™æº–TextBoxã«ã¯RedoãŒãªã„ãŸã‚ã€ã‚«ã‚¹ã‚¿ãƒ å®Ÿè£…ãŒå¿…è¦
+        }
+
+        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl is TextBox textBox)
+            {
+                textBox.Cut();
+            }
+        }
+
+        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl is TextBox textBox)
+            {
+                textBox.Copy();
+            }
+        }
+
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl is TextBox textBox)
+            {
+                textBox.Paste();
+            }
+        }
+
+        private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _uiService.ShowDialog<SettingsForm>();
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                $"{_appContext.AppSettings.ApplicationName}\nVersion 1.0\n\nÂ© 2025 Your Company",
+                "ã“ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«ã¤ã„ã¦",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// ãƒ†ã‚­ã‚¹ãƒˆå¤‰æ›´æ™‚ã®å‡¦ç†
+        /// </summary>
+        private void textBoxContent_TextChanged(object sender, EventArgs e)
+        {
+            if (_updatingUI) return;
+            
+            if (_appContext.CurrentProjectContext != null)
+            {
+                _appContext.CurrentProjectContext.Project.Content = textBoxContent.Text;
+            }
+        }
+
+        // IViewModelHost ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹å®Ÿè£…
+        public void SetViewModel(object viewModel)
+        {
+            if (viewModel is MainViewModel mainViewModel)
+            {
+                _viewModel = mainViewModel;
+            }
+        }
+
+        public object GetViewModel()
+        {
+            return _viewModel;
+        }
+
+        // ãƒ‡ã‚¶ã‚¤ãƒŠãƒ¼ã‚³ãƒ¼ãƒ‰ (ç°¡ç•¥åŒ–)
+        private void InitializeComponent()
+        {
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolSt
+```
+
+---
+
+
