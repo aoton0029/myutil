@@ -1,3 +1,141 @@
+
+
+I see you're working with WinForms and want to focus on a cell in a DataGridView when an error occurs using INotifyDataError implementation. Let me help you implement this functionality.
+
+To focus on a DataGridView cell when an error occurs in an INotifyDataError implementation, you'll need to:
+
+1. Subscribe to the ErrorsChanged event in your INotifyDataError class
+2. Map the error to the corresponding cell in the DataGridView
+3. Set focus to that cell
+
+Here's an implementation approach:
+
+```csharp
+public class YourViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
+{
+    private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+    
+    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+    public bool HasErrors => _errors.Count > 0;
+    
+    // Implement GetErrors method
+    public IEnumerable GetErrors(string? propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName) || !_errors.ContainsKey(propertyName))
+            return Enumerable.Empty<string>();
+        return _errors[propertyName];
+    }
+    
+    // Method to add error
+    protected void AddError(string propertyName, string error)
+    {
+        if (!_errors.ContainsKey(propertyName))
+            _errors[propertyName] = new List<string>();
+        
+        if (!_errors[propertyName].Contains(error))
+        {
+            _errors[propertyName].Add(error);
+            OnErrorsChanged(propertyName);
+        }
+    }
+    
+    // Method to clear errors
+    protected void ClearErrors(string propertyName)
+    {
+        if (_errors.ContainsKey(propertyName))
+        {
+            _errors.Remove(propertyName);
+            OnErrorsChanged(propertyName);
+        }
+    }
+    
+    // Trigger ErrorsChanged event
+    protected void OnErrorsChanged(string propertyName)
+    {
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+}
+```
+
+In your Form class, subscribe to the ErrorsChanged event and focus the cell:
+
+```csharp
+public partial class YourForm : Form
+{
+    private ObservableCollection<YourViewModel> _items;
+    
+    public YourForm()
+    {
+        InitializeComponent();
+        
+        _items = new ObservableCollection<YourViewModel>();
+        dataGridView1.DataSource = new BindingSource { DataSource = _items };
+        
+        // Subscribe to the CollectionChanged event to handle new items
+        _items.CollectionChanged += Items_CollectionChanged;
+    }
+    
+    private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (YourViewModel item in e.NewItems)
+            {
+                // Subscribe to ErrorsChanged for new items
+                item.ErrorsChanged += Item_ErrorsChanged;
+            }
+        }
+    }
+    
+    private void Item_ErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
+    {
+        if (sender is YourViewModel viewModel)
+        {
+            // Get the row index of the item
+            int rowIndex = _items.IndexOf(viewModel);
+            if (rowIndex < 0) return;
+            
+            // Find the column index based on property name
+            int columnIndex = -1;
+            for (int i = 0; i < dataGridView1.Columns.Count; i++)
+            {
+                if (dataGridView1.Columns[i].DataPropertyName == e.PropertyName)
+                {
+                    columnIndex = i;
+                    break;
+                }
+            }
+            
+            if (columnIndex >= 0)
+            {
+                // Check if there are errors for this property
+                var errors = viewModel.GetErrors(e.PropertyName);
+                if (errors.Cast<string>().Any())
+                {
+                    // Focus the cell with error
+                    BeginInvoke(new Action(() => {
+                        dataGridView1.CurrentCell = dataGridView1[columnIndex, rowIndex];
+                        dataGridView1.Focus();
+                    }));
+                }
+            }
+        }
+    }
+}
+```
+
+Some additional tips:
+
+1. You may need to use `BeginInvoke` to avoid cross-thread operations if your errors are coming from a different thread.
+  
+2. Make sure your DataGridView's `DataPropertyName` property on each column matches the property names used in your view model.
+
+3. You might want to enhance this by adding visual indicators for cells with errors using the DataGridView's `CellFormatting` event.
+
+Is there any specific part of this implementation you'd like me to explain in more detail?
+
+---
+
 ## **HD画面 (1920x1080) レイアウト設計**
 
 ### **画面構成**
