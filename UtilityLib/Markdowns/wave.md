@@ -74,6 +74,52 @@ Would you like me to elaborate on any specific aspect of implementing these para
 
 ---
 
+I'll check the GitHub repository to understand the context better and address your question about phase shifts in angular terms.角度でシフトする場合のノコギリ波の式について説明します。
+
+サイン波などと同様に、角度（ラジアンや度）を使って位相シフトを表現する場合、次のように式を変更します：
+
+### 角度による位相シフトを持つノコギリ波の式
+
+```
+f(t) = A × (2((t/T - φ/2π) - floor(1/2 + (t/T - φ/2π))))
+```
+
+ここで：
+- t は時間（秒）
+- T は周期（秒）
+- A は振幅
+- φ は角度単位（ラジアン）での位相シフト
+- 2π は一周期の角度（ラジアン）
+
+### 説明
+
+1. 時間単位での位相シフト（前回の式）：
+   ```
+   f(t) = A × (2((t-φ)/T - floor(1/2 + (t-φ)/T)))
+   ```
+   ここで φ は時間単位（秒など）
+
+2. 角度単位（ラジアン）での位相シフト：
+   ```
+   f(t) = A × (2((t/T - φ/2π) - floor(1/2 + (t/T - φ/2π))))
+   ```
+   ここで φ は角度単位（ラジアン）
+
+### 例
+
+- φ = π（180度）の場合、波形は半周期分シフト
+- φ = π/2（90度）の場合、波形は1/4周期分シフト
+
+フーリエ級数表現での角度による位相シフト：
+```
+f(t) = A/2 - (A/π) × Σ (sin(nωt + φ)/n)
+```
+ここで ω = 2π/T、n は 1 から ∞ までの整数です。
+
+このように、角度で位相をシフトさせる場合は、時間と角度の関係（2π/T）を考慮して変換する必要があります。
+
+---
+
 I see you're working with WinForms and want to focus on a cell in a DataGridView when an error occurs using INotifyDataError implementation. Let me help you implement this functionality.
 
 To focus on a DataGridView cell when an error occurs in an INotifyDataError implementation, you'll need to:
