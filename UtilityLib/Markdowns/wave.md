@@ -30,6 +30,50 @@ Would you like me to explain more about how phase affects sawtooth waves, or do 
 
 ---
 
+I notice you're asking about sweeping amplitude, frequency, and offset from start to end in a sawtooth wave (in Japanese: "振幅、周波数、オフセットをスタートからエンドまでスイープさせる").
+
+Here's how to incorporate these dynamic parameters into a sawtooth wave formula:
+
+### Sawtooth Wave with Time-Varying Parameters
+
+For a sawtooth wave where amplitude A(t), frequency f(t), and offset O(t) change over time from start (t₀) to end (t₁):
+
+```
+y(t) = A(t) × [2(mod(∫f(τ)dτ, 1) - 0.5)] + O(t)
+```
+
+Where:
+- A(t) is the time-varying amplitude function (e.g., linear: A₀ + (A₁-A₀)(t-t₀)/(t₁-t₀))
+- f(t) is the time-varying frequency function (e.g., linear: f₀ + (f₁-f₀)(t-t₀)/(t₁-t₀))
+- O(t) is the time-varying offset function (e.g., linear: O₀ + (O₁-O₀)(t-t₀)/(t₁-t₀))
+- mod(x,1) returns the fractional part of x
+
+### Implementation Approaches:
+
+1. **Linear Sweep**:
+   - A(t) = A₀ + (A₁-A₀)(t-t₀)/(t₁-t₀)
+   - f(t) = f₀ + (f₁-f₀)(t-t₀)/(t₁-t₀)
+   - O(t) = O₀ + (O₁-O₀)(t-t₀)/(t₁-t₀)
+
+2. **Exponential Frequency Sweep** (common in audio):
+   - f(t) = f₀ × (f₁/f₀)^((t-t₀)/(t₁-t₀))
+
+3. **Digital Implementation**:
+   ```
+   phase = 0
+   for each time step t:
+       A = calculate_amplitude(t)
+       f = calculate_frequency(t)
+       O = calculate_offset(t)
+       phase += f * dt  # dt is time step
+       phase = phase % 1.0  # keep in [0,1) range
+       output = A * (2 * phase - 1) + O
+   ```
+
+Would you like me to elaborate on any specific aspect of implementing these parameter sweeps?
+
+---
+
 I see you're working with WinForms and want to focus on a cell in a DataGridView when an error occurs using INotifyDataError implementation. Let me help you implement this functionality.
 
 To focus on a DataGridView cell when an error occurs in an INotifyDataError implementation, you'll need to:
