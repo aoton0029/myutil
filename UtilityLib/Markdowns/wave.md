@@ -1,4 +1,34 @@
+I'll be happy to help you. I notice that your query appears to be in Japanese asking about the formula for a sawtooth wave ("ノコギリ波の式"). Let me provide information about sawtooth wave formulas.
 
+A sawtooth wave is a non-sinusoidal waveform that gets its name from its resemblance to the teeth of a saw. Here's the mathematical formula for a sawtooth wave:
+
+For a sawtooth wave with period T and amplitude A:
+- The standard formula: f(t) = A × (2(t/T - floor(1/2 + t/T)))
+- Alternative form: f(t) = 2A/π × Σ ((-1)^n × sin(2πnt/T)/n) where n goes from 1 to ∞
+
+The Fourier series representation of a sawtooth wave is:
+f(t) = A/2 - (A/π) × Σ (sin(nωt)/n) where n goes from 1 to ∞, and ω = 2π/T
+
+Is there any specific aspect of sawtooth wave formulas you're interested in, or would you like more details about their applications in signal processing?
+
+---
+
+I notice you provided the current date and time (2025-05-26 08:22:42) and your username, followed by text in Japanese about "adding phase" (位相を加える).
+
+If you're interested in adding a phase component to the sawtooth wave formula, I can help with that.
+
+When adding a phase φ to a sawtooth wave, the formula becomes:
+
+f(t) = A × (2((t-φ)/T - floor(1/2 + (t-φ)/T)))
+
+In the Fourier series representation with phase:
+f(t) = A/2 - (A/π) × Σ (sin(nωt + nφ)/n) where n goes from 1 to ∞, and ω = 2π/T
+
+The phase shift φ essentially shifts the entire waveform in time, allowing you to control when the wave begins its cycle.
+
+Would you like me to explain more about how phase affects sawtooth waves, or do you need information about implementing this mathematically in a specific context?
+
+---
 
 I see you're working with WinForms and want to focus on a cell in a DataGridView when an error occurs using INotifyDataError implementation. Let me help you implement this functionality.
 
