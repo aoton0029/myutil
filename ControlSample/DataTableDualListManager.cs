@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -8,123 +9,44 @@ using System.Threading.Tasks;
 
 namespace ControlSample
 {
-    public class DataTableDualListManager
-    {
-        private DataTable _table;
-        private DataView _availableView;
-        private DataView _selectedView;
-        private DataGridView _availableGrid;
-        private DataGridView _selectedGrid;
-
-        public DataTableDualListManager(DataGridView availableGrid, DataGridView selectedGrid)
-        {
-            _availableGrid = availableGrid;
-            _selectedGrid = selectedGrid;
-        }
-
-        public void Load(DataTable sourceTable, string idColumn, string nameColumn, List<string> preselectedIds = null)
-        {
-            _table = sourceTable.Copy();
-            preselectedIds ??= new List<string>();
-
-            // 列を追加（なければ）
-            if (!_table.Columns.Contains("IsSelected"))
-                _table.Columns.Add("IsSelected", typeof(bool));
-            if (!_table.Columns.Contains("Order"))
-                _table.Columns.Add("Order", typeof(int));
-
-            foreach (DataRow row in _table.Rows)
-            {
-                var id = row[idColumn]?.ToString();
-                row["IsSelected"] = preselectedIds.Contains(id);
-            }
-
-            // 選択済みに順序をつける
-            int order = 0;
-            foreach (DataRow row in _table.Select("IsSelected = true"))
-            {
-                row["Order"] = order++;
-            }
-
-            // DataView 作成
-            _availableView = new DataView(_table, "IsSelected = false", nameColumn, DataViewRowState.CurrentRows);
-            _selectedView = new DataView(_table, "IsSelected = true", "Order ASC", DataViewRowState.CurrentRows);
-
-            // DataGridView にバインド
-            _availableGrid.DataSource = _availableView;
-            _selectedGrid.DataSource = _selectedView;
-        }
-
-        public void SelectCurrent()
-        {
-            if (_availableGrid.CurrentRow?.DataBoundItem is DataRowView row)
-            {
-                row["IsSelected"] = true;
-                row["Order"] = _selectedView.Count;
-            }
-        }
-
-        public void DeselectCurrent()
-        {
-            if (_selectedGrid.CurrentRow?.DataBoundItem is DataRowView row)
-            {
-                row["IsSelected"] = false;
-                row["Order"] = DBNull.Value;
-                ReorderSelected();
-            }
-        }
-
-        public void MoveUp()
-        {
-            Move(-1);
-        }
-
-        public void MoveDown()
-        {
-            Move(1);
-        }
-
-        private void Move(int direction)
-        {
-            if (_selectedGrid.CurrentRow == null) return;
-
-            int index = _selectedGrid.CurrentRow.Index;
-            int targetIndex = index + direction;
-            if (targetIndex < 0 || targetIndex >= _selectedView.Count) return;
-
-            var rowA = _selectedView[index];
-            var rowB = _selectedView[targetIndex];
-
-            var temp = rowA["Order"];
-            rowA["Order"] = rowB["Order"];
-            rowB["Order"] = temp;
-
-            _selectedView.Sort = "Order ASC";
-        }
-
-        private void ReorderSelected()
-        {
-            for (int i = 0; i < _selectedView.Count; i++)
-            {
-                _selectedView[i]["Order"] = i;
-            }
-        }
-
-        public List<string> GetSelectedIds(string idColumn)
-        {
-            return _table.AsEnumerable()
-                .Where(r => r.Field<bool>("IsSelected"))
-                .OrderBy(r => r.Field<int>("Order"))
-                .Select(r => r.Field<string>(idColumn))
-                .ToList();
-        }
-    }
-
-    public class DataTableDualList
+    public class DataTableDualList : INotifyPropertyChanged
     {
         private readonly string _idColumn;
         private readonly string _nameColumn;
         private readonly DataTable _table;
+        private string _filterExpression = string.Empty;
+
+        // プロパティ変更通知のためのイベント
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        // フィルター条件を保持するプロパティ
+        public string FilterExpression
+        {
+            get => _filterExpression;
+            set
+            {
+                if (_filterExpression != value)
+                {
+                    _filterExpression = value;
+                    OnPropertyChanged(nameof(AvailableView));
+                }
+            }
+        }
+
+        // フィルター条件を組み合わせたRowFilterを作成
+        private string GetAvailableRowFilter()
+        {
+            string baseFilter = "IsSelected = false";
+            if (string.IsNullOrWhiteSpace(_filterExpression))
+                return baseFilter;
+
+            return $"{baseFilter} AND ({_filterExpression})";
+        }
+
+        // AvailableViewプロパティを修正してフィルターを適用
+        public DataView AvailableView => new DataView(_table, GetAvailableRowFilter(), _nameColumn, DataViewRowState.CurrentRows);
+
+        public DataView SelectedView => new DataView(_table, "IsSelected = true", "Order ASC", DataViewRowState.CurrentRows);
 
         public DataTableDualList(DataTable table, string idColumn, string nameColumn, IEnumerable<string>? preselectedIds = null)
         {
@@ -151,8 +73,31 @@ namespace ControlSample
             }
         }
 
-        public DataView AvailableView => new DataView(_table, "IsSelected = false", _nameColumn, DataViewRowState.CurrentRows);
-        public DataView SelectedView => new DataView(_table, "IsSelected = true", "Order ASC", DataViewRowState.CurrentRows);
+        // プロパティ変更通知を発行するメソッド
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // フィルターを適用するメソッド
+        public void ApplyFilter(string filterExpression)
+        {
+            FilterExpression = filterExpression;
+        }
+
+        // 特定の列に対するフィルターを適用するヘルパーメソッド
+        public void ApplyColumnFilter(string columnName, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                FilterExpression = string.Empty;
+            }
+            else
+            {
+                // DataViewのフィルター構文に従ってフィルタ式を作成
+                FilterExpression = $"{columnName} LIKE '%{value.Replace("'", "''")}%'";
+            }
+        }
 
         public void Select(string id)
         {
@@ -161,6 +106,8 @@ namespace ControlSample
             {
                 row["IsSelected"] = true;
                 row["Order"] = SelectedView.Count;
+                OnPropertyChanged(nameof(AvailableView));
+                OnPropertyChanged(nameof(SelectedView));
             }
         }
 
@@ -172,6 +119,8 @@ namespace ControlSample
                 row["IsSelected"] = false;
                 row["Order"] = DBNull.Value;
                 Reorder();
+                OnPropertyChanged(nameof(AvailableView));
+                OnPropertyChanged(nameof(SelectedView));
             }
         }
 
@@ -194,6 +143,7 @@ namespace ControlSample
             rowB["Order"] = tmp;
 
             SelectedView.Sort = "Order ASC";
+            OnPropertyChanged(nameof(SelectedView));
         }
 
         public List<string> GetSelectedIdsInOrder()
@@ -233,5 +183,4 @@ namespace ControlSample
                 : new();
         }
     }
-
 }
