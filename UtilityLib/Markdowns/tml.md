@@ -406,7 +406,277 @@ USBドライブなどを使用してファイルを転送します。
 ---
 
 
+I understand you want to first download all necessary packages on an internet-connected computer, and then transfer them to an offline standalone computer for installation. Let me provide you with a clear process for accomplishing this.
 
+# オフライン環境へのDocker Engine + PyTorch GPU環境の移行インストール手順
+
+## STEP 1: インターネット接続済みコンピュータでの準備
+
+### 1. WSL 2関連ファイルの取得
+
+1. 次のファイルをダウンロードします：
+   - [WSL 2 Linux kernel update package](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)
+   - [Ubuntu 20.04 LTS](https://aka.ms/wslubuntu2004) または [Ubuntu 22.04 LTS](https://aka.ms/wslubuntu2204)
+
+### 2. NVIDIA GPUドライバーのダウンロード
+
+1. [NVIDIA公式サイト](https://www.nvidia.com/Download/index.aspx)からWindows用の最新ドライバーをダウンロード
+
+### 3. Ubuntuパッケージのダウンロード
+
+WSLのUbuntu環境でコマンドを実行し、必要なパッケージをダウンロードします：
+
+```bash
+# 作業ディレクトリを作成
+mkdir -p ~/offline-docker-packages
+cd ~/offline-docker-packages
+
+# 基本的な依存パッケージをダウンロード
+apt-get download \
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release \
+  software-properties-common
+
+# Dockerの公式GPGキー
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o docker-archive-keyring.gpg
+
+# Dockerパッケージの取得
+VERSION_STRING=$(lsb_release -cs)
+mkdir -p docker-packages
+cd docker-packages
+apt-get update
+apt-get download \
+  docker-ce \
+  docker-ce-cli \
+  containerd.io \
+  docker-compose-plugin
+cd ..
+```
+
+### 4. NVIDIA Container Toolkit関連パッケージのダウンロード
+
+```bash
+# NVIDIA Container Toolkitリポジトリの設定とパッケージのダウンロード
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey -o nvidia-docker-gpgkey
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list -o nvidia-docker.list
+
+# パッケージをダウンロード
+mkdir -p nvidia-docker-packages
+cd nvidia-docker-packages
+apt-get update
+apt-get download \
+  nvidia-container-toolkit \
+  nvidia-container-runtime \
+  nvidia-docker2 \
+  libnvidia-container1 \
+  libnvidia-container-tools
+cd ..
+```
+
+### 5. CUDAパッケージのダウンロード
+
+```bash
+# CUDA関連パッケージをダウンロード
+wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda-repo-wsl-ubuntu-11-8-local_11.8.0-1_amd64.deb
+```
+
+### 6. PyTorch用Dockerイメージのエクスポート
+
+```bash
+# PyTorchイメージをダウンロードしてエクスポート
+docker pull pytorch/pytorch:latest
+docker save -o pytorch-image.tar pytorch/pytorch:latest
+```
+
+### 7. 全てのファイルを圧縮
+
+```bash
+# 必要なファイルを一つのアーカイブにまとめる
+cd ~/
+tar -czvf offline-docker-pytorch.tar.gz offline-docker-packages
+```
+
+### 8. USBメモリなどの外部ストレージに転送
+
+上記で作成した`offline-docker-pytorch.tar.gz`ファイルと以下のファイルを外部ストレージに転送します：
+- `wsl_update_x64.msi`
+- Ubuntuインストーラー
+- NVIDIAドライバーインストーラー
+
+## STEP 2: オフラインコンピュータでのインストール
+
+### 1. WSL 2のセットアップ（Windows側）
+
+1. PowerShellを管理者権限で開き、WSL機能を有効化します：
+```powershell
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+2. コンピュータを再起動します
+
+3. ダウンロードしたWSL 2更新パッケージ (`wsl_update_x64.msi`) をインストールします
+
+4. PowerShellで以下を実行してWSL 2をデフォルトバージョンに設定します：
+```powershell
+wsl --set-default-version 2
+```
+
+5. ダウンロードしたUbuntuパッケージをダブルクリックでインストールします
+
+### 2. NVIDIA GPUドライバーのインストール（Windows側）
+
+1. ダウンロードしたNVIDIAドライバーのインストーラーを実行します
+
+### 3. WSL 2にパッケージを展開
+
+1. 外部ストレージから`offline-docker-pytorch.tar.gz`をWSLのホームディレクトリにコピーします
+
+2. WSL 2のターミナルを開き、以下のコマンドを実行：
+```bash
+# アーカイブを展開
+tar -xzvf offline-docker-pytorch.tar.gz
+cd offline-docker-packages
+```
+
+### 4. Docker Engineのインストール
+
+```bash
+# GPGキーの設定
+cat docker-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# リポジトリの設定
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 基本パッケージのインストール
+sudo dpkg -i *.deb
+
+# Dockerパッケージのインストール
+cd docker-packages
+sudo dpkg -i *.deb
+cd ..
+
+# ユーザーをdockerグループに追加
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Dockerサービスを起動
+sudo service docker start
+```
+
+### 5. NVIDIA Container Toolkitのインストール
+
+```bash
+# NVIDIAのGPGキー設定
+cat nvidia-docker-gpgkey | sudo apt-key add -
+sudo cp nvidia-docker.list /etc/apt/sources.list.d/
+
+# パッケージのインストール
+cd nvidia-docker-packages
+sudo dpkg -i *.deb
+cd ..
+
+# Dockerデーモンの設定
+sudo tee /etc/docker/daemon.json <<EOF
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "/usr/bin/nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    }
+}
+EOF
+
+# Dockerを再起動
+sudo systemctl restart docker
+```
+
+### 6. CUDAのインストール
+
+```bash
+# CUDA設定ファイルの配置
+sudo cp cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+
+# CUDAリポジトリパッケージのインストール
+sudo dpkg -i cuda-repo-wsl-ubuntu-11-8-local_11.8.0-1_amd64.deb
+
+# キーリングのコピー
+sudo cp /var/cuda-repo-wsl-ubuntu-11-8-local/cuda-*-keyring.gpg /usr/share/keyrings/
+
+# CUDAパッケージのインストール
+cd /var/cuda-repo-wsl-ubuntu-11-8-local/
+sudo dpkg -i *.deb
+cd -
+
+# 環境変数を設定
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 7. PyTorchイメージのインポートと実行
+
+```bash
+# Dockerイメージをインポート
+docker load -i pytorch-image.tar
+
+# GPU対応確認のためにコンテナを実行
+docker run --gpus all -it --rm pytorch/pytorch:latest python -c "import torch; print('GPU available:', torch.cuda.is_available()); print('GPU count:', torch.cuda.device_count()); print('GPU name:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'No GPU')"
+```
+
+## 追加の作業ディレクトリ設定（オプション）
+
+PyTorchプロジェクト用の環境を作成する場合：
+
+```bash
+# プロジェクトディレクトリを作成
+mkdir -p ~/pytorch-project
+cd ~/pytorch-project
+
+# 以下のDockerfileを作成
+cat > Dockerfile << 'EOF'
+FROM pytorch/pytorch:latest
+
+# 必要なパッケージを追加
+RUN pip install matplotlib numpy pandas scikit-learn jupyter
+
+WORKDIR /workspace
+EOF
+
+# イメージをビルド（既に取得済みのベースイメージを使用）
+docker build -t pytorch-gpu-custom .
+
+# コンテナを起動
+docker run --gpus all -it --rm -v $(pwd):/workspace pytorch-gpu-custom
+```
+
+## トラブルシューティング
+
+1. **依存関係のエラー**: `apt-get download`コマンドは直接の依存パッケージしかダウンロードしないため、エラーが発生する場合は不足パッケージを特定し、追加でダウンロードする必要があります。
+
+2. **GPUが認識されない場合**: 
+   - WSL内で`nvidia-smi`コマンドを実行してGPUの状態を確認
+   - WSLの構成を更新：`wsl --update`
+   - Windowsを再起動
+
+3. **Dockerサービスが起動しない場合**:
+   - ログを確認：`sudo journalctl -u docker.service`
+   - 依存関係を再確認：`sudo apt --fix-broken install`
+
+4. **CUDAバージョンとPyTorchの互換性**:
+   - PyTorchのバージョンによってサポートされるCUDAのバージョンが異なります
+   - 必要に応じて異なるバージョンのPyTorchイメージをダウンロード（例：`pytorch/pytorch:1.13.0-cuda11.6-cudnn8-runtime`）
+
+この方法で、インターネット接続なしでWindowsにDocker EngineとPyTorch GPU環境を完全にセットアップすることができます。
+
+
+---
 
 
 
