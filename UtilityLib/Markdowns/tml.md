@@ -1,3 +1,166 @@
+# Windows環境でDocker DesktopなしでDocker Engineをインストールし、PythonとPyTorchをGPU対応で使う方法
+
+Windowsで直接Docker Engineを使ってPythonイメージを導入し、PyTorchでGPUを使用する方法を説明します。
+
+## 1. WindowsにDocker Engineをインストールする
+
+### WSL 2のセットアップ
+Windows環境でDocker Desktopなしで使用するには、WSL 2 (Windows Subsystem for Linux 2)を使用するのが最も効率的です。
+
+1. PowerShellを管理者権限で開き、WSL 2を有効化します：
+```powershell
+wsl --install
+```
+
+2. 再起動後、Ubuntuなどのディストリビューションをインストールします：
+```powershell
+wsl --install -d Ubuntu
+```
+
+### Dockerのインストール (WSL 2内)
+1. WSL 2のターミナルを開き、以下のコマンドを実行します：
+```bash
+# リポジトリの設定
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg lsb-release
+
+# Dockerの公式GPGキーを追加
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# リポジトリのセットアップ
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Docker Engine のインストール
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+```
+
+2. ユーザーをdockerグループに追加して、sudoなしでDockerを使えるようにします：
+```bash
+sudo usermod -aG docker $USER
+# 変更を適用するために一度ログアウトして再ログインするか、以下を実行
+newgrp docker
+```
+
+3. Dockerサービスを起動します：
+```bash
+sudo service docker start
+```
+
+## 2. NVIDIA GPUドライバーとCUDAのセットアップ
+
+### WindowsにNVIDIA GPUドライバーをインストール
+1. [NVIDIA公式サイト](https://www.nvidia.com/Download/index.aspx)から最新のGPUドライバーをダウンロードしてインストールします。
+
+### WSL 2でNVIDIA CUDA Toolkitをインストール
+1. WSL 2のターミナルで以下のコマンドを実行します：
+```bash
+# CUDA関連パッケージのインストール
+wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+sudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda-repo-wsl-ubuntu-11-8-local_11.8.0-1_amd64.deb
+sudo dpkg -i cuda-repo-wsl-ubuntu-11-8-local_11.8.0-1_amd64.deb
+sudo cp /var/cuda-repo-wsl-ubuntu-11-8-local/cuda-*-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get -y install cuda
+```
+
+2. 環境変数を設定します：
+```bash
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## 3. DockerでPythonイメージを導入し、PyTorchでGPUを使えるようにする
+
+### NVIDIA Container Toolkitのインストール
+1. WSL 2のターミナルで以下のコマンドを実行します：
+```bash
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update
+sudo apt-get install -y nvidia-docker2
+sudo systemctl restart docker
+```
+
+### PyTorch用のDockerfileの作成
+1. プロジェクト用のディレクトリを作成し、そこにDockerfileを作成します：
+```bash
+mkdir -p ~/pytorch-project
+cd ~/pytorch-project
+```
+
+2. Dockerfileを作成します：
+```bash
+cat > Dockerfile << 'EOF'
+FROM pytorch/pytorch:latest
+
+# 基本的なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    nano \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 作業ディレクトリを設定
+WORKDIR /workspace
+
+# PyTorch関連のパッケージをインストール
+RUN pip install torch torchvision torchaudio matplotlib numpy pandas scikit-learn jupyter
+EOF
+```
+
+### Dockerイメージのビルドと実行
+1. イメージをビルドします：
+```bash
+docker build -t pytorch-gpu .
+```
+
+2. GPUを使用してコンテナを実行します：
+```bash
+docker run --gpus all -it --rm -v $(pwd):/workspace -p 8888:8888 pytorch-gpu
+```
+
+3. コンテナ内でGPUが認識されているか確認します：
+```python
+python -c "import torch; print('GPU available:', torch.cuda.is_available()); print('GPU count:', torch.cuda.device_count()); print('GPU name:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'No GPU')"
+```
+
+### Jupyter Notebookの起動（オプション）
+コンテナ内でJupyter Notebookを起動する場合：
+```bash
+jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root
+```
+
+## トラブルシューティング
+
+1. **WSL 2でGPUが認識されない場合**:
+   - Windows側で最新のWSL 2を使用しているか確認（`wsl --update`）
+   - NVIDIA Driversが最新か確認
+
+2. **CUDA関連のエラー**:
+   - インストールしたCUDAバージョンとPyTorchが互換性があるか確認
+   - `nvidia-smi`コマンドを実行してGPUの状態を確認
+
+3. **Dockerコンテナ内でGPUが認識されない**:
+   - `--gpus all`オプションを指定しているか確認
+   - NVIDIA Container Toolkitが正しくインストールされているか確認
+
+この方法で、WindowsでDocker Desktopなしに直接Docker EngineとWSL 2を使用して、PythonとPyTorchをGPU対応で利用することができます。
+
+----
+
+
+
+
+
+
+
+
+
 現在の状況に関するご指定ありがとうございます。
 
 日本語でお手伝いします。WSL2とDockerをオフラインでセットアップする方法について、詳細なステップをご案内します。
