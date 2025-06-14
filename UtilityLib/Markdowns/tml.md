@@ -153,7 +153,155 @@ jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root
 
 ----
 
+I understand that you want to perform this Docker Engine installation process offline on Windows. Let me adjust the instructions to accommodate offline installation requirements.
 
+# Windows環境でオフライン状態でDocker EngineをインストールしてPyTorchをGPU対応で使う方法
+
+オフライン環境でのインストールは事前にすべてのパッケージやファイルをダウンロードしておく必要があります。以下に手順を説明します。
+
+## 事前準備 (オンライン環境で実施)
+
+### 1. WSL 2インストール用ファイルの取得
+
+1. オンライン環境でWSL 2のインストールパッケージをダウンロードします：
+   - [WSL 2 Linux kernel update package](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)
+   - Ubuntuのディストリビューションパッケージも取得しておきます：[Ubuntu WSL](https://aka.ms/wslubuntu)
+
+### 2. Docker関連ファイルの取得
+
+1. Docker Engineのインストールファイルをダウンロード：
+   - Ubuntu用のDocker DEBファイル一式 (docker-ce, docker-ce-cli, containerd.io)を[Docker公式サイト](https://download.docker.com/linux/ubuntu/dists/)からダウンロードします
+
+2. NVIDIA Container Toolkitのパッケージもダウンロード：
+   - [NVIDIA GitHub](https://nvidia.github.io/nvidia-docker/)から対応するバージョンのDEBファイルを取得
+
+### 3. NVIDIA GPUドライバーとCUDAのダウンロード
+
+1. [NVIDIA公式サイト](https://www.nvidia.com/Download/index.aspx)からWindows用GPUドライバーをダウンロード
+
+2. [NVIDIA Developer](https://developer.nvidia.com/cuda-downloads)からWSL 2用のCUDAインストーラー (local installer)をダウンロード
+
+### 4. Python/PyTorchコンテナイメージの取得
+
+1. オンライン環境で以下のコマンドを実行し、PyTorch公式イメージをダウンロード：
+```bash
+docker pull pytorch/pytorch:latest
+docker save -o pytorch-image.tar pytorch/pytorch:latest
+```
+
+## オフラインインストール手順
+
+### 1. WSL 2のセットアップ (Windows側)
+
+1. PowerShellを管理者権限で開き、WSL機能を有効化:
+```powershell
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+2. ダウンロードしたWSL 2更新パッケージ (`wsl_update_x64.msi`) をインストール
+
+3. PowerShellで以下を実行してWSL 2をデフォルトバージョンに設定:
+```powershell
+wsl --set-default-version 2
+```
+
+4. ダウンロードしたUbuntuパッケージをダブルクリックでインストール
+
+### 2. NVIDIA GPUドライバーのインストール (Windows側)
+
+1. ダウンロードしたNVIDIA GPUドライバーのインストーラーを実行
+
+### 3. Docker Engineのインストール (WSL 2内)
+
+1. WSL 2のUbuntuシェルを開く
+
+2. 事前にダウンロードしたDocker DEBファイルをWSLフォルダに移動し、以下のコマンドでインストール:
+```bash
+sudo dpkg -i ./containerd.io_*.deb
+sudo dpkg -i ./docker-ce-cli_*.deb
+sudo dpkg -i ./docker-ce_*.deb
+```
+
+3. ユーザーをDockerグループに追加:
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+4. Dockerサービスを起動:
+```bash
+sudo service docker start
+```
+
+### 4. CUDA Toolkitのオフラインインストール (WSL 2内)
+
+1. ダウンロードしたCUDAインストーラ (`.deb`ファイル)をWSLフォルダに移動し、以下のコマンドでインストール:
+```bash
+sudo dpkg -i cuda-repo-wsl-ubuntu-11-8-local_11.8.0-1_amd64.deb
+# キーリングをコピー
+sudo cp /var/cuda-repo-wsl-ubuntu-11-8-local/cuda-*-keyring.gpg /usr/share/keyrings/
+# オフラインでインストール
+sudo apt-get install --no-download -y cuda
+```
+
+2. 環境変数を設定:
+```bash
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 5. NVIDIA Container Toolkitのオフラインインストール
+
+1. ダウンロードしたNVIDIA Container ToolkitのDEBファイルをWSLフォルダに移動し、以下のコマンドでインストール:
+```bash
+sudo dpkg -i ./nvidia-container-toolkit_*.deb
+sudo dpkg -i ./nvidia-container-runtime_*.deb
+# 依存関係のあるパッケージも同様にインストール
+```
+
+2. Dockerを再起動:
+```bash
+sudo systemctl restart docker
+```
+
+### 6. PyTorchコンテナイメージのインポートとGPU対応環境の構築
+
+1. 事前に保存したDockerイメージをインポート:
+```bash
+docker load -i pytorch-image.tar
+```
+
+2. プロジェクト用のディレクトリを作成:
+```bash
+mkdir -p ~/pytorch-project
+cd ~/pytorch-project
+```
+
+3. Dockerコンテナを実行:
+```bash
+docker run --gpus all -it --rm -v $(pwd):/workspace pytorch/pytorch:latest
+```
+
+4. コンテナ内でGPUが認識されているか確認:
+```python
+python -c "import torch; print('GPU available:', torch.cuda.is_available()); print('GPU count:', torch.cuda.device_count()); print('GPU name:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'No GPU')"
+```
+
+## 参考資料と注意点
+
+1. **依存関係の確認**: オフラインインストールでは依存関係の管理が難しいため、必要に応じて依存パッケージも事前にすべてダウンロードしておく必要があります
+
+2. **バージョンの互換性**: CUDAとPyTorchのバージョンの互換性を確認してから実施してください
+
+3. **WSL 2のディスク容量管理**: WSL 2はデフォルトではディスク容量が動的に増加するため、`.wslconfig`ファイルを使って管理することをお勧めします
+
+4. **トラブルシューティング**:
+   - インストールに失敗した場合は、不足している依存パッケージがないか確認してください
+   - NVIDIA GPUの認識に問題がある場合は、WSL内で`nvidia-smi`コマンドを実行して確認してください
+
+この手順に従うことで、インターネット接続なしでWindowsにDocker EngineとPyTorch環境をGPU対応でセットアップすることができます。
 
 
 
@@ -254,6 +402,9 @@ USBドライブなどを使用してファイルを転送します。
    ```
 
 この手順で特に詳しい説明が必要な部分がありましたら、お知らせください。オフライン環境でのWSL2とDockerのセットアップについて、さらに詳細な情報をお伝えします。
+
+---
+
 
 
 
