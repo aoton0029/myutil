@@ -1,6 +1,6 @@
-﻿namespace PageNavigationSample.Test2
+﻿namespace PageNavigationSample.sample1
 {
-    partial class UcPageBase
+    partial class UcComfirmationPage
     {
         /// <summary> 
         /// 必要なデザイナー変数です。

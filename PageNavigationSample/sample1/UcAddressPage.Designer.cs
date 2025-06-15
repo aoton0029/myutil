@@ -1,6 +1,6 @@
-﻿namespace PageNavigationSample
+﻿namespace PageNavigationSample.sample1
 {
-    partial class BreadcrumbHighlightControl
+    partial class UcAddressPage
     {
         /// <summary> 
         /// 必要なデザイナー変数です。
@@ -28,29 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            flowPanel = new FlowLayoutPanel();
-            SuspendLayout();
-            // 
-            // flowPanel
-            // 
-            flowPanel.Dock = DockStyle.Fill;
-            flowPanel.Location = new Point(0, 0);
-            flowPanel.Name = "flowPanel";
-            flowPanel.Size = new Size(679, 127);
-            flowPanel.TabIndex = 0;
-            // 
-            // BreadcrumbHighlightControl
-            // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(flowPanel);
-            Name = "BreadcrumbHighlightControl";
-            Size = new Size(679, 127);
-            ResumeLayout(false);
+            components = new System.ComponentModel.Container();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         }
 
         #endregion
-
-        private FlowLayoutPanel flowPanel;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace PageNavigationSample.Test2
+﻿namespace PageNavigationSample
 {
     partial class Form1
     {

@@ -1,6 +1,6 @@
 ﻿namespace PageNavigationSample
 {
-    partial class BreadcrumbControl
+    partial class UcBreadCrumbControl
     {
         /// <summary> 
         /// 必要なデザイナー変数です。
@@ -28,29 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            flowPanel = new FlowLayoutPanel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             SuspendLayout();
             // 
-            // flowPanel
+            // flowLayoutPanel1
             // 
-            flowPanel.Dock = DockStyle.Fill;
-            flowPanel.Location = new Point(0, 0);
-            flowPanel.Name = "flowPanel";
-            flowPanel.Size = new Size(651, 53);
-            flowPanel.TabIndex = 0;
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(463, 54);
+            flowLayoutPanel1.TabIndex = 0;
             // 
-            // BreadcrumbControl
+            // UcBreadCrumbControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(flowPanel);
-            Name = "BreadcrumbControl";
-            Size = new Size(651, 53);
+            Controls.Add(flowLayoutPanel1);
+            Name = "UcBreadCrumbControl";
+            Size = new Size(463, 54);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private FlowLayoutPanel flowPanel;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }
